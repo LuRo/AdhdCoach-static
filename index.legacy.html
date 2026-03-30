@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADHD Coach UI Prototype</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="assets/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/bootstrap-icons/bootstrap-icons.min.css">
+  <style>
+    :root {
+      --color-white: #ffffff;
+      --color-white-soft: rgba(255, 255, 255, 0.95);
+      --color-white-muted: rgba(255, 255, 255, 0.85);
+      --color-accent: #7f1391;
+      --color-accent-alt: #b125c9;
+      --color-accent-soft: #efe0f4;
+      --color-bg: #f1f3f8;
+      --color-accent-shadow: rgba(127, 19, 145, 0.22);
+      --color-ink: #2d1731;
+      --color-muted: #6f5a76;
+      --color-muted-line: rgba(111, 90, 118, 0.45);
+      --color-muted-line-mobile: rgba(124, 107, 98, 0.45);
+      --color-success: #7f1391;
+      --color-gauge-red: #ff2323;
+      --color-gauge-yellow: #ffcf0f;
+      --color-gauge-green: #7acd42;
+      --color-gauge-needle: #1d1d1d;
+      --color-complexity-track: #f0e2ff;
+      --color-complexity-fill: #9f64ff;
+      --color-energy-unselected-bg: rgba(79, 13, 91, 0.88);
+      --color-energy-selected-bg: #4f0d5b;
+      --color-energy-selected-border: rgba(253, 245, 255, 0.75);
+      --color-energy-text: rgba(255, 244, 255, 0.96);
+      --coach-surface: var(--color-white-soft);
+      --coach-accent: var(--color-accent);
+      --coach-accent-soft: var(--color-accent-soft);
+      --coach-ink: var(--color-ink);
+      --coach-muted: var(--color-muted);
+      --coach-border: var(--color-accent-shadow);
+      --coach-success: var(--color-success);
+      --bs-primary: var(--color-accent);
+      --bs-primary-rgb: 127, 19, 145;
+      --bs-border-radius: 0.75rem;
+      --bs-border-radius-lg: 0.75rem;
+      --bs-border-radius-sm: 0.75rem;
+      --energy-step-switch-duration: 1.5s;
+    }
+
+    button,
+    .btn,
+    .nav-tile,
+    .step-toggle,
+    .dropdown-toggle,
+    .task-grip,
+    .btn-group > .btn {
+      border-radius: 0.75rem !important;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--coach-ink);
+      background: linear-gradient(135deg, #ffffff 0%, #f7f9fc 100%);
+    }
+
+    /* Grid utilities: rows, cols, and span helpers */
+    .grid {
+      display: grid;
+      gap: var(--grid-gap, 1rem);
+    }
+
+    .grid.gap-0 { --grid-gap: 0; }
+    .grid.gap-1 { --grid-gap: 0.25rem; }
+    .grid.gap-2 { --grid-gap: 0.5rem; }
+    .grid.gap-3 { --grid-gap: 0.75rem; }
+    .grid.gap-4 { --grid-gap: 1rem; }
+    .grid.gap-5 { --grid-gap: 1.25rem; }
+    .grid.gap-6 { --grid-gap: 1.5rem; }
+
+    .grid.col-gap-0 { column-gap: 0; }
+    .grid.col-gap-1 { column-gap: 0.25rem; }
+    .grid.col-gap-2 { column-gap: 0.5rem; }
+    .grid.col-gap-3 { column-gap: 0.75rem; }
+    .grid.col-gap-4 { column-gap: 1rem; }
+    .grid.row-gap-0 { row-gap: 0; }
+    .grid.row-gap-1 { row-gap: 0.25rem; }
+    .grid.row-gap-2 { row-gap: 0.5rem; }
+    .grid.row-gap-3 { row-gap: 0.75rem; }
+    .grid.row-gap-4 { row-gap: 1rem; }
+
+    .cols { grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr)); }
+    .rows { grid-template-rows: repeat(var(--rows, 1), minmax(0, 1fr)); }
+
+    .cols-1 { --cols: 1; }
+    .cols-2 { --cols: 2; }
+    .cols-3 { --cols: 3; }
+    .cols-4 { --cols: 4; }
+    .cols-5 { --cols: 5; }
+    .cols-6 { --cols: 6; }
+    .cols-7 { --cols: 7; }
+    .cols-8 { --cols: 8; }
+    .cols-9 { --cols: 9; }
+    .cols-10 { --cols: 10; }
+    .cols-11 { --cols: 11; }
+    .cols-12 { --cols: 12; }
+    .cols-1,
+    .cols-2,
+    .cols-3,
+    .cols-4,
+    .cols-5,
+    .cols-6,
+    .cols-7,
+    .cols-8,
+    .cols-9,
+    .cols-10,
+    .cols-11,
+    .cols-12 {
+      grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+    }
+
+    .rows-1 { --rows: 1; }
+    .rows-2 { --rows: 2; }
+    .rows-3 { --rows: 3; }
+    .rows-4 { --rows: 4; }
+    .rows-5 { --rows: 5; }
+    .rows-6 { --rows: 6; }
+    .rows-7 { --rows: 7; }
+    .rows-8 { --rows: 8; }
+    .rows-9 { --rows: 9; }
+    .rows-10 { --rows: 10; }
+    .rows-11 { --rows: 11; }
+    .rows-12 { --rows: 12; }
+    .rows-1,
+    .rows-2,
+    .rows-3,
+    .rows-4,
+    .rows-5,
+    .rows-6,
+    .rows-7,
+    .rows-8,
+    .rows-9,
+    .rows-10,
+    .rows-11,
+    .rows-12 {
+      grid-template-rows: repeat(var(--rows, 1), minmax(0, 1fr));
+    }
+
+    .rows-auto {
+      grid-template-rows: repeat(var(--rows, 1), auto);
+      align-content: center;
+    }
+
+    /* Content-sized column presets */
+    .cols-content {
+      grid-template-columns: repeat(var(--cols, 1), max-content);
+    }
+
+    .cols-content-3-fluid {
+      grid-template-columns: max-content max-content max-content minmax(0, 1fr);
+    }
+
+    .cols-content-2-fluid {
+      grid-template-columns: max-content max-content minmax(0, 1fr);
+    }
+
+    .col-span {
+      grid-column: span var(--col-span, 1) / span var(--col-span, 1);
+    }
+    .row-span {
+      grid-row: span var(--row-span, 1) / span var(--row-span, 1);
+    }
+
+    .col-span-1 { --col-span: 1; }
+    .col-span-2 { --col-span: 2; }
+    .col-span-3 { --col-span: 3; }
+    .col-span-4 { --col-span: 4; }
+    .col-span-5 { --col-span: 5; }
+    .col-span-6 { --col-span: 6; }
+    .col-span-7 { --col-span: 7; }
+    .col-span-8 { --col-span: 8; }
+    .col-span-9 { --col-span: 9; }
+    .col-span-10 { --col-span: 10; }
+    .col-span-11 { --col-span: 11; }
+    .col-span-12 { --col-span: 12; }
+    .col-span-1,
+    .col-span-2,
+    .col-span-3,
+    .col-span-4,
+    .col-span-5,
+    .col-span-6,
+    .col-span-7,
+    .col-span-8,
+    .col-span-9,
+    .col-span-10,
+    .col-span-11,
+    .col-span-12 {
+      grid-column: span var(--col-span, 1) / span var(--col-span, 1);
+    }
+
+    .row-span-1 { --row-span: 1; }
+    .row-span-2 { --row-span: 2; }
+    .row-span-3 { --row-span: 3; }
+    .row-span-4 { --row-span: 4; }
+    .row-span-5 { --row-span: 5; }
+    .row-span-6 { --row-span: 6; }
+    .row-span-7 { --row-span: 7; }
+    .row-span-8 { --row-span: 8; }
+    .row-span-9 { --row-span: 9; }
+    .row-span-10 { --row-span: 10; }
+    .row-span-11 { --row-span: 11; }
+    .row-span-12 { --row-span: 12; }
+    .row-span-1,
+    .row-span-2,
+    .row-span-3,
+    .row-span-4,
+    .row-span-5,
+    .row-span-6,
+    .row-span-7,
+    .row-span-8,
+    .row-span-9,
+    .row-span-10,
+    .row-span-11,
+    .row-span-12 {
+      grid-row: span var(--row-span, 1) / span var(--row-span, 1);
+    }
+
+    .row-span-center {
+      align-self: center;
+      display: flex;
+      align-items: center;
+    }
+
+    .app-shell {
+      max-width: 1180px;
+    }
+
+    .brand-logo {
+      width: 188px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .user-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid var(--color-accent-shadow);
+      object-fit: cover;
+      background: var(--coach-accent-soft);
+    }
+
+    .nav-switcher {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .nav-tile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      min-height: 82px;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--coach-border);
+      border-radius: 0.75rem;
+      color: var(--coach-ink);
+      background: var(--color-white);
+      transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .nav-tile:hover,
+    .nav-tile:focus-visible {
+      border-color: var(--color-accent-shadow);
+      transform: translateY(-1px);
+    }
+
+    .nav-tile.active {
+      color: var(--color-white);
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-alt) 100%);
+    }
+
+    .nav-tile i {
+      font-size: 1.5rem;
+    }
+
+    .section-panel {
+      display: none;
+    }
+
+    .section-panel.active {
+      display: block;
+    }
+
+    .stepper {
+      position: relative;
+      padding-top: 2.15rem;
+    }
+
+    .step-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 150px;
+      cursor: pointer;
+    }
+
+    .step-item:last-child {
+      min-height: 0;
+    }
+
+    .step-dot {
+      position: relative;
+      z-index: 2;
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid var(--coach-border);
+      background: var(--color-white);
+      color: var(--coach-muted);
+      font-weight: 700;
+    }
+
+    @keyframes stepPulse {
+      0% {
+        box-shadow: 0 0 0 6px var(--color-white-soft), 0 0 0 0 var(--color-accent-shadow);
+      }
+      50% {
+        box-shadow: 0 0 0 6px var(--color-white-soft), 0 0 0 9px var(--color-accent-shadow);
+      }
+      100% {
+        box-shadow: 0 0 0 6px var(--color-white-soft), 0 0 0 0 var(--color-accent-shadow);
+      }
+    }
+
+    .step-item::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: calc(100% + 24px);
+      border-left: 3px dotted var(--color-muted-line);
+      transform: translate(-50%, -50%);
+    }
+
+    .step-item:last-child::after {
+      display: none;
+    }
+
+    .step-item[data-step="2"]::after {
+      display: none;
+    }
+
+    .step-item.completed::after {
+      border-left-style: solid;
+      border-left-color: var(--color-accent-shadow);
+    }
+
+    .step-item.completed .step-dot {
+      border-color: var(--color-accent-shadow);
+      background: var(--coach-success);
+      color: var(--color-white);
+      box-shadow: none;
+    }
+
+    .step-item.active .step-dot {
+      background: var(--coach-accent-soft);
+      color: var(--bs-warning-text-emphasis);
+      animation: stepPulse 3.5s ease-in-out infinite;
+    }
+
+    .step-item.pending .step-dot {
+      background: var(--color-white);
+      color: var(--coach-muted);
+      box-shadow: none;
+    }
+
+    .section-card {
+      border: 1px solid var(--coach-border);
+      border-radius: 0.75rem;
+      background: var(--color-white-soft);
+      box-shadow: none;
+    }
+
+    .step-row.is-active .section-card {
+      box-shadow: 0 0.15rem 0.6rem var(--color-accent-shadow);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .step-header.mb-collapsed {
+      margin-bottom: 0 !important;
+    }
+
+    .step-header.mb-collapsed p {
+      display: none;
+    }
+
+    .step-header.mb-collapsed .step-header-actions {
+      display: none !important;
+    }
+
+    .complexity-card {
+      min-width: min(100%, 290px);
+    }
+
+    .complexity-gauge {
+      width: min(100%, 290px);
+      margin-inline: auto;
+      cursor: pointer;
+    }
+
+    .complexity-gauge svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .gauge-segment {
+      fill: none;
+      stroke-width: 24;
+      stroke-linecap: butt;
+    }
+
+    .gauge-red {
+      stroke: var(--color-gauge-red);
+    }
+
+    .gauge-yellow {
+      stroke: url(#gauge-mid-gradient);
+    }
+
+    .gauge-green {
+      stroke: var(--color-gauge-green);
+    }
+
+    .gauge-needle {
+      transform-box: view-box;
+      transform-origin: 110px 110px;
+      transition: transform 420ms ease-out;
+      filter: drop-shadow(1.5px 0 1px rgba(0, 0, 0, 0.28));
+    }
+
+    .gauge-needle polygon {
+      fill: var(--color-gauge-needle);
+    }
+
+    .gauge-needle line {
+      stroke: var(--color-gauge-needle);
+      stroke-width: 8;
+      stroke-linecap: butt;
+    }
+
+    .gauge-needle circle {
+      fill: var(--color-gauge-needle);
+    }
+
+    .gauge-hub {
+      fill: var(--color-gauge-needle);
+      filter: drop-shadow(1.5px 0 1px rgba(0, 0, 0, 0.28));
+    }
+
+    .gauge-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: -0.1rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      color: var(--coach-muted);
+    }
+
+    .step-complete-body {
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .morning-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .step-row {
+      display: grid;
+      grid-template-columns: 80px minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .step-marker {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding-top: 0;
+    }
+
+    .step-row:first-child .step-marker::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 34px;
+      width: 0;
+      height: calc(100% + 1.5rem);
+      border-left: 3px dotted var(--color-muted-line);
+      transform: translateX(-50%);
+    }
+
+    .morning-steps.connector-dotted .step-row:first-child .step-marker::after {
+      border-left-style: dotted;
+      border-left-color: var(--color-muted-line);
+    }
+
+    .morning-steps.connector-solid .step-row:first-child .step-marker::after {
+      border-left-style: solid;
+      border-left-color: var(--color-accent-shadow);
+    }
+
+    .step-row:first-child .step-item.completed::after {
+      border-left-style: solid;
+      border-left-color: var(--color-accent-shadow);
+    }
+
+    .step-complete-body.collapsing {
+      transform: translateY(-0.25rem);
+      opacity: 0.32;
+      transition: height 0.9s ease, opacity 0.9s ease, transform 0.9s ease !important;
+    }
+
+    .step-toggle {
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+    }
+
+    .step-toggle:focus-visible {
+      outline: 2px solid var(--color-accent-shadow);
+      outline-offset: 4px;
+      border-radius: 0.5rem;
+    }
+
+    .energy-choice {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .energy-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.42rem 0.5rem;
+      border-radius: 999px;
+      background: var(--coach-accent-soft);
+      border: 0;
+      box-shadow: inset 0 1px 0 var(--color-white-muted);
+    }
+
+    .energy-option {
+      width: 58px;
+      height: 58px;
+      position: relative;
+      overflow: visible;
+      border-radius: 50%;
+      border: 1px solid var(--color-accent-soft);
+      color: var(--color-energy-text);
+      background: var(--color-energy-unselected-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      font-size: 0.9rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .energy-option i {
+      font-size: 2.24rem;
+      line-height: 1;
+    }
+
+    .btn-check:checked + .energy-option {
+      background: var(--color-energy-selected-bg);
+      border-color: var(--color-energy-selected-border);
+      color: var(--color-white);
+      box-shadow: 0 0 0 2px var(--color-white-muted);
+      transform: translateY(-1px);
+    }
+
+    .energy-option.energy-countdown::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 3px solid var(--color-accent-shadow);
+      border-top-color: var(--color-accent-alt);
+      animation: energyCountdownSpin 0.7s linear infinite;
+      pointer-events: none;
+    }
+
+    .energy-option.energy-active-spin::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 3px solid var(--color-accent-shadow);
+      border-top-color: var(--color-accent-alt);
+      animation: energyCountdownSpin 0.7s linear infinite;
+      pointer-events: none;
+    }
+
+    .energy-option.energy-selected-ring::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 3px solid var(--color-accent-shadow);
+      box-shadow: 0 0 0 3px var(--color-accent-shadow);
+      pointer-events: none;
+    }
+
+    @keyframes energyCountdownSpin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .btn-check:focus-visible + .energy-option {
+      outline: 2px solid var(--color-accent-shadow);
+      outline-offset: 2px;
+    }
+
+    .task-card {
+      border: 1px solid var(--color-accent-shadow);
+      border-radius: 0.75rem;
+      background: linear-gradient(180deg, var(--color-white-soft) 70%, var(--color-accent-soft) 150%);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .task-card.sortable-ghost {
+      opacity: 0.4;
+    }
+
+    .task-card.sortable-chosen {
+      box-shadow: 0 1rem 2rem var(--color-accent-shadow);
+    }
+
+    .task-grip {
+      cursor: grab;
+      color: var(--coach-muted);
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      min-width: auto !important;
+      min-height: auto !important;
+      margin-left: -0.38rem;
+    }
+
+    .task-grip i {
+      font-size: 1.35rem;
+      line-height: 1;
+      position: relative;
+      top: -0.08rem;
+    }
+
+    .priority-number {
+      min-width: 1ch;
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+
+    .complexity-pill {
+      --track: var(--color-complexity-track);
+      --fill: var(--color-complexity-fill);
+      --seg1: var(--track);
+      --seg2: var(--track);
+      --seg3: var(--track);
+      --seg4: var(--track);
+      --seg5: var(--track);
+      position: relative;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from -90deg,
+        var(--seg1) 0deg 64deg, transparent 64deg 72deg,
+        var(--seg2) 72deg 136deg, transparent 136deg 144deg,
+        var(--seg3) 144deg 208deg, transparent 208deg 216deg,
+        var(--seg4) 216deg 280deg, transparent 280deg 288deg,
+        var(--seg5) 288deg 352deg, transparent 352deg 360deg
+      );
+    }
+
+    .complexity-pill::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: var(--color-white-soft);
+    }
+
+    .text-purple {
+      color: var(--color-accent) !important;
+    }
+
+    .complexity-small { --seg1: var(--fill); }
+    .complexity-medium { --seg1: var(--fill); --seg2: var(--fill); --seg3: var(--fill); }
+    .complexity-large { --seg1: var(--fill); --seg2: var(--fill); --seg3: var(--fill); --seg4: var(--fill); --seg5: var(--fill); }
+
+    .task-info {
+      min-width: 0;
+    }
+
+    .task-summary {
+      color: var(--coach-muted);
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 20px 18px 24px minmax(0, 1fr) auto;
+      grid-template-rows: auto auto;
+      column-gap: 0.38rem;
+      row-gap: 0.16rem;
+      align-items: start;
+    }
+
+    .task-main {
+      grid-column: 4;
+      grid-row: 1 / span 2;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .task-main .task-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-main .task-subtext {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 0.05rem;
+    }
+
+    .task-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      grid-column: 5;
+      grid-row: 2;
+      justify-self: end;
+      align-self: end;
+    }
+
+    .task-select {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: center;
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      border-color: var(--color-accent-shadow);
+      cursor: pointer;
+    }
+
+    .task-select:checked {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    .task-select:focus {
+      box-shadow: 0 0 0 0.18rem var(--color-accent-shadow);
+    }
+
+    .task-grip {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: center;
+    }
+
+    .priority-number {
+      grid-column: 5;
+      grid-row: 1;
+      align-self: start;
+      justify-self: end;
+      text-align: right;
+    }
+
+    .complexity-pill {
+      grid-column: 3;
+      grid-row: 2;
+      align-self: start;
+      justify-self: start;
+    }
+
+    /* Task 1 custom layout:
+       col 1, 2, 3 span over 2 rows; col 4 and 5 do not span over 2 rows */
+    .task-row.task-layout-1 {
+      grid-template-columns: 20px 18px 24px minmax(0, 1fr) auto;
+      grid-template-rows: auto auto;
+    }
+
+    .task-row.task-layout-1 .task-grip {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    .task-row.task-layout-1 .task-select {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+
+    .task-row.task-layout-1 .complexity-pill {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      align-self: center;
+    }
+
+    .task-row.task-layout-1 .task-main {
+      grid-column: 4;
+      grid-row: 1;
+    }
+
+    .task-row.task-layout-1 .priority-number {
+      grid-column: 5;
+      grid-row: 1;
+    }
+
+    .task-row.task-layout-1 .task-controls {
+      grid-column: 5;
+      grid-row: 2;
+    }
+
+    .icon-square-btn {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      border-radius: 0.45rem !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 !important;
+      line-height: 1;
+    }
+
+    .icon-square-btn i {
+      font-size: 0.95rem;
+      margin: 0 !important;
+    }
+
+    .task-modal-actions .btn {
+      border-radius: 0.45rem !important;
+    }
+
+    .placeholder-panel {
+      min-height: 280px;
+      border: 1px dashed var(--color-accent);
+      border-radius: 0.25rem;
+      background:
+        linear-gradient(135deg, var(--color-accent-shadow), rgba(var(--bs-warning-rgb), 0.08)),
+        var(--color-white-muted);
+    }
+
+    @media (max-width: 767.98px) {
+      .stepper {
+        padding-top: 0.75rem;
+      }
+
+      .step-item,
+      .step-item:last-child {
+        min-height: auto;
+        min-width: 72px;
+      }
+
+      .step-item::after {
+        display: none;
+      }
+
+      .step-item.completed::after {
+        display: none;
+      }
+
+      .step-row {
+        position: relative;
+        grid-template-columns: 1fr;
+        padding-top: 1rem;
+      }
+
+      .step-marker {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        z-index: 3;
+        width: auto;
+        transform: translate(-50%, -50%);
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+      }
+
+      .step-marker .step-item {
+        margin-top: 2.55rem;
+      }
+
+      .step-row:first-child .step-marker::after {
+        display: none;
+      }
+
+      .morning-steps {
+        position: relative;
+      }
+
+      .morning-steps::before {
+        content: "";
+        position: absolute;
+        top: 0.35rem;
+        bottom: 0.35rem;
+        left: 50%;
+        width: 0;
+        border-left: 3px dotted var(--color-muted-line-mobile);
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+
+      .morning-steps.connector-dotted::before {
+        border-left-style: dotted;
+        border-left-color: var(--color-muted-line-mobile);
+      }
+
+      .morning-steps.connector-solid::before {
+        border-left-style: solid;
+        border-left-color: var(--color-accent-shadow);
+      }
+
+      .step-row .section-card {
+        position: relative;
+        z-index: 2;
+      }
+    }
+
+    @media (min-width: 768px) {
+      :root {
+        --energy-step-switch-duration: 0.7s;
+      }
+
+      .step-complete-body.collapsing {
+        transition-duration: 0.18s;
+      }
+
+      .task-row {
+        grid-template-columns: 20px 27px 36px minmax(0, 1fr) auto;
+      }
+
+      .task-row .priority-number {
+        margin-left: 0.3rem;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .nav-switcher {
+        grid-template-columns: 1fr;
+      }
+
+      .step-header {
+        flex-direction: column;
+      }
+
+      .step-header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .energy-toggle {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.55rem;
+        padding: 0.32rem 0.45rem;
+      }
+
+      .energy-option {
+        width: 50px;
+        height: 50px;
+      }
+
+      .energy-option i {
+        font-size: 1.9rem;
+      }
+
+      .task-card {
+        padding: 0.5rem !important;
+      }
+
+      .task-row {
+        display: grid;
+        grid-template-columns: 18px 16px 22px minmax(0, 1fr) auto;
+        align-items: start;
+        column-gap: 0.28rem;
+        row-gap: 0.12rem;
+      }
+
+      .task-select {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+
+      .task-grip {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        margin-top: 0;
+        margin-left: -0.36rem;
+      }
+
+      .priority-number {
+        grid-column: 5;
+        grid-row: 1;
+        align-self: start;
+        justify-self: end;
+        margin-top: 0;
+        line-height: 1.35;
+        padding-top: 0.03rem;
+      }
+
+      .task-main {
+        grid-column: 4;
+        grid-row: 1 / span 2;
+      }
+
+      .task-main .task-text,
+      .task-main .task-subtext {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
+
+      .task-main .task-text {
+        font-size: 1.03rem;
+        line-height: 1.35;
+      }
+
+      .task-main .task-subtext {
+        margin-top: 0.15rem;
+        line-height: 1.4;
+      }
+
+      .complexity-pill {
+        grid-column: 3;
+        grid-row: 2;
+        justify-self: start;
+        min-width: 0;
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+      }
+
+      .complexity-pill::after {
+        inset: 5px;
+      }
+
+      .task-controls {
+        grid-column: 5;
+        grid-row: 2;
+        width: auto;
+        justify-self: end;
+      }
+
+      .icon-square-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+      }
+
+      .icon-square-btn i {
+        font-size: 0.86rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4 py-lg-5 app-shell">
+    <div class="p-3 p-lg-4">
+      <nav class="navbar navbar-expand-lg px-1 px-lg-2" aria-label="Top navigation">
+        <div class="container-fluid px-0 align-items-center">
+          <a class="navbar-brand d-flex align-items-center gap-3 me-0" href="#" aria-label="ADHD Coach home">
+            <img src="adhd-logo.svg" alt="ADHD Coach logo" class="brand-logo">
+          </a>
+          <div class="d-flex align-items-center gap-2 gap-md-3 ms-auto">
+            <button class="btn btn-outline-purple rounded-circle" type="button" aria-label="Open settings">
+              <i class="bi bi-gear"></i>
+            </button>
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Crect width='84' height='84' rx='42' fill='%23ead9cc'/%3E%3Ccircle cx='42' cy='32' r='16' fill='%23845b45'/%3E%3Cpath d='M16 72c5-14 16-21 26-21s21 7 26 21' fill='%23c96f36'/%3E%3C/svg%3E"
+              alt="User avatar"
+              class="user-avatar"
+            >
+            <button class="btn btn-purple rounded-pill px-3 px-md-4" type="button">Logout</button>
+          </div>
+        </div>
+      </nav>
+
+      <section class="mt-3 mt-lg-4" aria-label="Main sections">
+        <div class="nav-switcher" role="tablist" aria-label="Main navigation tabs">
+          <button class="nav-tile active" type="button" data-target="morning-panel" role="tab" aria-selected="true" aria-controls="morning-panel">
+            <i class="bi bi-cup-hot"></i>
+            <span class="text-start">
+              <span class="d-block fw-semibold">Morning</span>
+              <span class="small opacity-75">Planning setup</span>
+            </span>
+          </button>
+          <button class="nav-tile" type="button" data-target="today-panel" role="tab" aria-selected="false" aria-controls="today-panel">
+            <i class="bi bi-sun"></i>
+            <span class="text-start">
+              <span class="d-block fw-semibold">Today</span>
+              <span class="small opacity-75">Work in progress</span>
+            </span>
+          </button>
+          <button class="nav-tile" type="button" data-target="debriefing-panel" role="tab" aria-selected="false" aria-controls="debriefing-panel">
+            <i class="bi bi-chat-dots"></i>
+            <span class="text-start">
+              <span class="d-block fw-semibold">Debriefing</span>
+              <span class="small opacity-75">Close the day</span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <main class="mt-4">
+        <section id="morning-panel" class="section-panel active" role="tabpanel" aria-labelledby="Morning">
+          <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+              <p class="text-uppercase small fw-semibold text-secondary mb-2">Morning sequence</p>
+              <h1 class="h2 mb-2">Build a plan that matches today’s capacity</h1>
+              <p class="text-secondary mb-0">Capture energy first, then shape the task load before making a commitment.</p>
+            </div>
+            <div class="section-card px-3 py-3 px-md-4 d-flex align-items-center gap-3">
+              <div class="flex-grow-1 complexity-card">
+                <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+                  <span class="fw-semibold">Daily complexity</span>
+                  <span id="complexity-text" class="badge text-bg-purple">Light</span>
+                </div>
+                <div id="complexity-gauge-control" class="complexity-gauge" role="button" tabindex="0" aria-label="Recalculate daily complexity gauge">
+                  <svg viewBox="0 0 220 140" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="gauge-mid-gradient" x1="75" y1="49.4" x2="145" y2="49.4" gradientUnits="userSpaceOnUse" gradientTransform="rotate(20 110 49.4)">
+                        <stop offset="0%" stop-color="#7acd42"></stop>
+                        <stop offset="90%" stop-color="#7acd42"></stop>
+                        <stop offset="100%" stop-color="#ff2323"></stop>
+                      </linearGradient>
+                    </defs>
+                    <path class="gauge-segment gauge-green" d="M 40 110 A 70 70 0 0 1 75 49.4" />
+                    <path class="gauge-segment gauge-yellow" d="M 75 49.4 A 70 70 0 0 1 145 49.4" />
+                    <path class="gauge-segment gauge-red" d="M 145 49.4 A 70 70 0 0 1 180 110" />
+                    <g id="complexity-needle" class="gauge-needle">
+                      <line x1="110" y1="110" x2="170" y2="110" />
+                      <circle cx="110" cy="110" r="4"></circle>
+                      <circle cx="170" cy="110" r="3"></circle>
+                    </g>
+                    <circle class="gauge-hub" cx="110" cy="110" r="10"></circle>
+                  </svg>
+                  <div class="gauge-scale" aria-hidden="true">
+                    <span>Light</span>
+                    <span>Moderate</span>
+                    <span>High</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between gap-2 mt-3">
+                  <span class="small text-secondary">Recommended threshold: 10 points</span>
+                  <span id="total-complexity" class="badge text-bg-purple px-3 py-2">0 points</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="complexity-warning" class="alert alert-danger d-none align-items-center gap-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div>Total planned complexity is above the recommended threshold for a focused day.</div>
+          </div>
+
+          <div class="morning-steps">
+            <div class="step-row align-items-start">
+              <div class="step-marker pt-md-4 d-flex align-items-start py-2 align-self-stretch" aria-hidden="true">
+                <div class="step-item active" data-step="1">
+                  <span class="step-dot">1</span>
+                </div>
+              </div>
+              <section class="section-card p-3 p-lg-4 p-xl-4" aria-labelledby="energy-title">
+                <div class="step-header mb-4">
+                  <div class="flex-grow-1">
+                    <button class="step-toggle" type="button" aria-expanded="true" aria-controls="energy-body">
+                      <h2 id="energy-title" class="h4 mb-0">Set your energy baseline</h2>
+                    </button>
+                  </div>
+                </div>
+
+                <div id="energy-body" class="collapse show step-complete-body">
+                  <p class="text-secondary mb-3">Choose the level that best reflects what you can realistically sustain this morning.</p>
+                  <div class="energy-choice">
+                    <div class="energy-toggle gap-md-3" role="group" aria-label="Energy selection">
+                      <input type="radio" class="btn-check energy-input" name="energy" id="energy-low" value="Low" autocomplete="off">
+                      <label class="energy-option" for="energy-low">
+                        <i class="bi bi-emoji-frown"></i>
+                      </label>
+
+                      <input type="radio" class="btn-check energy-input" name="energy" id="energy-medium" value="Medium" autocomplete="off" checked>
+                      <label class="energy-option" for="energy-medium">
+                        <i class="bi bi-emoji-neutral"></i>
+                      </label>
+
+                      <input type="radio" class="btn-check energy-input" name="energy" id="energy-high" value="High" autocomplete="off">
+                      <label class="energy-option" for="energy-high">
+                        <i class="bi bi-emoji-smile"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div class="step-row align-items-start">
+              <div class="step-marker pt-md-4 d-flex align-items-start" aria-hidden="true">
+                <div class="step-item pending" data-step="2">
+                  <span class="step-dot">2</span>
+                </div>
+              </div>
+              <section class="section-card p-4" aria-labelledby="tasks-title">
+                <div class="step-header mb-4">
+                  <div class="flex-grow-1">
+                    <button class="step-toggle" type="button" aria-expanded="false" aria-controls="tasks-body">
+                      <h2 id="tasks-title" class="h4 mb-2">Rank the task list</h2>
+                    </button>
+                    <p class="text-secondary mb-0">Drag tasks into the right order, check complexity load, and open details or actions as needed.</p>
+                  </div>
+                  <div class="step-header-actions d-flex align-items-center gap-2">
+                    <button id="remove-selected-btn" type="button" class="btn btn-outline-danger rounded-pill px-3 py-2" aria-label="Remove selected tasks" title="Remove selected tasks" disabled>
+                      <i class="bi bi-trash"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-purple rounded-pill px-3 py-2" data-bs-toggle="modal" data-bs-target="#step2HelpModal">
+                      Help
+                    </button>
+                  </div>
+                </div>
+
+                <div id="tasks-body" class="collapse step-complete-body">
+                <div id="task-list" class="d-flex flex-column gap-3" aria-label="Sortable task list">
+                  <article class="task-card p-3 p-lg-4" data-title="Inbox cleanup" data-details="Clear urgent messages, flag anything that needs a same-day response, and archive the rest before noon." data-actions="Move to later|Break into subtasks|Drop for today" data-complexity="1">
+                    <div class="grid cols-content-3-fluid rows-2 rows-auto col-gap-2 row-gap-0">
+                      <div class="row-span-2 pt-1 row-span-center">
+                        <button class="task-grip" type="button" aria-label="Drag to reorder">
+                          <i class="bi bi-grip-vertical"></i>
+                        </button>
+                      </div>
+                      <div class="row-span-2 row-span-center">
+                        <input class="form-check-input task-select" type="checkbox" aria-label="Select Inbox cleanup task for removal">
+                      </div>
+                      <div class="row-span-2 row-span-center">
+                        <span class="complexity-pill complexity-small" role="img" aria-label="Complexity small"></span>
+                      </div>
+                      <div class="d-flex align-items-start justify-content-between gap-2">
+                        <div class="task-text fw-semibold">Inbox cleanup</div>
+                        <span class="priority-number fw-semibold text-purple">1</span>
+                      </div>
+                      <div class="d-flex align-items-end justify-content-between gap-2">
+                        <div class="task-subtext small text-secondary">Triage communications and unblock the day.</div>
+                        <div class="task-controls justify-content-end">
+                          <button class="btn btn-outline-purple details-btn icon-square-btn" type="button" aria-label="Open task details and actions" data-bs-toggle="modal" data-bs-target="#taskDetailsModal">
+                            <i class="bi bi-three-dots"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="task-card p-3 p-lg-4" data-title="Client proposal revisions" data-details="Tighten the summary, adjust timeline assumptions, and send the revised draft to stakeholders before the afternoon review." data-actions="Schedule focus block|Delegate research prep|Reduce scope" data-complexity="5">
+                    <div class="grid cols-content-3-fluid rows-2 rows-auto col-gap-2 row-gap-0">
+                      <div class="row-span-2 pt-1 row-span-center">
+                        <button class="task-grip" type="button" aria-label="Drag to reorder">
+                          <i class="bi bi-grip-vertical"></i>
+                        </button>
+                      </div>
+                      <div class="row-span-2 row-span-center">
+                        <input class="form-check-input task-select" type="checkbox" aria-label="Select Client proposal revisions task for removal">
+                      </div>
+                      <div class="row-span-2 row-span-center">
+                        <span class="complexity-pill complexity-large" role="img" aria-label="Complexity large"></span>
+                      </div>
+                      <div class="d-flex align-items-start justify-content-between gap-2">
+                        <div class="task-text fw-semibold">Client proposal revisions</div>
+                        <span class="priority-number fw-semibold text-purple">2</span>
+                      </div>
+                      <div class="d-flex align-items-end justify-content-between gap-2">
+                        <div class="task-subtext small text-secondary">High-focus writing and decision making.</div>
+                        <div class="task-controls justify-content-end">
+                          <button class="btn btn-outline-purple details-btn icon-square-btn" type="button" aria-label="Open task details and actions" data-bs-toggle="modal" data-bs-target="#taskDetailsModal">
+                            <i class="bi bi-three-dots"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="task-card p-3 p-lg-4" data-title="Sprint planning check-in" data-details="Confirm upcoming sprint capacity, identify blockers, and leave the meeting with a clear owner for each open dependency." data-actions="Convert to checklist|Attach meeting notes|Push to tomorrow" data-complexity="3">
+                    <div class="grid cols-content-3-fluid rows-2 rows-auto col-gap-2 row-gap-0">
+                      <div class="row-span-2 pt-1 row-span-center">
+                        <button class="task-grip" type="button" aria-label="Drag to reorder">
+                          <i class="bi bi-grip-vertical"></i>
+                        </button>
+                      </div>
+                      <div class="row-span-2 row-span-center">
+                        <input class="form-check-input task-select" type="checkbox" aria-label="Select Sprint planning check-in task for removal">
+                      </div>
+                      <div class="row-span-2 row-span-center">
+                        <span class="complexity-pill complexity-medium" role="img" aria-label="Complexity medium"></span>
+                      </div>
+                      <div class="d-flex align-items-start justify-content-between gap-2">
+                        <div class="task-text fw-semibold">Sprint planning check-in</div>
+                        <span class="priority-number fw-semibold text-purple">3</span>
+                      </div>
+                      <div class="d-flex align-items-end justify-content-between gap-2">
+                        <div class="task-subtext small text-secondary">Coordination and scope alignment.</div>
+                        <div class="task-controls justify-content-end">
+                          <button class="btn btn-outline-purple details-btn icon-square-btn" type="button" aria-label="Open task details and actions" data-bs-toggle="modal" data-bs-target="#taskDetailsModal">
+                            <i class="bi bi-three-dots"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mt-4 pt-3 border-top">
+                  <button id="confirm-button" class="btn btn-purple rounded-pill px-4" type="button">
+                    Confirm tasks and go to Today
+                  </button>
+                </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          </section>
+
+        <section id="today-panel" class="section-panel" role="tabpanel" aria-labelledby="Today">
+          <div class="placeholder-panel d-flex flex-column justify-content-center align-items-start p-4 p-lg-5">
+            <span class="badge rounded-pill text-bg-light border mb-3">Today</span>
+            <h2 class="h3 mb-3">Working view placeholder</h2>
+            <p class="text-secondary mb-0">This section is ready for active tasks, timers, blockers, and in-progress checkpoints using the same component language.</p>
+          </div>
+        </section>
+
+        <section id="debriefing-panel" class="section-panel" role="tabpanel" aria-labelledby="Debriefing">
+          <div class="placeholder-panel d-flex flex-column justify-content-center align-items-start p-4 p-lg-5">
+            <span class="badge rounded-pill text-bg-light border mb-3">Debriefing</span>
+            <h2 class="h3 mb-3">Day-close placeholder</h2>
+            <p class="text-secondary mb-0">Use this space for reflection prompts, wins, unfinished tasks, and tomorrow prep after the workday ends.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="taskDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="taskDetailsLabel">Task details</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="task-modal-copy" class="mb-0 text-secondary"></p>
+          <div id="task-modal-actions" class="task-modal-actions d-flex flex-wrap gap-2 mt-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-purple">Mark ready</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="step2HelpModal" tabindex="-1" aria-labelledby="step2HelpLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="step2HelpLabel">Step 2 Help</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-2 text-secondary">Use this step to rank your tasks for today in a realistic order.</p>
+          <ul class="mb-0 ps-3">
+            <li>Drag with the handle on the left to reorder priorities.</li>
+            <li>Use the complexity marker to keep workload balanced.</li>
+            <li>Use the <strong>...</strong> button to open details and available actions for a task.</li>
+            <li>When the order looks right, select <strong>Confirm tasks and go to Today</strong>.</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-purple" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="assets/sortable/Sortable.min.js"></script>
+  <script>
+    const navTiles = document.querySelectorAll(".nav-tile");
+    const panels = document.querySelectorAll(".section-panel");
+    const energyInputs = document.querySelectorAll(".energy-input");
+    const energyOptionLabels = document.querySelectorAll(".energy-option");
+    const stepItems = document.querySelectorAll(".step-item");
+    const taskList = document.getElementById("task-list");
+    const taskModal = document.getElementById("taskDetailsModal");
+    const taskModalCopy = document.getElementById("task-modal-copy");
+    const taskModalActions = document.getElementById("task-modal-actions");
+    const complexityGaugeNeedle = document.getElementById("complexity-needle");
+    const complexityGaugeControl = document.getElementById("complexity-gauge-control");
+    const complexityText = document.getElementById("complexity-text");
+    const complexityWarning = document.getElementById("complexity-warning");
+    const totalComplexity = document.getElementById("total-complexity");
+    const energyBody = document.getElementById("energy-body");
+    const tasksBody = document.getElementById("tasks-body");
+    const confirmButton = document.getElementById("confirm-button");
+    const removeSelectedButton = document.getElementById("remove-selected-btn");
+    const stepToggles = document.querySelectorAll(".step-toggle[aria-controls]");
+    const energyHeader = document.querySelector('section[aria-labelledby="energy-title"] .step-header');
+    const tasksHeader = document.querySelector('section[aria-labelledby="tasks-title"] .step-header');
+    const morningStepsEl = document.querySelector(".morning-steps");
+    const step1Marker = document.querySelector('.step-item[data-step="1"]')?.closest(".step-marker");
+    const complexityThreshold = 10;
+    const complexityMax = 15;
+    const isMdUp = window.matchMedia("(min-width: 768px)").matches;
+    const stepSwitchDelayMs = isMdUp ? 700 : 1500;
+    let energyCollapseTimer = null;
+    let energySelectionRingTimer = null;
+    let gaugeAnimationTimerA = null;
+    let gaugeAnimationTimerB = null;
+    let taskSortable = null;
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .btn-purple {
+        color: var(--color-white);
+        background-color: var(--color-accent);
+        border-color: var(--color-accent);
+      }
+      .btn-purple:hover,
+      .btn-purple:focus-visible {
+        color: var(--color-white);
+        background-color: var(--color-accent-alt);
+        border-color: var(--color-accent-alt);
+      }
+      .btn-outline-purple {
+        color: var(--color-accent);
+        border-color: var(--color-accent);
+      }
+      .btn-outline-purple:hover,
+      .btn-outline-purple:focus-visible,
+      .btn-check:checked + .btn-outline-purple {
+        color: var(--color-ink);
+        background-color: var(--bs-warning);
+        border-color: var(--bs-warning);
+      }
+      .text-bg-purple {
+        color: var(--color-white) !important;
+        background-color: var(--color-accent) !important;
+      }
+      .bg-purple {
+        background-color: var(--color-accent) !important;
+      }
+      .btn-check:checked + .btn-outline-purple {
+        box-shadow: 0 0 0 0.2rem rgba(var(--bs-warning-rgb), 0.3);
+      }
+    `;
+    document.head.appendChild(style);
+
+    navTiles.forEach((tile) => {
+      tile.addEventListener("click", () => {
+        navTiles.forEach((item) => {
+          item.classList.remove("active");
+          item.setAttribute("aria-selected", "false");
+        });
+        panels.forEach((panel) => panel.classList.remove("active"));
+        tile.classList.add("active");
+        tile.setAttribute("aria-selected", "true");
+        document.getElementById(tile.dataset.target).classList.add("active");
+      });
+    });
+
+    function updateStepper(state) {
+      stepItems.forEach((item, index) => {
+        const stepRow = item.closest(".step-row");
+        item.classList.remove("active", "completed", "pending");
+        if (index + 1 < state) {
+          item.classList.add("completed");
+          stepRow?.classList.remove("is-active");
+          stepRow?.classList.add("is-inactive");
+        } else if (index + 1 === state) {
+          item.classList.add("active");
+          stepRow?.classList.add("is-active");
+          stepRow?.classList.remove("is-inactive");
+        } else {
+          item.classList.add("pending");
+          stepRow?.classList.remove("is-active");
+          stepRow?.classList.add("is-inactive");
+        }
+      });
+
+      if (morningStepsEl) {
+        morningStepsEl.classList.toggle("connector-solid", state === 2);
+        morningStepsEl.classList.toggle("connector-dotted", state !== 2);
+      }
+    }
+
+    function clearEnergyCountdown() {
+      document.querySelectorAll(".energy-option.energy-countdown").forEach((option) => {
+        option.classList.remove("energy-countdown");
+      });
+    }
+
+    function clearEnergyActiveSpin() {
+      document.querySelectorAll(".energy-option.energy-active-spin").forEach((option) => {
+        option.classList.remove("energy-active-spin");
+      });
+    }
+
+    function syncEnergyActiveSpin() {
+      clearEnergyActiveSpin();
+      if (!energyBody?.classList.contains("show")) return;
+      const activeInput = [...energyInputs].find((input) => input.checked);
+      if (!activeInput) return;
+      document.querySelector(`label[for="${activeInput.id}"]`)?.classList.add("energy-active-spin");
+    }
+
+    function clearEnergySelectionRings() {
+      document.querySelectorAll(".energy-option.energy-selected-ring").forEach((option) => {
+        option.classList.remove("energy-selected-ring");
+      });
+    }
+
+    const morningSteps = [
+      { step: 1, body: energyBody },
+      { step: 2, body: tasksBody }
+    ].filter((item) => item.body);
+
+    function setMorningStep(stepToOpen) {
+      morningSteps.forEach(({ step, body }) => {
+        const collapse = bootstrap.Collapse.getOrCreateInstance(body, { toggle: false });
+        if (step === stepToOpen) {
+          collapse.show();
+        } else {
+          collapse.hide();
+        }
+      });
+      stepToggles.forEach((toggle) => {
+        const controls = toggle.getAttribute("aria-controls");
+        const controlledStep = morningSteps.find(({ body }) => body.id === controls)?.step;
+        toggle.setAttribute("aria-expanded", String(controlledStep === stepToOpen));
+      });
+      updateStepper(stepToOpen);
+    }
+
+    function setStep1MarkerState(isExpanded) {
+      if (step1Marker) {
+        step1Marker.classList.toggle("py-2", isExpanded);
+        step1Marker.classList.toggle("py-0", !isExpanded);
+      }
+    }
+
+    function applySelectedEnergyRing(input, defer = false) {
+      const selectedOption = document.querySelector(`label[for="${input.id}"]`);
+      if (!selectedOption) return;
+
+      clearEnergySelectionRings();
+
+      if (energySelectionRingTimer) {
+        clearTimeout(energySelectionRingTimer);
+        energySelectionRingTimer = null;
+      }
+
+      if (!defer) {
+        selectedOption.classList.add("energy-selected-ring");
+        return;
+      }
+
+      energySelectionRingTimer = setTimeout(() => {
+        if (input.checked) {
+          selectedOption.classList.add("energy-selected-ring");
+        }
+        energySelectionRingTimer = null;
+      }, stepSwitchDelayMs);
+    }
+
+    energyInputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        updateStepper(2);
+        clearEnergyCountdown();
+        clearEnergyActiveSpin();
+        clearEnergySelectionRings();
+        document.querySelector(`label[for="${input.id}"]`)?.classList.add("energy-countdown");
+        applySelectedEnergyRing(input, true);
+        if (energyCollapseTimer) {
+          clearTimeout(energyCollapseTimer);
+        }
+        energyCollapseTimer = setTimeout(() => {
+          setMorningStep(2);
+          energyCollapseTimer = null;
+        }, stepSwitchDelayMs);
+      });
+    });
+
+    energyOptionLabels.forEach((label) => {
+      label.addEventListener("click", () => {
+        const inputId = label.getAttribute("for");
+        const input = inputId ? document.getElementById(inputId) : null;
+        if (!input || !input.checked) return;
+
+        if (energyCollapseTimer) {
+          clearTimeout(energyCollapseTimer);
+          energyCollapseTimer = null;
+        }
+        if (energySelectionRingTimer) {
+          clearTimeout(energySelectionRingTimer);
+          energySelectionRingTimer = null;
+        }
+
+        clearEnergyCountdown();
+        setMorningStep(2);
+      });
+    });
+
+    energyBody.addEventListener("hide.bs.collapse", () => {
+      energyHeader?.classList.add("mb-collapsed");
+      setStep1MarkerState(false);
+      clearEnergyActiveSpin();
+    });
+
+    energyBody.addEventListener("show.bs.collapse", () => {
+      energyHeader?.classList.remove("mb-collapsed");
+      updateStepper(1);
+      clearEnergyCountdown();
+      syncEnergyActiveSpin();
+      setStep1MarkerState(true);
+    });
+
+    if (!energyBody.classList.contains("show")) {
+      energyHeader?.classList.add("mb-collapsed");
+      setStep1MarkerState(false);
+    } else {
+      setStep1MarkerState(true);
+    }
+
+    energyBody.addEventListener("hidden.bs.collapse", () => {
+      clearEnergyCountdown();
+      clearEnergyActiveSpin();
+    });
+
+    if (tasksBody) {
+      tasksBody.addEventListener("hide.bs.collapse", () => {
+        tasksHeader?.classList.add("mb-collapsed");
+      });
+
+      tasksBody.addEventListener("show.bs.collapse", () => {
+        tasksHeader?.classList.remove("mb-collapsed");
+        updateStepper(2);
+      });
+
+      if (!tasksBody.classList.contains("show")) {
+        tasksHeader?.classList.add("mb-collapsed");
+      }
+    }
+
+    stepItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const step = Number(item.dataset.step);
+        if (!Number.isNaN(step)) {
+          setMorningStep(step);
+        }
+      });
+    });
+
+    stepToggles.forEach((toggle) => {
+      toggle.addEventListener("click", (event) => {
+        event.preventDefault();
+        const controls = toggle.getAttribute("aria-controls");
+        const targetStep = morningSteps.find(({ body }) => body.id === controls)?.step;
+        if (targetStep) {
+          setMorningStep(targetStep);
+        }
+      });
+    });
+
+    const initiallySelectedEnergy = [...energyInputs].find((input) => input.checked);
+    if (initiallySelectedEnergy) {
+      applySelectedEnergyRing(initiallySelectedEnergy, false);
+    }
+    syncEnergyActiveSpin();
+
+    function updatePriorityNumbers() {
+      taskList.querySelectorAll(".priority-number").forEach((badge, index) => {
+        badge.textContent = index + 1;
+      });
+    }
+
+    function updateBulkRemoveState() {
+      if (!removeSelectedButton) return;
+      const hasSelection = taskList.querySelectorAll(".task-select:checked").length > 0;
+      removeSelectedButton.disabled = !hasSelection;
+    }
+
+    function removeSelectedTasks() {
+      const selected = [...taskList.querySelectorAll(".task-select:checked")];
+      if (!selected.length) return;
+      selected.forEach((checkbox) => {
+        checkbox.closest(".task-card")?.remove();
+      });
+      updatePriorityNumbers();
+      updateComplexityState();
+      updateBulkRemoveState();
+    }
+
+    function getComplexitySnapshot() {
+      const total = [...taskList.querySelectorAll(".task-card")]
+        .reduce((sum, task) => sum + Number(task.dataset.complexity || 0), 0);
+      const status = total > complexityThreshold ? "Overloaded" : total >= 6 ? "Moderate" : "Light";
+      const ratio = Math.min(total / complexityMax, 1);
+      const needleAngle = -180 + (ratio * 180);
+      return { total, status, needleAngle };
+    }
+
+    function setNeedleAngle(angle, durationMs = 420, easing = "ease-out") {
+      complexityGaugeNeedle.style.transition = `transform ${durationMs}ms ${easing}`;
+      complexityGaugeNeedle.style.transform = `rotate(${angle}deg)`;
+    }
+
+    function applyComplexitySummary(snapshot) {
+      complexityText.className = snapshot.total > complexityThreshold ? "badge text-bg-danger" : snapshot.total >= 6 ? "badge text-bg-warning" : "badge text-bg-purple";
+      complexityText.textContent = snapshot.status;
+      complexityWarning.classList.toggle("d-none", snapshot.total <= complexityThreshold);
+      totalComplexity.textContent = `${snapshot.total} points`;
+    }
+
+    function clearGaugeAnimationTimers() {
+      if (gaugeAnimationTimerA) {
+        clearTimeout(gaugeAnimationTimerA);
+        gaugeAnimationTimerA = null;
+      }
+      if (gaugeAnimationTimerB) {
+        clearTimeout(gaugeAnimationTimerB);
+        gaugeAnimationTimerB = null;
+      }
+    }
+
+    function updateComplexityState() {
+      const snapshot = getComplexitySnapshot();
+      applyComplexitySummary(snapshot);
+      setNeedleAngle(snapshot.needleAngle, 420, "ease-out");
+    }
+
+    function animateGaugeRecalculation() {
+      const snapshot = getComplexitySnapshot();
+      applyComplexitySummary(snapshot);
+      clearGaugeAnimationTimers();
+
+      setNeedleAngle(-180, 180, "ease-out");
+      gaugeAnimationTimerA = setTimeout(() => {
+        setNeedleAngle(0, 320, "ease-in-out");
+        gaugeAnimationTimerB = setTimeout(() => {
+          setNeedleAngle(snapshot.needleAngle, 420, "ease-out");
+          gaugeAnimationTimerB = null;
+        }, 340);
+        gaugeAnimationTimerA = null;
+      }, 180);
+    }
+
+    function lockTasksAndSwitchToToday() {
+      if (taskSortable) {
+        taskSortable.option("disabled", true);
+      }
+      taskList.querySelectorAll(".task-grip, .details-btn, .task-select").forEach((control) => {
+        control.disabled = true;
+      });
+      if (removeSelectedButton) {
+        removeSelectedButton.disabled = true;
+      }
+      document.querySelector('.nav-tile[data-target="today-panel"]').click();
+    }
+
+    taskModal.addEventListener("show.bs.modal", (event) => {
+      const trigger = event.relatedTarget;
+      if (!trigger) return;
+      const taskCard = trigger.closest(".task-card");
+      if (!taskCard) return;
+      taskModal.querySelector(".modal-title").textContent = taskCard.dataset.title;
+      taskModalCopy.textContent = taskCard.dataset.details;
+      taskModalActions.innerHTML = "";
+      const actions = (taskCard.dataset.actions || "")
+        .split("|")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      actions.forEach((actionLabel) => {
+        const actionButton = document.createElement("button");
+        actionButton.type = "button";
+        actionButton.className = /drop|reduce|push/i.test(actionLabel) ? "btn btn-outline-danger btn-sm" : "btn btn-outline-purple btn-sm";
+        actionButton.textContent = actionLabel;
+        taskModalActions.appendChild(actionButton);
+      });
+    });
+
+    taskSortable = new Sortable(taskList, {
+      animation: 180,
+      handle: ".task-grip",
+      ghostClass: "sortable-ghost",
+      chosenClass: "sortable-chosen",
+      onEnd: () => {
+        updatePriorityNumbers();
+        updateComplexityState();
+      }
+    });
+
+    if (removeSelectedButton) {
+      removeSelectedButton.addEventListener("click", removeSelectedTasks);
+    }
+
+    taskList.addEventListener("change", (event) => {
+      if (event.target.classList.contains("task-select")) {
+        updateBulkRemoveState();
+      }
+    });
+
+    if (complexityGaugeControl) {
+      complexityGaugeControl.addEventListener("click", () => {
+        animateGaugeRecalculation();
+      });
+      complexityGaugeControl.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          animateGaugeRecalculation();
+        }
+      });
+    }
+
+    confirmButton.addEventListener("click", () => {
+      updateStepper(2);
+      lockTasksAndSwitchToToday();
+    });
+
+    updatePriorityNumbers();
+    animateGaugeRecalculation();
+    updateBulkRemoveState();
+    updateStepper(1);
+  </script>
+</body>
+</html>
+
+

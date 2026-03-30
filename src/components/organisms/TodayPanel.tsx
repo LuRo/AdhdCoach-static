@@ -1,0 +1,135 @@
+import { createPortal } from "react-dom";
+import type { PomodoroMinutes, TodayTask } from "../../features/morning/types";
+import { CoachButton } from "../atoms/CoachButton";
+import { TodayTaskCard } from "../molecules/TodayTaskCard";
+
+interface Props {
+  activeTaskId: string | null;
+  isActive: boolean;
+  onAddTask: () => void;
+  onBlockTask: (taskId: string) => void;
+  onOpenPomodoroOverlay: (taskId: string) => void;
+  onStartPomodoro: (taskId: string, minutes: PomodoroMinutes) => void;
+  onStartWorkTimer: (taskId: string) => void;
+  onStopPomodoro: (taskId: string) => void;
+  onToggleDone: (taskId: string, checked: boolean) => void;
+  tasks: TodayTask[];
+}
+
+export const TodayPanel = ({
+  activeTaskId,
+  isActive,
+  onAddTask,
+  onBlockTask,
+  onOpenPomodoroOverlay,
+  onStartPomodoro,
+  onStartWorkTimer,
+  onStopPomodoro,
+  onToggleDone,
+  tasks
+}: Props) => {
+  const openTasks = tasks.filter((task) => !task.done);
+  const achievedTasks = tasks.filter((task) => task.done);
+
+  const addTaskFab = isActive ? (
+    <CoachButton
+      id="today-add-task-btn"
+      type="button"
+      className="add-task-fab"
+      variant="primary"
+      aria-label="Add new task"
+      title="Add new task"
+      onClick={onAddTask}
+    >
+      <i className="bi bi-plus-lg" />
+    </CoachButton>
+  ) : null;
+
+  return (
+    <>
+      <section
+        id="today-panel"
+        className={isActive ? "section-panel active" : "section-panel"}
+        role="tabpanel"
+        aria-labelledby="Today"
+      >
+        <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+          <div>
+            <p className="text-uppercase small fw-semibold text-secondary mb-2">Today execution</p>
+            <h1 className="h2 mb-2">Work from your confirmed morning plan</h1>
+            <p className="text-secondary mb-0">
+              Click the timer circle to open the Pomodoro overlay.
+            </p>
+          </div>
+        </div>
+
+        <section className="section-card tasks-glass-section today-section-card p-3" aria-labelledby="today-tasks-title">
+          <div className="step-header mb-2">
+            <div className="flex-grow-1">
+              <h2 id="today-tasks-title" className="h4 mb-2">
+                Today tasks
+              </h2>
+              <p className="text-secondary mb-0">Only the top unblocked task can start. Block unlocks the next task.</p>
+            </div>
+          </div>
+
+          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Today task list">
+            {openTasks.length > 0 ? (
+              openTasks.map((task, index) => (
+                <TodayTaskCard
+                  key={task.id}
+                  isActiveTask={task.id === activeTaskId}
+                  isDone={task.done}
+                  onBlockTask={onBlockTask}
+                  onOpenPomodoroOverlay={onOpenPomodoroOverlay}
+                  onStartPomodoro={onStartPomodoro}
+                  onStartWorkTimer={onStartWorkTimer}
+                  onStopPomodoro={onStopPomodoro}
+                  onToggleDone={onToggleDone}
+                  priority={index + 1}
+                  task={task}
+                />
+              ))
+            ) : (
+              <div className="alert alert-success mb-0">All planned tasks are completed.</div>
+            )}
+          </div>
+        </section>
+
+        <section className="section-card tasks-glass-section today-section-card p-3 mt-3" aria-labelledby="today-achieved-title">
+          <div className="step-header mb-2">
+            <div className="flex-grow-1">
+              <h2 id="today-achieved-title" className="h4 mb-2">
+                Achieved goals of today
+              </h2>
+              <p className="text-secondary mb-0">Completed items are moved here automatically.</p>
+            </div>
+          </div>
+
+          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Achieved goals of today">
+            {achievedTasks.length > 0 ? (
+              achievedTasks.map((task) => (
+                <TodayTaskCard
+                  key={task.id}
+                  isActiveTask={false}
+                  isDone={task.done}
+                  onBlockTask={onBlockTask}
+                  onOpenPomodoroOverlay={onOpenPomodoroOverlay}
+                  onStartPomodoro={onStartPomodoro}
+                  onStartWorkTimer={onStartWorkTimer}
+                  onStopPomodoro={onStopPomodoro}
+                  onToggleDone={onToggleDone}
+                  task={task}
+                />
+              ))
+            ) : (
+              <div className="text-secondary small">No completed goals yet.</div>
+            )}
+          </div>
+        </section>
+      </section>
+
+      {typeof document !== "undefined" && addTaskFab ? createPortal(addTaskFab, document.body) : null}
+    </>
+  );
+};
