@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { useI18n } from "../../../i18n";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 
 interface Props extends PropsWithChildren {
@@ -9,6 +10,8 @@ interface Props extends PropsWithChildren {
 }
 
 export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, title }: Props) => {
+  const { copy } = useI18n();
+
   if (!isOpen) {
     return null;
   }
@@ -20,14 +23,14 @@ export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, titl
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header">
               <h2 className="modal-title fs-5">{title}</h2>
-              <button type="button" className="btn-close" aria-label="Close" onClick={onClose} />
+              <button type="button" className="btn-close" aria-label={copy.common.close} onClick={onClose} />
             </div>
 
             <div className="modal-body">{children}</div>
 
             <div className="modal-footer">
               <CoachButton type="button" variant="outline" onClick={onClose}>
-                Close
+                {copy.common.close}
               </CoachButton>
               {primaryActionLabel ? <CoachButton type="button">{primaryActionLabel}</CoachButton> : null}
             </div>
@@ -39,4 +42,3 @@ export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, titl
     </>
   );
 };
-

@@ -1,6 +1,7 @@
-import React from "react";
+﻿import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./app/App";
+import { I18nProvider } from "./i18n";
 import "./assets/bootstrap/bootstrap.bundle.min.js";
 import "./assets/bootstrap/bootstrap.min.css";
 import "./assets/bootstrap-icons/bootstrap-icons.min.css";
@@ -9,6 +10,8 @@ import "./shared/styles/mobile.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <I18nProvider>
+      <App />
+    </I18nProvider>
   </React.StrictMode>
 );

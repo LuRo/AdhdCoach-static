@@ -1,7 +1,8 @@
 import { useMemo } from "react";
+import { useI18n } from "../../../i18n";
 import { cn } from "../../../shared/utils/cn";
-import type { PomodoroMinutes, TodayTask } from "../types";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import type { PomodoroMinutes, TodayTask } from "../types";
 
 interface Props {
   isActiveTask: boolean;
@@ -63,6 +64,7 @@ export const TodayTaskCard = ({
   priority,
   task
 }: Props) => {
+  const { copy } = useI18n();
   const complexityClass = useMemo(() => {
     if (task.complexity >= 5) {
       return "complexity-large";
@@ -83,7 +85,7 @@ export const TodayTaskCard = ({
   const borderProgress = Math.max(0, Math.min(task.workElapsedSeconds / fourHoursSeconds, 1));
 
   return (
-    <article className={cn("task-card today-task-card p-3 p-lg-4", isDone && "today-task-card-done")}>
+    <article className={cn("task-card today-task-card p-3 p-lg-4", isDone && "today-task-card-done")}> 
       {task.workElapsedSeconds > 0 ? (
         <div className="today-task-work-progress" aria-hidden="true">
           <div className="today-task-work-progress-fill" style={{ width: `${borderProgress * 100}%` }} />
@@ -94,9 +96,9 @@ export const TodayTaskCard = ({
         <div className="today-task-side d-flex flex-column align-items-start justify-content-start gap-1 ps-2 pe-2">
           <span className="small text-secondary fw-semibold">{formatElapsed(task.workElapsedSeconds)}</span>
           {task.blocked && !isDone ? (
-            <span className="badge text-bg-warning today-tracking-pill">Blocked</span>
+            <span className="badge text-bg-warning today-tracking-pill">{copy.ui.todayTaskCard.blocked}</span>
           ) : task.workTimerRunning && !isDone ? (
-            <span className="badge text-bg-purple today-tracking-pill">Tracking</span>
+            <span className="badge text-bg-purple today-tracking-pill">{copy.ui.todayTaskCard.tracking}</span>
           ) : (
             <span className="today-tracking-pill-spacer" aria-hidden="true" />
           )}
@@ -106,7 +108,7 @@ export const TodayTaskCard = ({
               className="form-check-input task-select"
               type="checkbox"
               checked={isDone}
-              aria-label={`Mark ${task.title} as done`}
+              aria-label={copy.ui.todayTaskCard.markDoneAria.replace("{{title}}", task.title)}
               onChange={(event) => onToggleDone(task.id, event.currentTarget.checked)}
             />
 
@@ -114,7 +116,7 @@ export const TodayTaskCard = ({
               <span
                 className={cn("complexity-pill my-auto", complexityClass)}
                 role="img"
-                aria-label={`Complexity ${task.complexity}`}
+                aria-label={copy.ui.todayTaskCard.complexityAria.replace("{{value}}", String(task.complexity))}
               />
             </div>
           </div>
@@ -133,7 +135,7 @@ export const TodayTaskCard = ({
                     className="rounded-pill px-3 py-1"
                     onClick={() => onStartWorkTimer(task.id)}
                   >
-                    <i className="bi bi-play-fill" /> <span className="task-action-label">Play</span>
+                    <i className="bi bi-play-fill" /> <span className="task-action-label">{copy.ui.todayTaskCard.play}</span>
                   </CoachButton>
 
                   <CoachButton
@@ -142,7 +144,7 @@ export const TodayTaskCard = ({
                     className="rounded-pill px-3 py-1"
                     onClick={() => onBlockTask(task.id)}
                   >
-                    <i className="bi bi-check2-square" /> <span className="task-action-label">Block</span>
+                    <i className="bi bi-check2-square" /> <span className="task-action-label">{copy.ui.todayTaskCard.block}</span>
                   </CoachButton>
 
                   <CoachButton
@@ -150,7 +152,7 @@ export const TodayTaskCard = ({
                     variant="outline"
                     className="rounded-pill px-2 py-1 d-md-none"
                     onClick={() => onOpenPomodoroOverlay(task.id)}
-                    aria-label="Open Pomodoro"
+                    aria-label={copy.ui.todayTaskCard.openPomodoroAria}
                   >
                     <i className="bi bi-stopwatch" />
                   </CoachButton>
@@ -177,7 +179,7 @@ export const TodayTaskCard = ({
                       className="rounded-pill px-2 py-1 today-duration-btn"
                       onClick={() => onStartPomodoro(task.id, minutes)}
                     >
-                      {minutes}"
+                      {minutes}{copy.ui.todayTaskCard.minutesSuffix}
                     </CoachButton>
                   ))}
                 </div>
@@ -218,4 +220,3 @@ export const TodayTaskCard = ({
     </article>
   );
 };
-

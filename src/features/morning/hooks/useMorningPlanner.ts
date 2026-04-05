@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { COMPLEXITY_MAX, COMPLEXITY_THRESHOLD, INITIAL_BACKLOG_TASKS, INITIAL_TASKS } from "../constants";
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { COMPLEXITY_MAX, COMPLEXITY_THRESHOLD } from "../constants";
+import { getInitialBacklogTasks, getInitialTasks, type Locale } from "../../../i18n/copy";
 import { getPlannerSnapshot, getSelectedTestDate, savePlannerSnapshot, setSelectedTestDate } from "../store";
 import type {
   BacklogTask,
@@ -50,13 +51,13 @@ const toTodayTask = (task: Task): TodayTask => ({
 
 const cloneForToday = (tasks: Task[]): TodayTask[] => tasks.map((task) => toTodayTask(task));
 
-export const useMorningPlanner = () => {
+export const useMorningPlanner = (locale: Locale = "en") => {
   const [activeTab, setActiveTab] = useState<TabId>("morning");
   const [currentStep, setCurrentStep] = useState<StepId>(1);
   const [selectedEnergy, setSelectedEnergy] = useState<EnergyLevel>("Medium");
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [tasks, setTasks] = useState<Task[]>(() => getInitialTasks(locale));
   const [todayTasks, setTodayTasks] = useState<TodayTask[]>([]);
-  const [backlogTasks, setBacklogTasks] = useState<BacklogTask[]>(INITIAL_BACKLOG_TASKS);
+  const [backlogTasks, setBacklogTasks] = useState<BacklogTask[]>(() => getInitialBacklogTasks(locale));
   const [taskDetailsTaskId, setTaskDetailsTaskId] = useState<string | null>(null);
   const [pomodoroOverlayTaskId, setPomodoroOverlayTaskId] = useState<string | null>(null);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
@@ -397,9 +398,9 @@ export const useMorningPlanner = () => {
       setTasksLocked(snapshot.tasksLocked);
       setTestDaySpeed(snapshot.testDaySpeed ?? 1);
     } else {
-      setTasks(INITIAL_TASKS);
+      setTasks(getInitialTasks(locale));
       setTodayTasks([]);
-      setBacklogTasks(INITIAL_BACKLOG_TASKS);
+      setBacklogTasks(getInitialBacklogTasks(locale));
       setSelectedEnergy("Medium");
       setCurrentStep(1);
       setTasksLocked(false);
@@ -534,3 +535,5 @@ export const useMorningPlanner = () => {
     triggerGaugeRecalculation: animateGaugeRecalculation
   };
 };
+
+

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useI18n } from "../../../i18n";
 import { cn } from "../../../shared/utils/cn";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import type { Task } from "../types";
@@ -19,26 +19,15 @@ const complexityClassByValue: Record<number, string> = {
   5: "complexity-large"
 };
 
-export const TaskCard = ({
-  isLocked,
-  onOpenDetails,
-  onToggleSelected,
-  priority,
-  task
-}: Props) => {
-  const complexityClass = useMemo(() => {
-    if (task.complexity >= 5) {
-      return "complexity-large";
-    }
-
-    return complexityClassByValue[task.complexity] ?? "complexity-medium";
-  }, [task.complexity]);
+export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, task }: Props) => {
+  const { copy } = useI18n();
+  const complexityClass = task.complexity >= 5 ? "complexity-large" : complexityClassByValue[task.complexity] ?? "complexity-medium";
 
   return (
     <article className="task-card p-3 p-lg-4">
       <div className="d-flex align-items-center">
         <div className="d-flex align-items-center pt-1 ps-md-2 pe-md-2 ">
-          <button className="task-grip" type="button" aria-label="Drag to reorder" disabled={isLocked}>
+          <button className="task-grip" type="button" aria-label={copy.ui.taskCard.dragAria} disabled={isLocked}>
             <i className="bi bi-grip-vertical" />
           </button>
         </div>
@@ -49,7 +38,7 @@ export const TaskCard = ({
             type="checkbox"
             checked={task.selected}
             disabled={isLocked}
-            aria-label={`Select ${task.title} for removal`}
+            aria-label={copy.ui.taskCard.selectAria.replace("{{title}}", task.title)}
             onChange={(event) => onToggleSelected(task.id, event.currentTarget.checked)}
           />
         </div>
@@ -58,7 +47,7 @@ export const TaskCard = ({
           <span
             className={cn("complexity-pill my-auto", complexityClass)}
             role="img"
-            aria-label={`Complexity ${task.complexity}`}
+            aria-label={copy.ui.taskCard.complexityAria.replace("{{value}}", String(task.complexity))}
           />
         </div>
 
@@ -76,7 +65,7 @@ export const TaskCard = ({
                 type="button"
                 variant="outline"
                 disabled={isLocked}
-                aria-label="Open task details and actions"
+                aria-label={copy.ui.taskCard.detailsAria}
                 onClick={() => onOpenDetails(task.id)}
               >
                 <i className="bi bi-three-dots" />
@@ -88,9 +77,3 @@ export const TaskCard = ({
     </article>
   );
 };
-
-
-
-
-
-
