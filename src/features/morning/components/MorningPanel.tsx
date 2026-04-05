@@ -1,6 +1,7 @@
 import type { TestModeSettings } from "../store";
 import { cn } from "../../../shared/utils/cn";
 import type { EnergyLevel, RemoveSelectedMode, Task } from "../types";
+import { useTranslation } from "react-i18next";
 import { ComplexitySummaryCard } from "./ComplexitySummaryCard";
 import { EnergyStepSection } from "./EnergyStepSection";
 import { TasksStepSection } from "./TasksStepSection";
@@ -64,6 +65,7 @@ export const MorningPanel = ({
   testModeSettings,
   totalComplexity
 }: Props) => {
+  const { t } = useTranslation();
   const showTestDateControl = testModeSettings.enabled && testModeSettings.morningDateEnabled;
   const currentDateLabel = formatDotDate(new Date());
 
@@ -77,20 +79,20 @@ export const MorningPanel = ({
     >
       <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
         <div className="flex-grow-1">
-          <p className="text-uppercase small fw-semibold text-secondary mb-2">Morning sequence</p>
-          <h1 className="h2 mb-2">Build a plan that matches today&apos;s capacity</h1>
+          <p className="text-uppercase small fw-semibold text-secondary mb-2">{t("Morning sequence")}</p>
+          <h1 className="h2 mb-2">{t("Build a plan that matches today's capacity")}</h1>
           <p className="text-secondary mb-1">
-            Capture energy first, then shape the task load before making a commitment.
+            {t("Capture energy first, then shape the task load before making a commitment.")}
           </p>
           {!showTestDateControl ? (
-            <div className="h5 mb-0">{`Today is the ${currentDateLabel}`}</div>
+            <div className="h5 mb-0">{t("Today is the {{date}}", { date: currentDateLabel })}</div>
           ) : null}
         </div>
 
         <div className="d-grid gap-2 min-w-0">
           {showTestDateControl ? (
             <label className="d-grid gap-1">
-              <span className="small text-secondary fw-semibold">Set current day manually</span>
+              <span className="small text-secondary fw-semibold">{t("Set current day manually")}</span>
               <input
                 type="date"
                 className="form-control"
