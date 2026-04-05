@@ -3,6 +3,7 @@ export type EnergyLevel = "Low" | "Medium" | "High";
 export type StepId = 1 | 2;
 export type RemoveSelectedMode = "remove" | "delete";
 export type PomodoroMinutes = 5 | 10 | 15 | 20;
+export type DaySpeedMultiplier = 1 | 10 | 20 | 50 | 100;
 
 export interface NavTab {
   id: TabId;
