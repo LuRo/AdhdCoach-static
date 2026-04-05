@@ -17,7 +17,9 @@ export const TodayPage = ({ planner }: Props) => (
     onStartPomodoro={planner.startTodayTaskPomodoro}
     onStartWorkTimer={planner.startTodayTaskWorkTimer}
     onStopPomodoro={planner.stopTodayTaskPomodoro}
+    onTestDaySpeedChange={planner.setTestDaySpeed}
     onToggleDone={planner.toggleTodayTaskDone}
     tasks={planner.todayTasks}
+    testDaySpeed={planner.testDaySpeed}
   />
 );

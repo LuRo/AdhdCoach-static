@@ -5,6 +5,7 @@ import type {
   BacklogTask,
   ComplexitySnapshot,
   CreateTaskInput,
+  DaySpeedMultiplier,
   EnergyLevel,
   PomodoroMinutes,
   RemoveSelectedMode,
@@ -61,6 +62,7 @@ export const useMorningPlanner = () => {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [tasksLocked, setTasksLocked] = useState(false);
+  const [testDaySpeed, setTestDaySpeed] = useState<DaySpeedMultiplier>(1);
   const [gauge, setGauge] = useState<GaugeAnimation>({
     angle: -180,
     transition: "transform 420ms ease-out"
@@ -393,6 +395,7 @@ export const useMorningPlanner = () => {
       setSelectedEnergy(snapshot.selectedEnergy);
       setCurrentStep(snapshot.currentStep);
       setTasksLocked(snapshot.tasksLocked);
+      setTestDaySpeed(snapshot.testDaySpeed ?? 1);
     } else {
       setTasks(INITIAL_TASKS);
       setTodayTasks([]);
@@ -400,6 +403,7 @@ export const useMorningPlanner = () => {
       setSelectedEnergy("Medium");
       setCurrentStep(1);
       setTasksLocked(false);
+      setTestDaySpeed(1);
     }
 
     setTaskDetailsTaskId(null);
@@ -419,9 +423,10 @@ export const useMorningPlanner = () => {
       backlogTasks,
       selectedEnergy,
       currentStep,
-      tasksLocked
+      tasksLocked,
+      testDaySpeed
     });
-  }, [backlogTasks, currentStep, selectedEnergy, selectedTestDate, tasks, tasksLocked, todayTasks]);
+  }, [backlogTasks, currentStep, selectedEnergy, selectedTestDate, tasks, tasksLocked, testDaySpeed, todayTasks]);
 
   useEffect(() => {
     updateGaugeFromTasks();
@@ -462,9 +467,13 @@ export const useMorningPlanner = () => {
             return task;
           }
 
-          const nextPomodoro = task.timerRunning ? Math.max(task.timerRemainingSeconds - 1, 0) : task.timerRemainingSeconds;
+          const nextPomodoro = task.timerRunning
+            ? Math.max(task.timerRemainingSeconds - testDaySpeed, 0)
+            : task.timerRemainingSeconds;
           const nextPomodoroRunning = task.timerRunning && nextPomodoro > 0;
-          const nextElapsed = task.workTimerRunning ? task.workElapsedSeconds + 1 : task.workElapsedSeconds;
+          const nextElapsed = task.workTimerRunning
+            ? task.workElapsedSeconds + testDaySpeed
+            : task.workElapsedSeconds;
 
           return {
             ...task,
@@ -479,7 +488,7 @@ export const useMorningPlanner = () => {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [todayTasks]);
+  }, [testDaySpeed, todayTasks]);
 
   return {
     activeTab,
@@ -507,34 +516,21 @@ export const useMorningPlanner = () => {
     pomodoroOverlayTask,
     removeSelectedTasks,
     selectedTestDate,
-    setSelectedTestDate: setSelectedTestDateState,
     selectedEnergy,
     selectedTask,
     setActiveTabFromPanel,
     setIsHelpOpen,
+    setSelectedTestDate: setSelectedTestDateState,
+    setTestDaySpeed,
     startTodayTaskPomodoro,
     stopTodayTaskPomodoro,
     startTodayTaskWorkTimer,
     tasks,
     tasksLocked,
+    testDaySpeed,
     todayTasks,
     toggleTaskSelected,
     toggleTodayTaskDone,
     triggerGaugeRecalculation: animateGaugeRecalculation
   };
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import type { PomodoroMinutes, TodayTask } from "../types";
+import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../types";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import { TodayTaskCard } from "./TodayTaskCard";
 
@@ -12,9 +12,13 @@ interface Props {
   onStartPomodoro: (taskId: string, minutes: PomodoroMinutes) => void;
   onStartWorkTimer: (taskId: string) => void;
   onStopPomodoro: (taskId: string) => void;
+  onTestDaySpeedChange: (speed: DaySpeedMultiplier) => void;
   onToggleDone: (taskId: string, checked: boolean) => void;
   tasks: TodayTask[];
+  testDaySpeed: DaySpeedMultiplier;
 }
+
+const SPEED_OPTIONS: DaySpeedMultiplier[] = [1, 10, 20, 50, 100];
 
 export const TodayPanel = ({
   activeTaskId,
@@ -25,8 +29,10 @@ export const TodayPanel = ({
   onStartPomodoro,
   onStartWorkTimer,
   onStopPomodoro,
+  onTestDaySpeedChange,
   onToggleDone,
-  tasks
+  tasks,
+  testDaySpeed
 }: Props) => {
   const openTasks = tasks.filter((task) => !task.done);
   const achievedTasks = tasks.filter((task) => task.done);
@@ -57,9 +63,25 @@ export const TodayPanel = ({
           <div>
             <p className="text-uppercase small fw-semibold text-secondary mb-2">Today execution</p>
             <h1 className="h2 mb-2">Work from your confirmed morning plan</h1>
-            <p className="text-secondary mb-0">
-              Click the timer circle to open the Pomodoro overlay.
-            </p>
+            <p className="text-secondary mb-0">Click the timer circle to open the Pomodoro overlay.</p>
+          </div>
+
+          <div className="d-grid gap-2 min-w-0">
+            <span className="small fw-semibold text-secondary">Test day speed</span>
+            <div className="d-flex flex-wrap gap-2" role="group" aria-label="Test day speed">
+              {SPEED_OPTIONS.map((speed) => (
+                <CoachButton
+                  key={speed}
+                  type="button"
+                  variant={testDaySpeed === speed ? "primary" : "outline"}
+                  className="rounded-pill px-3 py-1"
+                  onClick={() => onTestDaySpeedChange(speed)}
+                >
+                  {speed}x
+                </CoachButton>
+              ))}
+            </div>
+            <div className="small text-secondary">Simulation only. All running timers advance at the selected speed.</div>
           </div>
         </div>
 
@@ -133,4 +155,3 @@ export const TodayPanel = ({
     </>
   );
 };
-

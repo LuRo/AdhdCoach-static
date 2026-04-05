@@ -1,4 +1,4 @@
-import type { BacklogTask, EnergyLevel, StepId, Task, TodayTask } from "./types";
+import type { BacklogTask, DaySpeedMultiplier, EnergyLevel, StepId, Task, TodayTask } from "./types";
 
 export type DebriefAnswerValue = 1 | 2 | 3 | 4 | 5;
 
@@ -27,6 +27,7 @@ export interface PlannerSnapshot {
   selectedEnergy: EnergyLevel;
   currentStep: StepId;
   tasksLocked: boolean;
+  testDaySpeed?: DaySpeedMultiplier;
 }
 
 export interface LocalAppDb {
