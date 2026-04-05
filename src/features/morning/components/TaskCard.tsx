@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "../../../shared/utils/cn";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
-import { useI18n } from "../../../i18n";
 import type { Task } from "../types";
 
 interface Props {
@@ -22,7 +22,7 @@ const complexityClassByValue: Record<number, string> = {
 };
 
 export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, task, testId }: Props) => {
-  const { copy } = useI18n();
+  const { t } = useTranslation();
   const complexityClass = useMemo(() => {
     if (task.complexity >= 5) {
       return "complexity-large";
@@ -35,30 +35,17 @@ export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, 
     <article className="task-card p-3 p-lg-4" data-testid={testId ?? `morning-task-card-${task.id}`}>
       <div className="d-flex align-items-center">
         <div className="d-flex align-items-center pt-1 ps-md-2 pe-md-2 ">
-          <button className="task-grip" type="button" aria-label={copy.ui.taskCard.dragAria} disabled={isLocked} data-testid={testId ? `${testId}-drag-handle` : undefined}>
+          <button className="task-grip" type="button" aria-label={t("Drag to reorder")} disabled={isLocked} data-testid={testId ? `${testId}-drag-handle` : undefined}>
             <i className="bi bi-grip-vertical" />
           </button>
         </div>
 
         <div className="d-flex align-items-center ps-2 pe-2">
-          <input
-            className="form-check-input task-select"
-            type="checkbox"
-            checked={task.selected}
-            disabled={isLocked}
-            aria-label={copy.ui.taskCard.selectAria.replace("{{title}}", task.title)}
-            data-testid={testId ? `${testId}-select-checkbox` : undefined}
-            onChange={(event) => onToggleSelected(task.id, event.currentTarget.checked)}
-          />
+          <input className="form-check-input task-select" type="checkbox" checked={task.selected} disabled={isLocked} aria-label={t("Select {{title}} for removal", { title: task.title })} data-testid={testId ? `${testId}-select-checkbox` : undefined} onChange={(event) => onToggleSelected(task.id, event.currentTarget.checked)} />
         </div>
 
         <div className="d-flex align-items-center ps-md-3 pe-md-3 ps-1 pe-2">
-          <span
-            className={cn("complexity-pill my-auto", complexityClass)}
-            role="img"
-            aria-label={copy.ui.taskCard.complexityAria.replace("{{value}}", String(task.complexity))}
-            data-testid={testId ? `${testId}-complexity-indicator` : undefined}
-          />
+          <span className={cn("complexity-pill my-auto", complexityClass)} role="img" aria-label={t("Complexity {{value}}", { value: task.complexity })} data-testid={testId ? `${testId}-complexity-indicator` : undefined} />
         </div>
 
         <div className="flex-grow-1 d-flex flex-column justify-content-between align-self-stretch">
@@ -70,15 +57,7 @@ export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, 
           <div className="d-flex align-items-start justify-content-between">
             <div className="task-subtext small text-secondary">{task.summary}</div>
             <div className="task-controls justify-content-end d-flex align-items-center gap-1">
-              <CoachButton
-                className="details-btn icon-square-btn"
-                type="button"
-                variant="outline"
-                disabled={isLocked}
-                aria-label={copy.ui.taskCard.detailsAria}
-                testId={testId ? `${testId}-details-button` : undefined}
-                onClick={() => onOpenDetails(task.id)}
-              >
+              <CoachButton className="details-btn icon-square-btn" type="button" variant="outline" disabled={isLocked} aria-label={t("Open task details and actions")} testId={testId ? `${testId}-details-button` : undefined} onClick={() => onOpenDetails(task.id)}>
                 <i className="bi bi-three-dots" />
               </CoachButton>
             </div>

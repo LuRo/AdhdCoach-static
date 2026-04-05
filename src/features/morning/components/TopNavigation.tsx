@@ -1,3 +1,4 @@
+﻿import { useTranslation } from "react-i18next";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import { LOCALES, type Locale, useI18n } from "../../../i18n";
 
@@ -8,15 +9,16 @@ interface Props {
 }
 
 export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSettingsPage }: Props) => {
-  const { copy, locale, setLocale, translationEnabled } = useI18n();
+  const { t } = useTranslation();
+  const { locale, setLocale } = useI18n();
 
   return (
-    <nav className="navbar navbar-expand-lg px-1 px-lg-2" aria-label={copy.nav.sectionsAria} data-testid="top-navigation">
+    <nav className="navbar navbar-expand-lg px-1 px-lg-2" aria-label={t("Main sections")} data-testid="top-navigation">
       <div className="container-fluid px-0 align-items-center">
         <button
           type="button"
           className="navbar-brand d-flex align-items-center gap-3 me-0 border-0 bg-transparent p-0"
-          aria-label={copy.nav.homeAria}
+          aria-label={t("ADHD Coach home")}
           data-testid="top-navigation-home-button"
           onClick={onOpenHomePage}
         >
@@ -25,37 +27,29 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
 
         <div className="d-flex align-items-center gap-2 gap-md-3 ms-auto">
           <label className="d-flex align-items-center gap-2 small text-secondary mb-0">
-            <span>{copy.locale.label}</span>
+            <span>{t("Language")}</span>
             <select
               className="form-select form-select-sm locale-select"
               value={locale}
               onChange={(event) => setLocale(event.currentTarget.value as Locale)}
-              aria-label={copy.locale.label}
-              disabled={!translationEnabled}
+              aria-label={t("Language")}
             >
               {LOCALES.map((item) => (
                 <option key={item} value={item}>
-                  {copy.locale[item]}
+                  {item === "en" ? t("English") : item === "de" ? t("Deutsch") : t("French")}
                 </option>
               ))}
             </select>
           </label>
 
-          <CoachButton
-            className="rounded-circle"
-            variant="outline"
-            type="button"
-            aria-label={copy.nav.settingsAria}
-            testId="top-navigation-settings-button"
-            onClick={onOpenSettingsPage}
-          >
+          <CoachButton className="rounded-circle" variant="outline" type="button" aria-label={t("Open settings")} testId="top-navigation-settings-button" onClick={onOpenSettingsPage}>
             <i className="bi bi-gear" />
           </CoachButton>
 
           <button
             type="button"
             className="border-0 p-0 bg-transparent rounded-circle"
-            aria-label={copy.nav.profileAria}
+            aria-label={t("Open profile")}
             data-testid="top-navigation-profile-button"
             onClick={onOpenProfilePage}
           >
@@ -67,7 +61,7 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
           </button>
 
           <CoachButton className="rounded-pill px-3 px-md-4" type="button" testId="top-navigation-logout-button">
-            {copy.nav.logout}
+            {t("Logout")}
           </CoachButton>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import type { Locale } from "./copy";
+ï»¿import type { Locale } from "./locale";
 
 const uiCopy = {
   en: {
@@ -192,12 +192,12 @@ const uiCopy = {
   de: {
     planner: {
       testDateLabel: "Testdatum",
-      localStorageNote: "Plan- und Debrief-Daten werden für dieses Datum lokal gespeichert.",
-      complexityWarning: "Die gesamte geplante Komplexität liegt über dem empfohlenen Grenzwert für einen fokussierten Tag."
+      localStorageNote: "Plan- und Debrief-Daten werden fï¿½r dieses Datum lokal gespeichert.",
+      complexityWarning: "Die gesamte geplante Komplexitï¿½t liegt ï¿½ber dem empfohlenen Grenzwert fï¿½r einen fokussierten Tag."
     },
     complexitySummaryCard: {
-      title: "Tägliche Komplexität",
-      recalculateAria: "Tägliche Komplexitätsanzeige neu berechnen",
+      title: "Tï¿½gliche Komplexitï¿½t",
+      recalculateAria: "Tï¿½gliche Komplexitï¿½tsanzeige neu berechnen",
       levels: {
         light: "Leicht",
         moderate: "Mittel",
@@ -208,42 +208,42 @@ const uiCopy = {
     },
     energyStepSection: {
       title: "Energie-Basiswert festlegen",
-      description: "Wähle das Niveau, das am besten widerspiegelt, was du heute Morgen realistisch halten kannst.",
+      description: "Wï¿½hle das Niveau, das am besten widerspiegelt, was du heute Morgen realistisch halten kannst.",
       groupAria: "Energieauswahl"
     },
     tasksStepSection: {
       title: "Aufgabenliste priorisieren",
-      description: "Ziehe Aufgaben in die richtige Reihenfolge, prüfe die Komplexitätslast und öffne bei Bedarf Details oder Aktionen.",
-      addTaskAria: "Neue Aufgabe hinzufügen",
-      removeSelectedAria: "Ausgewählte Aufgaben entfernen",
+      description: "Ziehe Aufgaben in die richtige Reihenfolge, prï¿½fe die Komplexitï¿½tslast und ï¿½ffne bei Bedarf Details oder Aktionen.",
+      addTaskAria: "Neue Aufgabe hinzufï¿½gen",
+      removeSelectedAria: "Ausgewï¿½hlte Aufgaben entfernen",
       help: "Hilfe",
-      confirm: "Aufgaben bestätigen und zu Heute wechseln",
-      removeModalTitle: "Ausgewählte Aufgaben entfernen",
-      removeModalBody: "Sollen ausgewählte Aufgaben vollständig gelöscht oder nur aus diesem Planer entfernt und im Backlog behalten werden?",
+      confirm: "Aufgaben bestï¿½tigen und zu Heute wechseln",
+      removeModalTitle: "Ausgewï¿½hlte Aufgaben entfernen",
+      removeModalBody: "Sollen ausgewï¿½hlte Aufgaben vollstï¿½ndig gelï¿½scht oder nur aus diesem Planer entfernt und im Backlog behalten werden?",
       removeFromPlanner: "Aus dem Planer entfernen",
-      deleteCompletely: "Vollständig löschen"
+      deleteCompletely: "Vollstï¿½ndig lï¿½schen"
     },
     addTaskModal: {
-      ariaLabel: "Aufgabe hinzufügen",
+      ariaLabel: "Aufgabe hinzufï¿½gen",
       backlogTitle: "Backlog",
       newTaskTitle: "Neue Aufgabe erstellen",
-      intro: "Wähle eine Aufgabe aus dem Backlog oder erstelle eine komplett neue.",
-      emptyBacklog: "Keine Backlog-Aufgaben verfügbar.",
-      add: "Hinzufügen",
+      intro: "Wï¿½hle eine Aufgabe aus dem Backlog oder erstelle eine komplett neue.",
+      emptyBacklog: "Keine Backlog-Aufgaben verfï¿½gbar.",
+      add: "Hinzufï¿½gen",
       titleLabel: "Titel",
       titlePlaceholder: "Was muss erledigt werden?",
       summaryLabel: "Untertext (optional)",
-      summaryPlaceholder: "Hilfreicher Kontext für die Aufgabe",
-      complexityLabel: "Geschätzte Komplexität",
-      calculateComplexity: "Komplexität berechnen",
+      summaryPlaceholder: "Hilfreicher Kontext fï¿½r die Aufgabe",
+      complexityLabel: "Geschï¿½tzte Komplexitï¿½t",
+      calculateComplexity: "Komplexitï¿½t berechnen",
       storeInBacklog: "Im Backlog speichern",
-      dueDateLabel: "Fälligkeitsdatum (optional)",
-      duePrefix: "fällig am",
-      backToBacklog: "Zurück zum Backlog",
+      dueDateLabel: "Fï¿½lligkeitsdatum (optional)",
+      duePrefix: "fï¿½llig am",
+      backToBacklog: "Zurï¿½ck zum Backlog",
       close: "Schliessen",
       createNewTask: "Neue Aufgabe erstellen",
       saveToBacklog: "Im Backlog speichern",
-      addToToday: "Zu heute hinzufügen"
+      addToToday: "Zu heute hinzufï¿½gen"
     },
     taskDetailsModal: {
       defaultTitle: "Aufgabendetails",
@@ -251,24 +251,24 @@ const uiCopy = {
     },
     step2HelpModal: {
       title: "Hilfe zu Schritt 2",
-      intro: "Nutze diesen Schritt, um deine Aufgaben für heute in einer realistischen Reihenfolge zu ordnen.",
+      intro: "Nutze diesen Schritt, um deine Aufgaben fï¿½r heute in einer realistischen Reihenfolge zu ordnen.",
       tips: [
-        "Ziehe Karten mit dem Griff links, um Prioritäten neu zu ordnen.",
-        "Nutze den Komplexitätsmarker, um die Arbeitslast auszugleichen.",
-        "Nutze die Detail-Schaltfläche, um Kontext und verfügbare Aktionen je Aufgabe zu öffnen.",
-        "Wenn die Reihenfolge stimmt, bestätige die Aufgaben, um zu Heute zu wechseln."
+        "Ziehe Karten mit dem Griff links, um Prioritï¿½ten neu zu ordnen.",
+        "Nutze den Komplexitï¿½tsmarker, um die Arbeitslast auszugleichen.",
+        "Nutze die Detail-Schaltflï¿½che, um Kontext und verfï¿½gbare Aktionen je Aufgabe zu ï¿½ffnen.",
+        "Wenn die Reihenfolge stimmt, bestï¿½tige die Aufgaben, um zu Heute zu wechseln."
       ]
     },
     placeholderPanel: {
       today: {
         badge: "Heute",
-        title: "Platzhalter für die Arbeitsansicht",
-        text: "Dieser Bereich ist bereit für aktive Aufgaben, Timer, Blockaden und laufende Kontrollpunkte mit derselben Komponentensprache."
+        title: "Platzhalter fï¿½r die Arbeitsansicht",
+        text: "Dieser Bereich ist bereit fï¿½r aktive Aufgaben, Timer, Blockaden und laufende Kontrollpunkte mit derselben Komponentensprache."
       },
       debriefing: {
         badge: "Reflexion",
-        title: "Platzhalter für den Tagesabschluss",
-        text: "Nutze diesen Bereich für Reflexionsfragen, Erfolge, offene Aufgaben und die Vorbereitung auf morgen nach Feierabend."
+        title: "Platzhalter fï¿½r den Tagesabschluss",
+        text: "Nutze diesen Bereich fï¿½r Reflexionsfragen, Erfolge, offene Aufgaben und die Vorbereitung auf morgen nach Feierabend."
       }
     },
     pomodoroOverlay: {
@@ -280,66 +280,66 @@ const uiCopy = {
     },
     taskCard: {
       dragAria: "Zum Neuordnen ziehen",
-      selectAria: "{{title}} zum Entfernen auswählen",
-      complexityAria: "Komplexität {{value}}",
-      detailsAria: "Aufgabendetails und Aktionen öffnen"
+      selectAria: "{{title}} zum Entfernen auswï¿½hlen",
+      complexityAria: "Komplexitï¿½t {{value}}",
+      detailsAria: "Aufgabendetails und Aktionen ï¿½ffnen"
     },
     todayTaskCard: {
       blocked: "Blockiert",
       tracking: "Tracking",
       markDoneAria: "{{title}} als erledigt markieren",
-      complexityAria: "Komplexität {{value}}",
+      complexityAria: "Komplexitï¿½t {{value}}",
       play: "Start",
       block: "Blockieren",
-      openPomodoroAria: "Pomodoro öffnen",
+      openPomodoroAria: "Pomodoro ï¿½ffnen",
       minutesSuffix: "Min."
     },
     todayPanel: {
-      eyebrow: "Heute ausführen",
-      title: "Arbeite nach deinem bestätigten Morgenplan",
-      intro: "Klicke auf den Timer-Kreis, um das Pomodoro-Overlay zu öffnen.",
+      eyebrow: "Heute ausfï¿½hren",
+      title: "Arbeite nach deinem bestï¿½tigten Morgenplan",
+      intro: "Klicke auf den Timer-Kreis, um das Pomodoro-Overlay zu ï¿½ffnen.",
       speedLabel: "Test-Tagesgeschwindigkeit",
       speedAria: "Test-Tagesgeschwindigkeit",
-      simulationNote: "Nur Simulation. Alle laufenden Timer laufen mit der gewählten Geschwindigkeit weiter.",
-      tasksTitle: "Aufgaben für heute",
-      tasksDescription: "Nur die oberste nicht blockierte Aufgabe kann starten. Blockieren gibt die nächste Aufgabe frei.",
+      simulationNote: "Nur Simulation. Alle laufenden Timer laufen mit der gewï¿½hlten Geschwindigkeit weiter.",
+      tasksTitle: "Aufgaben fï¿½r heute",
+      tasksDescription: "Nur die oberste nicht blockierte Aufgabe kann starten. Blockieren gibt die nï¿½chste Aufgabe frei.",
       allCompleted: "Alle geplanten Aufgaben sind erledigt.",
       achievedTitle: "Heutige erledigte Ziele",
-      achievedDescription: "Erledigte Einträge werden hier automatisch verschoben.",
+      achievedDescription: "Erledigte Eintrï¿½ge werden hier automatisch verschoben.",
       noCompleted: "Noch keine erledigten Ziele."
     },
     debriefingPage: {
       heroBadge: "Tagesabschluss-Reflexion",
-      heroEyebrow: "Nur anhängende Reflexionsspur",
+      heroEyebrow: "Nur anhï¿½ngende Reflexionsspur",
       heroTitle: "Schliesse den Tag ab, ohne ihn zu einer Bewertung zu machen.",
-      heroLead: "Prüfe die Arbeit, erkenne Reibung ehrlich an und gehe mit einer praktischen Anpassung für morgen weiter.",
-      selectedDate: "Ausgewähltes Testdatum",
+      heroLead: "Prï¿½fe die Arbeit, erkenne Reibung ehrlich an und gehe mit einer praktischen Anpassung fï¿½r morgen weiter.",
+      selectedDate: "Ausgewï¿½hltes Testdatum",
       summaryHeading: "Coaching-Zusammenfassung",
-      summaryLead: "Eine Anerkennung, ein Signal, ein nächster Schritt.",
+      summaryLead: "Eine Anerkennung, ein Signal, ein nï¿½chster Schritt.",
       versionLabel: "Version",
-      actualFocus: "Tatsächlicher Fokus",
+      actualFocus: "Tatsï¿½chlicher Fokus",
       actualFocusNote: "Geplante Pause bereits abgezogen",
       expectedBaseline: "Erwartete Basis",
-      expectedBaselineNote: "Snapshot mittlerer Komplexität",
-      timeRatio: "Zeitverhältnis",
+      expectedBaselineNote: "Snapshot mittlerer Komplexitï¿½t",
+      timeRatio: "Zeitverhï¿½ltnis",
       questionsHeading: "Fragen aus den Einstellungen",
-      questionsLead: "Hier sind sie schreibgeschützt. Antworten werden lokal als Zahlen gespeichert, während du Textlabels siehst.",
+      questionsLead: "Hier sind sie schreibgeschï¿½tzt. Antworten werden lokal als Zahlen gespeichert, wï¿½hrend du Textlabels siehst.",
       storedValueHidden: "Gespeicherter Wert: verborgen",
       questionLabel: "Frage {{index}}",
       optionalNote: "Optionale Notiz",
       submit: "Reflexion absenden",
       historyHeading: "Einreichungsverlauf",
-      historyLead: "Historische Einträge behalten die Fragenversion bei, die beim Absenden aktiv war.",
+      historyLead: "Historische Eintrï¿½ge behalten die Fragenversion bei, die beim Absenden aktiv war.",
       simulateCheckin: "Check-in simulieren",
       submissionVersion: "Einreichung v{{version}}",
-      noSubmissions: "Für dieses Testdatum gibt es noch keine Einreichungen.",
-      interruptionHeading: "Unterbrechungsübersicht",
+      noSubmissions: "Fï¿½r dieses Testdatum gibt es noch keine Einreichungen.",
+      interruptionHeading: "Unterbrechungsï¿½bersicht",
       interruptionTime: "Unterbrochene Zeit",
       checkinsSummary: "Check-ins gesendet: {{sent}} | beantwortet: {{answered}}",
       strategyHeading: "Heartbeat- und Check-in-Strategie",
       strategy: [
-        "Im Vordergrund werden während aktiver Fokusphasen etwa alle 90 Sekunden Heartbeats erwartet.",
-        "Zwei verpasste Heartbeats lösen einen Check-in aus; bevorzugt wird zuerst In-App, dann Push.",
+        "Im Vordergrund werden wï¿½hrend aktiver Fokusphasen etwa alle 90 Sekunden Heartbeats erwartet.",
+        "Zwei verpasste Heartbeats lï¿½sen einen Check-in aus; bevorzugt wird zuerst In-App, dann Push.",
         "Mobile Browser drosseln JavaScript im Hintergrund, daher sind Wiederaufnahme-Pings wichtig, wenn die Seite wieder in den Vordergrund kommt."
       ],
       eventLogHeading: "Ereignisprotokoll",
@@ -350,24 +350,24 @@ const uiCopy = {
       answerLabel: "Antwort: {{answer}}",
       status: {
         onTrack: "Im Plan",
-        extraRunway: "Mehr Puffer nötig",
+        extraRunway: "Mehr Puffer nï¿½tig",
         highFriction: "Tag mit hoher Reibung"
       },
       coaching: {
         highInterruptions: {
           acknowledgment: "Du hast den Schwung durch einen lauten Tag gehalten und trotzdem den Kreis geschlossen.",
           insight: "Die meiste Reibung kam von {{dominantCause}}, mit etwa {{minutes}} unterbrochener Zeit.",
-          nextStep: "Morgen: mit einem geschützten 20-Minuten-Sprint starten, bevor Nachrichten geprüft werden."
+          nextStep: "Morgen: mit einem geschï¿½tzten 20-Minuten-Sprint starten, bevor Nachrichten geprï¿½ft werden."
         },
         extraRunway: {
           acknowledgment: "Du hast die Arbeit zusammengehalten, ohne den Faden zu verlieren.",
-          insight: "Dein Tempo lag bei {{ratio}} der Basis, während die Unterbrechungen begrenzt blieben.",
-          nextStep: "Morgen: den ersten Schritt halbieren oder die Aufgabe eine Komplexitätsstufe nach oben verschieben."
+          insight: "Dein Tempo lag bei {{ratio}} der Basis, wï¿½hrend die Unterbrechungen begrenzt blieben.",
+          nextStep: "Morgen: den ersten Schritt halbieren oder die Aufgabe eine Komplexitï¿½tsstufe nach oben verschieben."
         },
         onTrack: {
-          acknowledgment: "Du hast den Plan mit ruhiger Konsequenz erfüllt.",
+          acknowledgment: "Du hast den Plan mit ruhiger Konsequenz erfï¿½llt.",
           insight: "Der Tag endete im erwarteten Rhythmus, ohne grosse Erholungskosten.",
-          nextStep: "Morgen: dieselbe Einstiegsroutine wiederholen und die Länge des ersten Sprints beibehalten."
+          nextStep: "Morgen: dieselbe Einstiegsroutine wiederholen und die Lï¿½nge des ersten Sprints beibehalten."
         },
         default: {
           acknowledgment: "Du bist weitergegangen, auch als der Tag sich gewehrt hat.",
@@ -380,186 +380,186 @@ const uiCopy = {
   fr: {
     planner: {
       testDateLabel: "Date de test",
-      localStorageNote: "Le plan et les données de débriefing sont stockés localement pour cette date.",
-      complexityWarning: "La complexité totale prévue dépasse le seuil recommandé pour une journée de concentration."
+      localStorageNote: "Le plan et les donnï¿½es de dï¿½briefing sont stockï¿½s localement pour cette date.",
+      complexityWarning: "La complexitï¿½ totale prï¿½vue dï¿½passe le seuil recommandï¿½ pour une journï¿½e de concentration."
     },
     complexitySummaryCard: {
-      title: "Complexité du jour",
-      recalculateAria: "Recalculer la jauge de complexité du jour",
+      title: "Complexitï¿½ du jour",
+      recalculateAria: "Recalculer la jauge de complexitï¿½ du jour",
       levels: {
-        light: "Léger",
-        moderate: "Modéré",
-        high: "Élevé"
+        light: "Lï¿½ger",
+        moderate: "Modï¿½rï¿½",
+        high: "ï¿½levï¿½"
       },
-      threshold: "Seuil recommandé : 10 points",
+      threshold: "Seuil recommandï¿½ : 10 points",
       pointsLabel: "points"
     },
     energyStepSection: {
-      title: "Définir votre niveau d'énergie",
-      description: "Choisissez le niveau qui reflète le mieux ce que vous pouvez réellement tenir ce matin.",
-      groupAria: "Sélection de l'énergie"
+      title: "Dï¿½finir votre niveau d'ï¿½nergie",
+      description: "Choisissez le niveau qui reflï¿½te le mieux ce que vous pouvez rï¿½ellement tenir ce matin.",
+      groupAria: "Sï¿½lection de l'ï¿½nergie"
     },
     tasksStepSection: {
-      title: "Classer la liste de tâches",
-      description: "Faites glisser les tâches dans le bon ordre, vérifiez la charge de complexité et ouvrez les détails ou actions si nécessaire.",
-      addTaskAria: "Ajouter une tâche",
-      removeSelectedAria: "Supprimer les tâches sélectionnées",
+      title: "Classer la liste de tï¿½ches",
+      description: "Faites glisser les tï¿½ches dans le bon ordre, vï¿½rifiez la charge de complexitï¿½ et ouvrez les dï¿½tails ou actions si nï¿½cessaire.",
+      addTaskAria: "Ajouter une tï¿½che",
+      removeSelectedAria: "Supprimer les tï¿½ches sï¿½lectionnï¿½es",
       help: "Aide",
-      confirm: "Confirmer les tâches et passer à Aujourd'hui",
-      removeModalTitle: "Supprimer les tâches sélectionnées",
-      removeModalBody: "Les tâches sélectionnées doivent-elles être entièrement supprimées ou seulement retirées de ce planificateur et conservées dans le backlog ?",
+      confirm: "Confirmer les tï¿½ches et passer ï¿½ Aujourd'hui",
+      removeModalTitle: "Supprimer les tï¿½ches sï¿½lectionnï¿½es",
+      removeModalBody: "Les tï¿½ches sï¿½lectionnï¿½es doivent-elles ï¿½tre entiï¿½rement supprimï¿½es ou seulement retirï¿½es de ce planificateur et conservï¿½es dans le backlog ?",
       removeFromPlanner: "Retirer du planificateur",
-      deleteCompletely: "Supprimer complètement"
+      deleteCompletely: "Supprimer complï¿½tement"
     },
     addTaskModal: {
-      ariaLabel: "Ajouter une tâche",
+      ariaLabel: "Ajouter une tï¿½che",
       backlogTitle: "Backlog",
-      newTaskTitle: "Créer une nouvelle tâche",
-      intro: "Choisissez une tâche depuis le backlog ou créez-en une totalement nouvelle.",
-      emptyBacklog: "Aucune tâche de backlog disponible.",
+      newTaskTitle: "Crï¿½er une nouvelle tï¿½che",
+      intro: "Choisissez une tï¿½che depuis le backlog ou crï¿½ez-en une totalement nouvelle.",
+      emptyBacklog: "Aucune tï¿½che de backlog disponible.",
       add: "Ajouter",
       titleLabel: "Titre",
       titlePlaceholder: "Qu'est-ce qu'il faut faire ?",
       summaryLabel: "Sous-texte (facultatif)",
-      summaryPlaceholder: "Contexte utile pour la tâche",
-      complexityLabel: "Complexité estimée",
-      calculateComplexity: "Calculer la complexité",
+      summaryPlaceholder: "Contexte utile pour la tï¿½che",
+      complexityLabel: "Complexitï¿½ estimï¿½e",
+      calculateComplexity: "Calculer la complexitï¿½",
       storeInBacklog: "Enregistrer dans le backlog",
-      dueDateLabel: "Date d'échéance (facultative)",
-      duePrefix: "échéance",
+      dueDateLabel: "Date d'ï¿½chï¿½ance (facultative)",
+      duePrefix: "ï¿½chï¿½ance",
       backToBacklog: "Retour au backlog",
       close: "Fermer",
-      createNewTask: "Créer une nouvelle tâche",
+      createNewTask: "Crï¿½er une nouvelle tï¿½che",
       saveToBacklog: "Enregistrer dans le backlog",
-      addToToday: "Ajouter à Aujourd'hui"
+      addToToday: "Ajouter ï¿½ Aujourd'hui"
     },
     taskDetailsModal: {
-      defaultTitle: "Détails de la tâche",
-      primaryAction: "Marquer comme prêt"
+      defaultTitle: "Dï¿½tails de la tï¿½che",
+      primaryAction: "Marquer comme prï¿½t"
     },
     step2HelpModal: {
-      title: "Aide à l'étape 2",
-      intro: "Utilisez cette étape pour classer vos tâches du jour dans un ordre réaliste.",
+      title: "Aide ï¿½ l'ï¿½tape 2",
+      intro: "Utilisez cette ï¿½tape pour classer vos tï¿½ches du jour dans un ordre rï¿½aliste.",
       tips: [
-        "Faites glisser les cartes avec la poignée à gauche pour réorganiser les priorités.",
-        "Utilisez l'indicateur de complexité pour équilibrer la charge de travail.",
-        "Utilisez le bouton des détails pour ouvrir le contexte et les actions disponibles pour chaque tâche.",
-        "Quand l'ordre vous convient, confirmez les tâches pour passer à Aujourd'hui."
+        "Faites glisser les cartes avec la poignï¿½e ï¿½ gauche pour rï¿½organiser les prioritï¿½s.",
+        "Utilisez l'indicateur de complexitï¿½ pour ï¿½quilibrer la charge de travail.",
+        "Utilisez le bouton des dï¿½tails pour ouvrir le contexte et les actions disponibles pour chaque tï¿½che.",
+        "Quand l'ordre vous convient, confirmez les tï¿½ches pour passer ï¿½ Aujourd'hui."
       ]
     },
     placeholderPanel: {
       today: {
         badge: "Aujourd'hui",
-        title: "Espace réservé pour la vue de travail",
-        text: "Cette section est prête pour les tâches actives, les minuteries, les blocages et les jalons en cours avec le même langage de composants."
+        title: "Espace rï¿½servï¿½ pour la vue de travail",
+        text: "Cette section est prï¿½te pour les tï¿½ches actives, les minuteries, les blocages et les jalons en cours avec le mï¿½me langage de composants."
       },
       debriefing: {
-        badge: "Débriefing",
-        title: "Espace réservé pour la clôture de journée",
-        text: "Utilisez cet espace pour les questions de réflexion, les réussites, les tâches inachevées et la préparation de demain après la fin de la journée."
+        badge: "Dï¿½briefing",
+        title: "Espace rï¿½servï¿½ pour la clï¿½ture de journï¿½e",
+        text: "Utilisez cet espace pour les questions de rï¿½flexion, les rï¿½ussites, les tï¿½ches inachevï¿½es et la prï¿½paration de demain aprï¿½s la fin de la journï¿½e."
       }
     },
     pomodoroOverlay: {
-      ariaLabel: "Fenêtre du minuteur Pomodoro",
+      ariaLabel: "Fenï¿½tre du minuteur Pomodoro",
       title: "Pomodoro",
       cycle: "Cycle de {{minutes}} minutes",
       close: "Fermer",
-      start: "Démarrer"
+      start: "Dï¿½marrer"
     },
     taskCard: {
-      dragAria: "Faire glisser pour réorganiser",
-      selectAria: "Sélectionner {{title}} pour suppression",
-      complexityAria: "Complexité {{value}}",
-      detailsAria: "Ouvrir les détails et actions de la tâche"
+      dragAria: "Faire glisser pour rï¿½organiser",
+      selectAria: "Sï¿½lectionner {{title}} pour suppression",
+      complexityAria: "Complexitï¿½ {{value}}",
+      detailsAria: "Ouvrir les dï¿½tails et actions de la tï¿½che"
     },
     todayTaskCard: {
-      blocked: "Bloquée",
+      blocked: "Bloquï¿½e",
       tracking: "Suivi",
-      markDoneAria: "Marquer {{title}} comme terminée",
-      complexityAria: "Complexité {{value}}",
+      markDoneAria: "Marquer {{title}} comme terminï¿½e",
+      complexityAria: "Complexitï¿½ {{value}}",
       play: "Lancer",
       block: "Bloquer",
       openPomodoroAria: "Ouvrir Pomodoro",
       minutesSuffix: "min"
     },
     todayPanel: {
-      eyebrow: "Exécution du jour",
-      title: "Travaillez à partir de votre plan du matin confirmé",
-      intro: "Cliquez sur le cercle du minuteur pour ouvrir la fenêtre Pomodoro.",
+      eyebrow: "Exï¿½cution du jour",
+      title: "Travaillez ï¿½ partir de votre plan du matin confirmï¿½",
+      intro: "Cliquez sur le cercle du minuteur pour ouvrir la fenï¿½tre Pomodoro.",
       speedLabel: "Vitesse du jour de test",
       speedAria: "Vitesse du jour de test",
-      simulationNote: "Simulation uniquement. Tous les minuteurs en cours avancent à la vitesse sélectionnée.",
-      tasksTitle: "Tâches du jour",
-      tasksDescription: "Seule la tâche supérieure non bloquée peut démarrer. Le blocage débloque la tâche suivante.",
-      allCompleted: "Toutes les tâches prévues sont terminées.",
+      simulationNote: "Simulation uniquement. Tous les minuteurs en cours avancent ï¿½ la vitesse sï¿½lectionnï¿½e.",
+      tasksTitle: "Tï¿½ches du jour",
+      tasksDescription: "Seule la tï¿½che supï¿½rieure non bloquï¿½e peut dï¿½marrer. Le blocage dï¿½bloque la tï¿½che suivante.",
+      allCompleted: "Toutes les tï¿½ches prï¿½vues sont terminï¿½es.",
       achievedTitle: "Objectifs accomplis aujourd'hui",
-      achievedDescription: "Les éléments terminés sont déplacés ici automatiquement.",
-      noCompleted: "Aucun objectif terminé pour le moment."
+      achievedDescription: "Les ï¿½lï¿½ments terminï¿½s sont dï¿½placï¿½s ici automatiquement.",
+      noCompleted: "Aucun objectif terminï¿½ pour le moment."
     },
     debriefingPage: {
-      heroBadge: "Débriefing de fin de journée",
-      heroEyebrow: "Journal de réflexion en ajout seulement",
-      heroTitle: "Clôturez la journée sans en faire une feuille de score.",
-      heroLead: "Passez le travail en revue, constatez honnêtement les frictions et repartez avec un ajustement pratique pour demain.",
-      selectedDate: "Date de test sélectionnée",
-      summaryHeading: "Résumé de type coaching",
+      heroBadge: "Dï¿½briefing de fin de journï¿½e",
+      heroEyebrow: "Journal de rï¿½flexion en ajout seulement",
+      heroTitle: "Clï¿½turez la journï¿½e sans en faire une feuille de score.",
+      heroLead: "Passez le travail en revue, constatez honnï¿½tement les frictions et repartez avec un ajustement pratique pour demain.",
+      selectedDate: "Date de test sï¿½lectionnï¿½e",
+      summaryHeading: "Rï¿½sumï¿½ de type coaching",
       summaryLead: "Une reconnaissance, un signal, un prochain mouvement.",
       versionLabel: "Version",
-      actualFocus: "Concentration réelle",
-      actualFocusNote: "Pause prévue déjà retirée",
-      expectedBaseline: "Référence attendue",
-      expectedBaselineNote: "instantané de complexité moyenne",
+      actualFocus: "Concentration rï¿½elle",
+      actualFocusNote: "Pause prï¿½vue dï¿½jï¿½ retirï¿½e",
+      expectedBaseline: "Rï¿½fï¿½rence attendue",
+      expectedBaselineNote: "instantanï¿½ de complexitï¿½ moyenne",
       timeRatio: "Ratio temporel",
-      questionsHeading: "Questions depuis les paramètres",
-      questionsLead: "Ici, elles sont en lecture seule. Les réponses sont stockées localement sous forme de nombres, tandis que vous voyez des libellés textuels.",
-      storedValueHidden: "Valeur enregistrée : masquée",
+      questionsHeading: "Questions depuis les paramï¿½tres",
+      questionsLead: "Ici, elles sont en lecture seule. Les rï¿½ponses sont stockï¿½es localement sous forme de nombres, tandis que vous voyez des libellï¿½s textuels.",
+      storedValueHidden: "Valeur enregistrï¿½e : masquï¿½e",
       questionLabel: "Question {{index}}",
       optionalNote: "Note facultative",
-      submit: "Soumettre le débrief",
+      submit: "Soumettre le dï¿½brief",
       historyHeading: "Historique des envois",
-      historyLead: "Les entrées historiques conservent la version des questions active au moment de l'envoi.",
-      simulateCheckin: "Simuler un point de contrôle",
+      historyLead: "Les entrï¿½es historiques conservent la version des questions active au moment de l'envoi.",
+      simulateCheckin: "Simuler un point de contrï¿½le",
       submissionVersion: "Soumission v{{version}}",
       noSubmissions: "Aucune soumission pour cette date de test.",
-      interruptionHeading: "Répartition des interruptions",
+      interruptionHeading: "Rï¿½partition des interruptions",
       interruptionTime: "Temps interrompu",
-      checkinsSummary: "Points de contrôle envoyés : {{sent}} | répondus : {{answered}}",
-      strategyHeading: "Stratégie de battement et de point de contrôle",
+      checkinsSummary: "Points de contrï¿½le envoyï¿½s : {{sent}} | rï¿½pondus : {{answered}}",
+      strategyHeading: "Stratï¿½gie de battement et de point de contrï¿½le",
       strategy: [
         "Les battements en premier plan sont attendus environ toutes les 90 secondes pendant la concentration active.",
-        "Deux battements manqués déclenchent un point de contrôle ; le canal privilégie d'abord l'application, puis les notifications push.",
-        "Les navigateurs mobiles peuvent ralentir le JavaScript en arrière-plan, donc les signaux de reprise comptent quand la page revient au premier plan."
+        "Deux battements manquï¿½s dï¿½clenchent un point de contrï¿½le ; le canal privilï¿½gie d'abord l'application, puis les notifications push.",
+        "Les navigateurs mobiles peuvent ralentir le JavaScript en arriï¿½re-plan, donc les signaux de reprise comptent quand la page revient au premier plan."
       ],
-      eventLogHeading: "Journal des événements",
+      eventLogHeading: "Journal des ï¿½vï¿½nements",
       interruptionLabel: "Interruption {{kind}}",
-      checkinSentLabel: "Point de contrôle envoyé",
-      checkinAnsweredLabel: "Point de contrôle répondu",
+      checkinSentLabel: "Point de contrï¿½le envoyï¿½",
+      checkinAnsweredLabel: "Point de contrï¿½le rï¿½pondu",
       channelLabel: "Canal : {{channel}}",
-      answerLabel: "Réponse : {{answer}}",
+      answerLabel: "Rï¿½ponse : {{answer}}",
       status: {
         onTrack: "Dans les temps",
         extraRunway: "Besoin de plus de marge",
-        highFriction: "Journée à forte friction"
+        highFriction: "Journï¿½e ï¿½ forte friction"
       },
       coaching: {
         highInterruptions: {
-          acknowledgment: "Vous avez gardé l'élan malgré une journée bruyante et vous avez quand même bouclé la boucle.",
+          acknowledgment: "Vous avez gardï¿½ l'ï¿½lan malgrï¿½ une journï¿½e bruyante et vous avez quand mï¿½me bouclï¿½ la boucle.",
           insight: "La majeure partie de la friction venait de {{dominantCause}}, avec environ {{minutes}} de temps interrompu.",
-          nextStep: "Demain : commencez par un sprint protégé de 20 minutes avant de consulter les messages."
+          nextStep: "Demain : commencez par un sprint protï¿½gï¿½ de 20 minutes avant de consulter les messages."
         },
         extraRunway: {
           acknowledgment: "Vous avez maintenu le travail sans perdre le fil.",
-          insight: "Votre rythme a atteint {{ratio}} de la base, tandis que les interruptions sont restées contenues.",
-          nextStep: "Demain : divisez l'étape d'ouverture en deux ou faites monter la tâche d'un niveau de complexité."
+          insight: "Votre rythme a atteint {{ratio}} de la base, tandis que les interruptions sont restï¿½es contenues.",
+          nextStep: "Demain : divisez l'ï¿½tape d'ouverture en deux ou faites monter la tï¿½che d'un niveau de complexitï¿½."
         },
         onTrack: {
-          acknowledgment: "Vous avez respecté le plan avec une régularité constante.",
-          insight: "La journée s'est terminée au rythme attendu, sans coût majeur de récupération.",
-          nextStep: "Demain : répétez la même routine d'ouverture et gardez la durée du premier sprint inchangée."
+          acknowledgment: "Vous avez respectï¿½ le plan avec une rï¿½gularitï¿½ constante.",
+          insight: "La journï¿½e s'est terminï¿½e au rythme attendu, sans coï¿½t majeur de rï¿½cupï¿½ration.",
+          nextStep: "Demain : rï¿½pï¿½tez la mï¿½me routine d'ouverture et gardez la durï¿½e du premier sprint inchangï¿½e."
         },
         default: {
-          acknowledgment: "Vous avez continué à avancer même quand la journée résistait.",
-          insight: "La session s'est inscrite dans un schéma {{status}} à {{ratio}} du plan.",
+          acknowledgment: "Vous avez continuï¿½ ï¿½ avancer mï¿½me quand la journï¿½e rï¿½sistait.",
+          insight: "La session s'est inscrite dans un schï¿½ma {{status}} ï¿½ {{ratio}} du plan.",
           nextStep: "Demain : ajoutez une courte marge avant le premier bloc de travail profond."
         }
       }
@@ -570,4 +570,5 @@ const uiCopy = {
 export type UiCopy = (typeof uiCopy)[Locale];
 
 export const getUiCopy = (locale: Locale): UiCopy => uiCopy[locale];
+
 
