@@ -1,28 +1,6 @@
-import type { BacklogTask, NavTab, Task } from "./types";
+﻿import type { BacklogTask, Task } from "./types";
 
-export const NAV_TABS: NavTab[] = [
-  {
-    id: "morning",
-    panelId: "morning-panel",
-    title: "Morning",
-    subtitle: "Planning setup",
-    iconClass: "bi bi-cup-hot"
-  },
-  {
-    id: "today",
-    panelId: "today-panel",
-    title: "Today",
-    subtitle: "Work in progress",
-    iconClass: "bi bi-sun"
-  },
-  {
-    id: "debriefing",
-    panelId: "debriefing-panel",
-    title: "Debriefing",
-    subtitle: "Close the day",
-    iconClass: "bi bi-chat-dots"
-  }
-];
+export { NAV_TABS, PAGE_FEATURE_ORDER, PAGE_FEATURES } from "../page-features";
 
 export const INITIAL_TASKS: Task[] = [
   {

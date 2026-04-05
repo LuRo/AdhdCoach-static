@@ -1,22 +1,12 @@
+import { useI18n } from "../../../i18n";
+
 interface Props {
   panelKey: "today" | "debriefing";
 }
 
-const content = {
-  today: {
-    badge: "Today",
-    title: "Working view placeholder",
-    text: "This section is ready for active tasks, timers, blockers, and in-progress checkpoints using the same component language."
-  },
-  debriefing: {
-    badge: "Debriefing",
-    title: "Day-close placeholder",
-    text: "Use this space for reflection prompts, wins, unfinished tasks, and tomorrow prep after the workday ends."
-  }
-};
-
 export const PlaceholderPanel = ({ panelKey }: Props) => {
-  const panel = content[panelKey];
+  const { copy } = useI18n();
+  const panel = copy.ui.placeholderPanel[panelKey];
 
   return (
     <div className="placeholder-panel d-flex flex-column justify-content-center align-items-start p-4 p-lg-5">

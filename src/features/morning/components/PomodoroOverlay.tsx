@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useI18n } from "../../../i18n";
 import type { PomodoroMinutes, TodayTask } from "../types";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 
@@ -24,6 +25,7 @@ const formatSeconds = (seconds: number): string => {
 };
 
 export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
+  const { copy } = useI18n();
   const [selectedMinutes, setSelectedMinutes] = useState<PomodoroMinutes>(5);
 
   useEffect(() => {
@@ -46,17 +48,19 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
 
   return createPortal(
     <>
-      <div className="pomodoro-overlay" role="dialog" aria-modal="true" aria-label="Pomodoro timer overlay">
+      <div className="pomodoro-overlay" role="dialog" aria-modal="true" aria-label={copy.ui.pomodoroOverlay.ariaLabel}>
         <div className="pomodoro-overlay-card">
           <div className="d-flex justify-content-between align-items-start gap-3 mb-3">
             <div>
-              <p className="text-uppercase small text-secondary mb-1">Pomodoro</p>
+              <p className="text-uppercase small text-secondary mb-1">{copy.ui.pomodoroOverlay.title}</p>
               <h2 className="h4 mb-1">{task.title}</h2>
-              <p className="text-secondary mb-0">{task.pomodoroMinutes}" cycle</p>
+              <p className="text-secondary mb-0">
+                {copy.ui.pomodoroOverlay.cycle.replace("{{minutes}}", String(task.pomodoroMinutes))}
+              </p>
             </div>
 
             <CoachButton type="button" variant="outline" onClick={onClose}>
-              Close
+              {copy.ui.pomodoroOverlay.close}
             </CoachButton>
           </div>
 
@@ -69,7 +73,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
                 className="rounded-pill px-2 py-1"
                 onClick={() => setSelectedMinutes(minutes)}
               >
-                {minutes}"
+                {minutes}{copy.ui.todayTaskCard.minutesSuffix}
               </CoachButton>
             ))}
 
@@ -79,7 +83,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
               className="rounded-pill px-3 py-1"
               onClick={() => onStart(task.id, selectedMinutes)}
             >
-              <i className="bi bi-play-fill" /> Start
+              <i className="bi bi-play-fill" /> {copy.ui.pomodoroOverlay.start}
             </CoachButton>
           </div>
 

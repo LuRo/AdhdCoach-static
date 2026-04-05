@@ -1,4 +1,5 @@
 import type { BacklogTask, DaySpeedMultiplier, EnergyLevel, StepId, Task, TodayTask } from "./types";
+import { detectInitialLocale, getAnswerOptions as getLocalizedAnswerOptions, getDefaultQuestionSet, type Locale } from "../../i18n/copy";
 
 export type DebriefAnswerValue = 1 | 2 | 3 | 4 | 5;
 
@@ -39,15 +40,9 @@ export interface LocalAppDb {
 
 const DB_KEY = "adhd-coach-static-local-db";
 
-const DEFAULT_QUESTION_SET: DebriefQuestionSet = {
-  version: 1,
-  questions: [
-    "What helped you stay engaged when the day started to drift?",
-    "Where did the work feel heavier than expected?",
-    "What recovery move actually helped you get back on task?"
-  ],
-  updatedAt: new Date().toISOString()
-};
+const initialLocale = (): Locale => detectInitialLocale();
+
+const DEFAULT_QUESTION_SET: DebriefQuestionSet = getDefaultQuestionSet(initialLocale());
 
 const isBrowser = () => typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
@@ -179,10 +174,6 @@ export const getQuestionSetByVersion = (version: number) => {
   return db.questionSets.find((entry) => entry.version === version) ?? null;
 };
 
-export const getAnswerOptions = () => [
-  { value: 1 as const, label: "Not at all" },
-  { value: 2 as const, label: "A little" },
-  { value: 3 as const, label: "Somewhat" },
-  { value: 4 as const, label: "Mostly" },
-  { value: 5 as const, label: "Very much" }
-];
+export const getAnswerOptions = (locale: Locale = initialLocale()) => getLocalizedAnswerOptions(locale);
+
+
