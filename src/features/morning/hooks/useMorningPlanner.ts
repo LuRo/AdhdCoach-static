@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { COMPLEXITY_MAX, COMPLEXITY_THRESHOLD, INITIAL_BACKLOG_TASKS, INITIAL_TASKS } from "../constants";
+import { getPlannerSnapshot, getSelectedTestDate, savePlannerSnapshot, setSelectedTestDate } from "../store";
 import type {
   BacklogTask,
   ComplexitySnapshot,
@@ -64,6 +65,7 @@ export const useMorningPlanner = () => {
     angle: -180,
     transition: "transform 420ms ease-out"
   });
+  const [selectedTestDate, setSelectedTestDateState] = useState(() => getSelectedTestDate());
 
   const timers = useRef<number[]>([]);
 
@@ -382,6 +384,46 @@ export const useMorningPlanner = () => {
   }, [tasks]);
 
   useEffect(() => {
+    const snapshot = getPlannerSnapshot(selectedTestDate);
+
+    if (snapshot) {
+      setTasks(snapshot.tasks);
+      setTodayTasks(snapshot.todayTasks);
+      setBacklogTasks(snapshot.backlogTasks);
+      setSelectedEnergy(snapshot.selectedEnergy);
+      setCurrentStep(snapshot.currentStep);
+      setTasksLocked(snapshot.tasksLocked);
+    } else {
+      setTasks(INITIAL_TASKS);
+      setTodayTasks([]);
+      setBacklogTasks(INITIAL_BACKLOG_TASKS);
+      setSelectedEnergy("Medium");
+      setCurrentStep(1);
+      setTasksLocked(false);
+    }
+
+    setTaskDetailsTaskId(null);
+    setPomodoroOverlayTaskId(null);
+    setIsAddTaskModalOpen(false);
+    setIsHelpOpen(false);
+  }, [selectedTestDate]);
+
+  useEffect(() => {
+    setSelectedTestDate(selectedTestDate);
+  }, [selectedTestDate]);
+
+  useEffect(() => {
+    savePlannerSnapshot(selectedTestDate, {
+      tasks,
+      todayTasks,
+      backlogTasks,
+      selectedEnergy,
+      currentStep,
+      tasksLocked
+    });
+  }, [backlogTasks, currentStep, selectedEnergy, selectedTestDate, tasks, tasksLocked, todayTasks]);
+
+  useEffect(() => {
     updateGaugeFromTasks();
   }, [updateGaugeFromTasks]);
 
@@ -464,6 +506,8 @@ export const useMorningPlanner = () => {
     openTaskDetails,
     pomodoroOverlayTask,
     removeSelectedTasks,
+    selectedTestDate,
+    setSelectedTestDate: setSelectedTestDateState,
     selectedEnergy,
     selectedTask,
     setActiveTabFromPanel,
@@ -479,6 +523,14 @@ export const useMorningPlanner = () => {
     triggerGaugeRecalculation: animateGaugeRecalculation
   };
 };
+
+
+
+
+
+
+
+
 
 
 

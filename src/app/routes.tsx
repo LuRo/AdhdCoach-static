@@ -1,0 +1,117 @@
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate
+} from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { DashboardLayout } from "../layouts/DashboardLayout";
+import { AddTaskModal } from "../features/morning/components/AddTaskModal";
+import { PomodoroOverlay } from "../features/morning/components/PomodoroOverlay";
+import { Step2HelpModal } from "../features/morning/components/Step2HelpModal";
+import { TaskDetailsModal } from "../features/morning/components/TaskDetailsModal";
+import { useMorningPlanner } from "../features/morning/hooks/useMorningPlanner";
+import { DebriefingPage } from "../features/morning/pages/DebriefingPage";
+import { MorningPage } from "../features/morning/pages/MorningPage";
+import { TodayPage } from "../features/morning/pages/TodayPage";
+import type { TabId } from "../features/morning/types";
+import { ProfilePage } from "../pages/ProfilePage";
+import { SettingsPage } from "../pages/SettingsPage";
+
+const TAB_PATHS: Record<TabId, string> = {
+  morning: "/morning",
+  today: "/today",
+  debriefing: "/debriefing"
+};
+
+const pathToMainTab = (pathname: string): TabId | null => {
+  if (pathname === "/morning") return "morning";
+  if (pathname === "/today") return "today";
+  if (pathname === "/debriefing") return "debriefing";
+  return null;
+};
+
+const RoutedApp = () => {
+  const planner = useMorningPlanner();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const lastMainTabRef = useRef<TabId>("morning");
+
+  useEffect(() => {
+    const routeTab = pathToMainTab(location.pathname);
+
+    if (routeTab) {
+      lastMainTabRef.current = routeTab;
+    }
+
+    if (routeTab && planner.activeTab !== routeTab) {
+      planner.setActiveTabFromPanel(`${routeTab}-panel`);
+    }
+  }, [location.pathname, planner.activeTab, planner.setActiveTabFromPanel]);
+
+  const isMainTabRoute = pathToMainTab(location.pathname) !== null;
+
+  const handleSelectTab = (tabId: TabId) => {
+    planner.setActiveTabFromPanel(`${tabId}-panel`);
+    navigate(TAB_PATHS[tabId]);
+  };
+
+  const handleCloseAuxPage = () => {
+    handleSelectTab(lastMainTabRef.current);
+  };
+
+  return (
+    <>
+      <DashboardLayout
+        activeTab={planner.activeTab}
+        onOpenHomePage={() => handleSelectTab("morning")}
+        onOpenProfilePage={() => navigate("/profile")}
+        onOpenSettingsPage={() => navigate("/settings")}
+        onSelectTab={handleSelectTab}
+        showMainTabs={isMainTabRoute}
+      >
+        <Routes>
+          <Route path="/" element={<Navigate to="/morning" replace />} />
+          <Route path="/morning" element={<MorningPage planner={planner} />} />
+          <Route path="/today" element={<TodayPage planner={planner} />} />
+          <Route path="/debriefing" element={<DebriefingPage />} />
+          <Route path="/settings" element={<SettingsPage onClose={handleCloseAuxPage} />} />
+          <Route path="/profile" element={<ProfilePage onClose={handleCloseAuxPage} />} />
+          <Route path="*" element={<Navigate to="/morning" replace />} />
+        </Routes>
+      </DashboardLayout>
+
+      <TaskDetailsModal
+        isOpen={Boolean(planner.selectedTask)}
+        onClose={planner.closeTaskDetails}
+        task={planner.selectedTask}
+      />
+
+      <PomodoroOverlay
+        task={planner.pomodoroOverlayTask}
+        onClose={planner.closePomodoroOverlay}
+        onStart={planner.startTodayTaskPomodoro}
+        onStop={planner.stopTodayTaskPomodoro}
+      />
+
+      <Step2HelpModal isOpen={planner.isHelpOpen} onClose={() => planner.setIsHelpOpen(false)} />
+
+      <AddTaskModal
+        backlogTasks={planner.backlogTasks}
+        isOpen={planner.isAddTaskModalOpen}
+        onAddFromBacklog={planner.addTaskFromBacklog}
+        onClose={planner.closeAddTaskModal}
+        onCreateTask={planner.createTask}
+      />
+    </>
+  );
+};
+
+export const AppRoutes = () => (
+  <BrowserRouter>
+    <RoutedApp />
+  </BrowserRouter>
+);
+
