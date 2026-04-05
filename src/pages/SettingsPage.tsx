@@ -1,4 +1,5 @@
-import { useState } from "react";
+﻿import { useState } from "react";
+import { InlineTranslationText } from "../i18n/InlineTranslationText";
 import { useI18n } from "../i18n";
 import { CoachBadge } from "../shared/components/atoms/CoachBadge";
 import { CoachButton } from "../shared/components/atoms/CoachButton";
@@ -37,7 +38,13 @@ const translationCopy = {
     helperOn: "The UI follows the active language.",
     helperOff: "The UI stays in English until you turn translation back on.",
     enableLabel: "Enabled",
-    disableLabel: "Disabled"
+    disableLabel: "Disabled",
+    editorTitle: "Inline translation editor",
+    editorLead: "Edit the current locale copy directly. Empty fields revert to the default translation.",
+    groupCommon: "Common labels",
+    groupNav: "Navigation labels",
+    groupPages: "Page headings",
+    groupPlanner: "Planner labels"
   },
   de: {
     sectionLabel: "Übersetzung",
@@ -46,7 +53,13 @@ const translationCopy = {
     helperOn: "Die Oberfläche folgt der aktiven Sprache.",
     helperOff: "Die Oberfläche bleibt auf Englisch, bis du die Übersetzung wieder einschaltest.",
     enableLabel: "Ein",
-    disableLabel: "Aus"
+    disableLabel: "Aus",
+    editorTitle: "Inline-Übersetzungseditor",
+    editorLead: "Bearbeite die aktuelle Sprachfassung direkt. Leere Felder fallen auf die Standardübersetzung zurück.",
+    groupCommon: "Allgemeine Labels",
+    groupNav: "Navigationslabels",
+    groupPages: "Seitentitel",
+    groupPlanner: "Planer-Labels"
   },
   fr: {
     sectionLabel: "Traduction",
@@ -55,7 +68,13 @@ const translationCopy = {
     helperOn: "L'interface suit la langue active.",
     helperOff: "L'interface reste en anglais jusqu'à ce que vous réactiviez la traduction.",
     enableLabel: "Activée",
-    disableLabel: "Désactivée"
+    disableLabel: "Désactivée",
+    editorTitle: "Editeur de traduction en ligne",
+    editorLead: "Modifiez directement la copie de la langue courante. Les champs vides reviennent à la traduction par défaut.",
+    groupCommon: "Libellés courants",
+    groupNav: "Libellés de navigation",
+    groupPages: "Titres de page",
+    groupPlanner: "Libellés du planificateur"
   }
 } as const;
 const emptyTestModes: TestModeSettings = {
@@ -137,15 +156,19 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
     <section className="section-panel active" id="settings-panel" aria-labelledby="settings-page-title" role="tabpanel" data-testid="settings-page">
       <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
         <div className="d-flex flex-column gap-2">
-          <p className="text-uppercase small fw-semibold text-secondary mb-0">{copy.settings.sectionLabel}</p>
+          <p className="text-uppercase small fw-semibold text-secondary mb-0">
+            <InlineTranslationText path="settings.sectionLabel" value={copy.settings.sectionLabel} />
+          </p>
           <h1 id="settings-page-title" className="h2 mb-0">
-            {copy.settings.title}
+            <InlineTranslationText path="settings.title" value={copy.settings.title} multiline />
           </h1>
-          <p className="text-secondary mb-0">{copy.settings.description}</p>
+          <p className="text-secondary mb-0">
+            <InlineTranslationText path="settings.description" value={copy.settings.description} multiline />
+          </p>
         </div>
 
         <CoachButton type="button" variant="outline" onClick={onClose} aria-label={copy.settings.closeAria} testId="settings-close-button">
-          {copy.common.close}
+          <InlineTranslationText path="common.close" value={copy.common.close} />
         </CoachButton>
       </div>
 
@@ -177,6 +200,97 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
         </div>
         <div className="small text-secondary">{translationEnabled ? translationCopy[locale].helperOn : translationCopy[locale].helperOff}</div>
       </SectionCard>
+
+      {translationEnabled ? (
+        <SectionCard className="p-4 p-lg-5 mb-4">
+          <div className="mb-4">
+            <CoachBadge tone="purple" className="rounded-pill px-3 py-2">
+              {translationCopy[locale].editorTitle}
+            </CoachBadge>
+            <h2 className="h4 mt-3 mb-2">{translationCopy[locale].editorTitle}</h2>
+            <p className="text-secondary mb-0">{translationCopy[locale].editorLead}</p>
+          </div>
+
+          <div className="d-grid gap-4">
+            <div>
+              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupCommon}</div>
+              <div className="d-grid gap-3">
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">close</span>
+                  <InlineTranslationText path="common.close" value={copy.common.close} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">save</span>
+                  <InlineTranslationText path="common.save" value={copy.common.save} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">cancel</span>
+                  <InlineTranslationText path="common.cancel" value={copy.common.cancel} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">reset</span>
+                  <InlineTranslationText path="common.reset" value={copy.common.reset} className="w-100" multiline />
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupNav}</div>
+              <div className="d-grid gap-3">
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">logout</span>
+                  <InlineTranslationText path="nav.logout" value={copy.nav.logout} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">settings aria</span>
+                  <InlineTranslationText path="nav.settingsAria" value={copy.nav.settingsAria} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">profile aria</span>
+                  <InlineTranslationText path="nav.profileAria" value={copy.nav.profileAria} className="w-100" multiline />
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupPages}</div>
+              <div className="d-grid gap-3">
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">profile title</span>
+                  <InlineTranslationText path="profile.title" value={copy.profile.title} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">settings title</span>
+                  <InlineTranslationText path="settings.title" value={copy.settings.title} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">settings description</span>
+                  <InlineTranslationText path="settings.description" value={copy.settings.description} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">question set heading</span>
+                  <InlineTranslationText path="settings.questionSetHeading" value={copy.settings.questionSetHeading} className="w-100" multiline />
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupPlanner}</div>
+              <div className="d-grid gap-3">
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">planner title</span>
+                  <InlineTranslationText path="settings.plannerTitle" value={copy.settings.plannerTitle} className="w-100" multiline />
+                </label>
+                <label className="d-grid gap-1">
+                  <span className="small text-secondary fw-semibold">planner text</span>
+                  <InlineTranslationText path="settings.plannerText" value={copy.settings.plannerText} className="w-100" multiline />
+                </label>
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+      ) : null}
+
       <SectionCard className="p-4 p-lg-5 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div>

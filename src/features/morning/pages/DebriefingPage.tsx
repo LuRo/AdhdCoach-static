@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useI18n } from "../../../i18n";
 import { CoachBadge } from "../../../shared/components/atoms/CoachBadge";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
@@ -350,7 +350,7 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
             <SectionCard className="p-4 mb-4">
               <h2 className="h4 mb-3">{copy.ui.debriefingPage.strategyHeading}</h2>
               <ul className="debrief-list mb-0">
-                {copy.ui.debriefingPage.strategy.map((item) => (
+                {copy.ui.debriefingPage.strategy.map((item: string) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
@@ -410,6 +410,7 @@ const CircleAverage = ({ label, value, count, countLabel, locale }: { label: str
     </div>
   );
 };
+
 
 
 
