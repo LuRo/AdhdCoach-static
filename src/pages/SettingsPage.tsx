@@ -29,6 +29,35 @@ const formatDate = (value: string, locale: string) => new Intl.DateTimeFormat(lo
 
 const formatDateTime = (value: string, locale: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 
+const translationCopy = {
+  en: {
+    sectionLabel: "Translation",
+    title: "In-page translation",
+    description: "Show the interface in the selected language.",
+    helperOn: "The UI follows the active language.",
+    helperOff: "The UI stays in English until you turn translation back on.",
+    enableLabel: "Enabled",
+    disableLabel: "Disabled"
+  },
+  de: {
+    sectionLabel: "Übersetzung",
+    title: "Übersetzung in der App",
+    description: "Zeige die Oberfläche in der gewählten Sprache an.",
+    helperOn: "Die Oberfläche folgt der aktiven Sprache.",
+    helperOff: "Die Oberfläche bleibt auf Englisch, bis du die Übersetzung wieder einschaltest.",
+    enableLabel: "Ein",
+    disableLabel: "Aus"
+  },
+  fr: {
+    sectionLabel: "Traduction",
+    title: "Traduction dans l'application",
+    description: "Affiche l'interface dans la langue sélectionnée.",
+    helperOn: "L'interface suit la langue active.",
+    helperOff: "L'interface reste en anglais jusqu'à ce que vous réactiviez la traduction.",
+    enableLabel: "Activée",
+    disableLabel: "Désactivée"
+  }
+} as const;
 const emptyTestModes: TestModeSettings = {
   enabled: false,
   morningDateEnabled: false,
@@ -36,7 +65,7 @@ const emptyTestModes: TestModeSettings = {
 };
 
 export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testModeSettings, onTestModeSettingsChange }: Props) => {
-  const { copy, locale } = useI18n();
+  const { copy, locale, translationEnabled, setTranslationEnabled } = useI18n();
   const [savedQuestionSet, setSavedQuestionSet] = useState(() => getQuestionSet());
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<0 | 1 | 2>(0);
   const [questionDrafts, setQuestionDrafts] = useState<[string, string, string]>(savedQuestionSet.questions);
@@ -124,99 +153,30 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div>
             <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
-              <CoachBadge tone={testModeSettings.enabled ? "purple" : "warning"} className="rounded-pill px-3 py-2">
-                {copy.settings.testModeBadge}
+              <CoachBadge tone={translationEnabled ? "purple" : "warning"} className="rounded-pill px-3 py-2">
+                {translationCopy[locale].sectionLabel}
               </CoachBadge>
-              <span className="small text-secondary">{testModeSettings.enabled ? copy.settings.toggleOn : copy.settings.toggleOff}</span>
+              <span className="small text-secondary">{translationEnabled ? translationCopy[locale].enableLabel : translationCopy[locale].disableLabel}</span>
             </div>
-            <h2 className="h4 mb-2">{copy.settings.masterHeading}</h2>
-            <p className="text-secondary mb-0">{copy.settings.masterDescription}</p>
+            <h2 className="h4 mb-2">{translationCopy[locale].title}</h2>
+            <p className="text-secondary mb-0">{translationCopy[locale].description}</p>
           </div>
-          <div className="text-end small text-secondary">
-            <div>{copy.settings.storedCurrentDay}</div>
-            <div className="fw-semibold text-dark">{formatDate(selectedTestDate, locale)}</div>
+          <div className="form-check form-switch m-0">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="translation-enabled"
+              checked={translationEnabled}
+              onChange={(event) => setTranslationEnabled(event.target.checked)}
+            />
+            <label className="form-check-label small fw-semibold" htmlFor="translation-enabled">
+              {translationEnabled ? translationCopy[locale].enableLabel : translationCopy[locale].disableLabel}
+            </label>
           </div>
         </div>
-
-        <div className="d-grid gap-3">
-          <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 p-3 rounded-4 border">
-            <div>
-              <div className="fw-semibold">{copy.settings.masterSwitchTitle}</div>
-              <div className="small text-secondary">{copy.settings.masterSwitchDescription}</div>
-            </div>
-            <div className="form-check form-switch m-0">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="test-mode-enabled"
-                data-testid="settings-test-mode-master-switch"
-                checked={testModeSettings.enabled}
-                onChange={(event) => handleMasterToggle(event.target.checked)}
-              />
-              <label className="form-check-label small fw-semibold" htmlFor="test-mode-enabled">
-                {testModeSettings.enabled ? copy.settings.toggleOn : copy.settings.toggleOff}
-              </label>
-            </div>
-          </div>
-
-          {showIndividualModes ? (
-            <>
-              <div className="d-grid gap-3 p-3 rounded-4 border">
-                <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                  <div>
-                    <div className="fw-semibold">{copy.settings.morningModeTitle}</div>
-                    <div className="small text-secondary">{copy.settings.morningModeDescription}</div>
-                  </div>
-                  <div className="form-check form-switch m-0">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="test-mode-morning-date"
-                      data-testid="settings-test-mode-morning-date-switch"
-                      checked={testModeSettings.morningDateEnabled}
-                      onChange={(event) => handleMorningToggle(event.target.checked)}
-                    />
-                    <label className="form-check-label small fw-semibold" htmlFor="test-mode-morning-date">
-                      {testModeSettings.morningDateEnabled ? copy.settings.toggleOn : copy.settings.toggleOff}
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="d-grid gap-3 p-3 rounded-4 border">
-                <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                  <div>
-                    <div className="fw-semibold">{copy.settings.todaySpeedTitle}</div>
-                    <div className="small text-secondary">{copy.settings.todaySpeedDescription}</div>
-                  </div>
-                  <div className="form-check form-switch m-0">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="test-mode-today-speed"
-                      data-testid="settings-test-mode-today-speed-switch"
-                      checked={testModeSettings.todaySpeedEnabled}
-                      onChange={(event) => handleTodaySpeedToggle(event.target.checked)}
-                    />
-                    <label className="form-check-label small fw-semibold" htmlFor="test-mode-today-speed">
-                      {testModeSettings.todaySpeedEnabled ? copy.settings.toggleOn : copy.settings.toggleOff}
-                    </label>
-                  </div>
-                </div>
-                <div className="small text-secondary">
-                  {copy.settings.activeSpeedLabel}: {testModeSettings.todaySpeedEnabled ? `${testDaySpeed}x` : copy.settings.liveSpeed}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="alert alert-info mb-0">{copy.settings.testOptionsHidden}</div>
-          )}
-        </div>
+        <div className="small text-secondary">{translationEnabled ? translationCopy[locale].helperOn : translationCopy[locale].helperOff}</div>
       </SectionCard>
-
       <SectionCard className="p-4 p-lg-5 mb-4">
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div>

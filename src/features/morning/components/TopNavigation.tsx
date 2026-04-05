@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSettingsPage }: Props) => {
-  const { copy, locale, setLocale } = useI18n();
+  const { copy, locale, setLocale, translationEnabled } = useI18n();
 
   return (
     <nav className="navbar navbar-expand-lg px-1 px-lg-2" aria-label={copy.nav.sectionsAria} data-testid="top-navigation">
@@ -31,6 +31,7 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
               value={locale}
               onChange={(event) => setLocale(event.currentTarget.value as Locale)}
               aria-label={copy.locale.label}
+              disabled={!translationEnabled}
             >
               {LOCALES.map((item) => (
                 <option key={item} value={item}>
