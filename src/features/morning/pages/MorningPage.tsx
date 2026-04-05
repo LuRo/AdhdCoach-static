@@ -30,6 +30,7 @@ export const MorningPage = ({ planner }: Props) => (
     selectedTestDate={planner.selectedTestDate}
     tasks={planner.tasks}
     tasksLocked={planner.tasksLocked}
+    testModeSettings={planner.testModeSettings}
     totalComplexity={planner.complexity.total}
   />
 );

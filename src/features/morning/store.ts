@@ -1,12 +1,20 @@
 import type { BacklogTask, DaySpeedMultiplier, EnergyLevel, StepId, Task, TodayTask } from "./types";
-import { detectInitialLocale, getAnswerOptions as getLocalizedAnswerOptions, getDefaultQuestionSet, type Locale } from "../../i18n/copy";
 
 export type DebriefAnswerValue = 1 | 2 | 3 | 4 | 5;
+export type DebriefAnswerOptions = [string, string, string, string, string];
+export type DebriefQuestionAnswerOptions = [DebriefAnswerOptions, DebriefAnswerOptions, DebriefAnswerOptions];
 
 export interface DebriefQuestionSet {
   version: number;
   questions: [string, string, string];
+  answerOptions: DebriefQuestionAnswerOptions;
   updatedAt: string;
+}
+
+export interface TestModeSettings {
+  enabled: boolean;
+  morningDateEnabled: boolean;
+  todaySpeedEnabled: boolean;
 }
 
 export interface DebriefSubmission {
@@ -33,6 +41,7 @@ export interface PlannerSnapshot {
 
 export interface LocalAppDb {
   selectedTestDate: string;
+  testModeSettings: TestModeSettings;
   questionSets: DebriefQuestionSet[];
   plannerByDate: Record<string, PlannerSnapshot>;
   submissionsByDate: Record<string, DebriefSubmission[]>;
@@ -40,32 +49,115 @@ export interface LocalAppDb {
 
 const DB_KEY = "adhd-coach-static-local-db";
 
-const initialLocale = (): Locale => detectInitialLocale();
+const DEFAULT_QUESTION_SET: DebriefQuestionSet = {
+  version: 1,
+  questions: [
+    "What helped you stay engaged when the day started to drift?",
+    "Where did the work feel heavier than expected?",
+    "What recovery move actually helped you get back on task?"
+  ],
+  answerOptions: [
+    ["Not at all", "A little", "Somewhat", "Mostly", "Very much"],
+    ["Not at all", "A little", "Somewhat", "Mostly", "Very much"],
+    ["Not at all", "A little", "Somewhat", "Mostly", "Very much"]
+  ],
+  updatedAt: new Date().toISOString()
+};
 
-const DEFAULT_QUESTION_SET: DebriefQuestionSet = getDefaultQuestionSet(initialLocale());
+export const DEFAULT_TEST_MODE_SETTINGS: TestModeSettings = {
+  enabled: false,
+  morningDateEnabled: false,
+  todaySpeedEnabled: false
+};
 
 const isBrowser = () => typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
-const isQuestionSet = (value: unknown): value is DebriefQuestionSet => {
-  if (!value || typeof value !== "object") return false;
-  const candidate = value as DebriefQuestionSet;
-  return (
-    typeof candidate.version === "number" &&
-    Array.isArray(candidate.questions) &&
-    candidate.questions.length === 3 &&
-    candidate.questions.every((question) => typeof question === "string") &&
-    typeof candidate.updatedAt === "string"
-  );
+const isAnswerOptions = (value: unknown): value is DebriefAnswerOptions =>
+  Array.isArray(value) && value.length === 5 && value.every((option) => typeof option === "string");
+
+const normalizeAnswerOptions = (value: unknown): DebriefAnswerOptions => {
+  if (isAnswerOptions(value)) {
+    return [...value] as DebriefAnswerOptions;
+  }
+
+  return [...DEFAULT_QUESTION_SET.answerOptions[0]] as DebriefAnswerOptions;
+};
+
+const normalizeQuestionAnswerOptions = (value: unknown): DebriefQuestionAnswerOptions => {
+  if (Array.isArray(value) && value.length === 3) {
+    const [q1, q2, q3] = value;
+    if (isAnswerOptions(q1) && isAnswerOptions(q2) && isAnswerOptions(q3)) {
+      return [
+        [...q1] as DebriefAnswerOptions,
+        [...q2] as DebriefAnswerOptions,
+        [...q3] as DebriefAnswerOptions
+      ];
+    }
+
+    if (isAnswerOptions(q1)) {
+      const normalized = [...q1] as DebriefAnswerOptions;
+      return [normalized, [...normalized] as DebriefAnswerOptions, [...normalized] as DebriefAnswerOptions];
+    }
+  }
+
+  if (isAnswerOptions(value)) {
+    const normalized = [...value] as DebriefAnswerOptions;
+    return [normalized, [...normalized] as DebriefAnswerOptions, [...normalized] as DebriefAnswerOptions];
+  }
+
+  return [
+    [...DEFAULT_QUESTION_SET.answerOptions[0]] as DebriefAnswerOptions,
+    [...DEFAULT_QUESTION_SET.answerOptions[1]] as DebriefAnswerOptions,
+    [...DEFAULT_QUESTION_SET.answerOptions[2]] as DebriefAnswerOptions
+  ];
+};
+
+const normalizeTestModeSettings = (value: unknown): TestModeSettings => {
+  if (!value || typeof value !== "object") {
+    return { ...DEFAULT_TEST_MODE_SETTINGS };
+  }
+
+  const candidate = value as Partial<TestModeSettings>;
+  const enabled = typeof candidate.enabled === "boolean" ? candidate.enabled : DEFAULT_TEST_MODE_SETTINGS.enabled;
+
+  return {
+    enabled,
+    morningDateEnabled: enabled && candidate.morningDateEnabled === true,
+    todaySpeedEnabled: enabled && candidate.todaySpeedEnabled === true
+  };
+};
+
+const normalizeQuestionSet = (value: unknown): DebriefQuestionSet | null => {
+  if (!value || typeof value !== "object") return null;
+  const candidate = value as Partial<DebriefQuestionSet> & { answerOptions?: unknown };
+
+  if (
+    typeof candidate.version !== "number" ||
+    !Array.isArray(candidate.questions) ||
+    candidate.questions.length !== 3 ||
+    !candidate.questions.every((question) => typeof question === "string") ||
+    typeof candidate.updatedAt !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    version: candidate.version,
+    questions: [candidate.questions[0], candidate.questions[1], candidate.questions[2]],
+    answerOptions: normalizeQuestionAnswerOptions(candidate.answerOptions),
+    updatedAt: candidate.updatedAt
+  };
 };
 
 const normalizeDb = (raw: Partial<LocalAppDb>): LocalAppDb => {
-  const questionSets = Array.isArray(raw.questionSets) && raw.questionSets.every(isQuestionSet) ? raw.questionSets : null;
-  const legacyQuestionSet = isQuestionSet((raw as { questionSet?: unknown }).questionSet)
-    ? (raw as { questionSet?: DebriefQuestionSet }).questionSet
+  const questionSets = Array.isArray(raw.questionSets)
+    ? raw.questionSets.map(normalizeQuestionSet).filter((entry): entry is DebriefQuestionSet => entry !== null)
     : null;
+  const legacyQuestionSet = normalizeQuestionSet((raw as { questionSet?: unknown }).questionSet);
 
   return {
     selectedTestDate: typeof raw.selectedTestDate === "string" ? raw.selectedTestDate : new Date().toISOString().slice(0, 10),
+    testModeSettings: normalizeTestModeSettings(raw.testModeSettings),
     questionSets: questionSets && questionSets.length > 0 ? questionSets : legacyQuestionSet ? [legacyQuestionSet] : [{ ...DEFAULT_QUESTION_SET }],
     plannerByDate:
       raw.plannerByDate && typeof raw.plannerByDate === "object" ? (raw.plannerByDate as Record<string, PlannerSnapshot>) : {},
@@ -80,6 +172,7 @@ const readRawDb = (): LocalAppDb => {
   if (!isBrowser()) {
     return {
       selectedTestDate: new Date().toISOString().slice(0, 10),
+      testModeSettings: { ...DEFAULT_TEST_MODE_SETTINGS },
       questionSets: [{ ...DEFAULT_QUESTION_SET }],
       plannerByDate: {},
       submissionsByDate: {}
@@ -90,6 +183,7 @@ const readRawDb = (): LocalAppDb => {
   if (!raw) {
     return {
       selectedTestDate: new Date().toISOString().slice(0, 10),
+      testModeSettings: { ...DEFAULT_TEST_MODE_SETTINGS },
       questionSets: [{ ...DEFAULT_QUESTION_SET }],
       plannerByDate: {},
       submissionsByDate: {}
@@ -101,6 +195,7 @@ const readRawDb = (): LocalAppDb => {
   } catch {
     return {
       selectedTestDate: new Date().toISOString().slice(0, 10),
+      testModeSettings: { ...DEFAULT_TEST_MODE_SETTINGS },
       questionSets: [{ ...DEFAULT_QUESTION_SET }],
       plannerByDate: {},
       submissionsByDate: {}
@@ -122,6 +217,13 @@ export const setSelectedTestDate = (selectedTestDate: string) => {
   writeRawDb({ ...db, selectedTestDate });
 };
 
+export const getTestModeSettings = () => readRawDb().testModeSettings;
+
+export const setTestModeSettings = (testModeSettings: TestModeSettings) => {
+  const db = readRawDb();
+  writeRawDb({ ...db, testModeSettings: normalizeTestModeSettings(testModeSettings) });
+};
+
 export const getQuestionSet = () => {
   const db = readRawDb();
   return db.questionSets[db.questionSets.length - 1] ?? { ...DEFAULT_QUESTION_SET };
@@ -129,12 +231,13 @@ export const getQuestionSet = () => {
 
 export const getQuestionSets = () => readRawDb().questionSets;
 
-export const saveQuestionSet = (questions: [string, string, string]) => {
+export const saveQuestionSet = (questions: [string, string, string], answerOptions: DebriefQuestionAnswerOptions = getQuestionSet().answerOptions) => {
   const db = readRawDb();
   const nextVersion = (db.questionSets[db.questionSets.length - 1]?.version ?? 0) + 1;
   const nextQuestionSet: DebriefQuestionSet = {
     version: nextVersion,
     questions,
+    answerOptions,
     updatedAt: new Date().toISOString()
   };
 
@@ -164,7 +267,7 @@ export const appendSubmissionForDate = (testDate: string, submission: DebriefSub
     ...db,
     submissionsByDate: {
       ...db.submissionsByDate,
-      [testDate]: [...previous, submission]
+      [testDate]: [submission]
     }
   });
 };
@@ -174,6 +277,10 @@ export const getQuestionSetByVersion = (version: number) => {
   return db.questionSets.find((entry) => entry.version === version) ?? null;
 };
 
-export const getAnswerOptions = (locale: Locale = initialLocale()) => getLocalizedAnswerOptions(locale);
+export const getAnswerOptionsForQuestion = (questionIndex: 0 | 1 | 2) => getQuestionSet().answerOptions[questionIndex];
+
+export const getAnswerOptionsForQuestionByVersion = (version: number, questionIndex: 0 | 1 | 2) =>
+  getQuestionSetByVersion(version)?.answerOptions[questionIndex] ?? DEFAULT_QUESTION_SET.answerOptions[questionIndex];
+
 
 

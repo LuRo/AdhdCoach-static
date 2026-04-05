@@ -1,7 +1,6 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { COMPLEXITY_MAX, COMPLEXITY_THRESHOLD } from "../constants";
-import { getInitialBacklogTasks, getInitialTasks, type Locale } from "../../../i18n/copy";
-import { getPlannerSnapshot, getSelectedTestDate, savePlannerSnapshot, setSelectedTestDate } from "../store";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { COMPLEXITY_MAX, COMPLEXITY_THRESHOLD, INITIAL_BACKLOG_TASKS, INITIAL_TASKS } from "../constants";
+import { getPlannerSnapshot, getSelectedTestDate, getTestModeSettings, savePlannerSnapshot, setSelectedTestDate, setTestModeSettings, type TestModeSettings } from "../store";
 import type {
   BacklogTask,
   ComplexitySnapshot,
@@ -45,19 +44,40 @@ const toTodayTask = (task: Task): TodayTask => ({
   timerRemainingSeconds: 5 * 60,
   timerRunning: false,
   blocked: false,
+  blockedAt: null,
   workElapsedSeconds: 0,
   workTimerRunning: false
 });
 
 const cloneForToday = (tasks: Task[]): TodayTask[] => tasks.map((task) => toTodayTask(task));
 
-export const useMorningPlanner = (locale: Locale = "en") => {
+const getActiveTodayTaskId = (tasks: TodayTask[]): string | null => {
+  const firstUnblocked = tasks.find((task) => !task.done && !task.blocked);
+  if (firstUnblocked) {
+    return firstUnblocked.id;
+  }
+
+  const blockedTasks = tasks.filter((task) => !task.done && task.blocked);
+  const oldestBlocked = blockedTasks.reduce<TodayTask | null>((oldest, task) => {
+    if (!oldest) {
+      return task;
+    }
+
+    const oldestBlockedAt = oldest.blockedAt ?? Number.POSITIVE_INFINITY;
+    const taskBlockedAt = task.blockedAt ?? Number.POSITIVE_INFINITY;
+    return taskBlockedAt < oldestBlockedAt ? task : oldest;
+  }, null);
+
+  return oldestBlocked?.id ?? null;
+};
+
+export const useMorningPlanner = () => {
   const [activeTab, setActiveTab] = useState<TabId>("morning");
   const [currentStep, setCurrentStep] = useState<StepId>(1);
   const [selectedEnergy, setSelectedEnergy] = useState<EnergyLevel>("Medium");
-  const [tasks, setTasks] = useState<Task[]>(() => getInitialTasks(locale));
+  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   const [todayTasks, setTodayTasks] = useState<TodayTask[]>([]);
-  const [backlogTasks, setBacklogTasks] = useState<BacklogTask[]>(() => getInitialBacklogTasks(locale));
+  const [backlogTasks, setBacklogTasks] = useState<BacklogTask[]>(INITIAL_BACKLOG_TASKS);
   const [taskDetailsTaskId, setTaskDetailsTaskId] = useState<string | null>(null);
   const [pomodoroOverlayTaskId, setPomodoroOverlayTaskId] = useState<string | null>(null);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
@@ -69,20 +89,16 @@ export const useMorningPlanner = (locale: Locale = "en") => {
     transition: "transform 420ms ease-out"
   });
   const [selectedTestDate, setSelectedTestDateState] = useState(() => getSelectedTestDate());
+  const [testModeSettings, setTestModeSettingsState] = useState<TestModeSettings>(() => getTestModeSettings());
 
   const timers = useRef<number[]>([]);
+  const getCurrentIsoDate = () => new Date().toISOString().slice(0, 10);
+  const effectiveSelectedTestDate = testModeSettings.enabled && testModeSettings.morningDateEnabled ? selectedTestDate : getCurrentIsoDate();
+  const effectiveTestDaySpeed = testModeSettings.enabled && testModeSettings.todaySpeedEnabled ? testDaySpeed : 1;
 
   const complexity = useMemo(() => getComplexitySnapshot(tasks), [tasks]);
   const hasTaskSelection = useMemo(() => tasks.some((task) => task.selected), [tasks]);
-  const activeTodayTaskId = useMemo(() => {
-    const firstUnblocked = todayTasks.find((task) => !task.done && !task.blocked);
-    if (firstUnblocked) {
-      return firstUnblocked.id;
-    }
-
-    const firstBlocked = todayTasks.find((task) => !task.done && task.blocked);
-    return firstBlocked?.id ?? null;
-  }, [todayTasks]);
+  const activeTodayTaskId = useMemo(() => getActiveTodayTaskId(todayTasks), [todayTasks]);
   const selectedTask = useMemo(
     () =>
       tasks.find((task) => task.id === taskDetailsTaskId) ??
@@ -157,6 +173,7 @@ export const useMorningPlanner = (locale: Locale = "en") => {
           ...task,
           done: checked,
           blocked: checked ? task.blocked : false,
+          blockedAt: checked ? task.blockedAt ?? null : null,
           timerRunning: false,
           workTimerRunning: false,
           timerRemainingSeconds: checked ? task.timerRemainingSeconds : task.pomodoroMinutes * 60
@@ -173,12 +190,15 @@ export const useMorningPlanner = (locale: Locale = "en") => {
             return task;
           }
 
+          const shouldResumeTimer = task.blocked || task.timerRunning || task.timerRemainingSeconds < task.pomodoroMinutes * 60;
+
           return {
             ...task,
-            pomodoroMinutes: minutes,
-            timerRemainingSeconds: minutes * 60,
+            pomodoroMinutes: shouldResumeTimer ? task.pomodoroMinutes : minutes,
+            timerRemainingSeconds: shouldResumeTimer ? task.timerRemainingSeconds : minutes * 60,
             timerRunning: true,
-            blocked: false
+            blocked: false,
+            blockedAt: null
           };
         })
       );
@@ -212,7 +232,8 @@ export const useMorningPlanner = (locale: Locale = "en") => {
           return {
             ...task,
             workTimerRunning: true,
-            blocked: false
+            blocked: false,
+            blockedAt: null
           };
         })
       );
@@ -231,6 +252,7 @@ export const useMorningPlanner = (locale: Locale = "en") => {
           return {
             ...task,
             blocked: true,
+            blockedAt: Date.now(),
             timerRunning: false,
             workTimerRunning: false
           };
@@ -387,7 +409,7 @@ export const useMorningPlanner = (locale: Locale = "en") => {
   }, [tasks]);
 
   useEffect(() => {
-    const snapshot = getPlannerSnapshot(selectedTestDate);
+    const snapshot = getPlannerSnapshot(effectiveSelectedTestDate);
 
     if (snapshot) {
       setTasks(snapshot.tasks);
@@ -398,9 +420,9 @@ export const useMorningPlanner = (locale: Locale = "en") => {
       setTasksLocked(snapshot.tasksLocked);
       setTestDaySpeed(snapshot.testDaySpeed ?? 1);
     } else {
-      setTasks(getInitialTasks(locale));
+      setTasks(INITIAL_TASKS);
       setTodayTasks([]);
-      setBacklogTasks(getInitialBacklogTasks(locale));
+      setBacklogTasks(INITIAL_BACKLOG_TASKS);
       setSelectedEnergy("Medium");
       setCurrentStep(1);
       setTasksLocked(false);
@@ -411,23 +433,28 @@ export const useMorningPlanner = (locale: Locale = "en") => {
     setPomodoroOverlayTaskId(null);
     setIsAddTaskModalOpen(false);
     setIsHelpOpen(false);
-  }, [selectedTestDate]);
+  }, [effectiveSelectedTestDate]);
 
   useEffect(() => {
     setSelectedTestDate(selectedTestDate);
   }, [selectedTestDate]);
 
   useEffect(() => {
-    savePlannerSnapshot(selectedTestDate, {
+    setTestModeSettings(testModeSettings);
+  }, [testModeSettings]);
+
+
+  useEffect(() => {
+    savePlannerSnapshot(effectiveSelectedTestDate, {
       tasks,
       todayTasks,
       backlogTasks,
       selectedEnergy,
       currentStep,
       tasksLocked,
-      testDaySpeed
+      testDaySpeed: effectiveTestDaySpeed
     });
-  }, [backlogTasks, currentStep, selectedEnergy, selectedTestDate, tasks, tasksLocked, testDaySpeed, todayTasks]);
+  }, [backlogTasks, currentStep, effectiveSelectedTestDate, effectiveTestDaySpeed, selectedEnergy, tasks, tasksLocked, todayTasks]);
 
   useEffect(() => {
     updateGaugeFromTasks();
@@ -469,11 +496,11 @@ export const useMorningPlanner = (locale: Locale = "en") => {
           }
 
           const nextPomodoro = task.timerRunning
-            ? Math.max(task.timerRemainingSeconds - testDaySpeed, 0)
+            ? Math.max(task.timerRemainingSeconds - effectiveTestDaySpeed, 0)
             : task.timerRemainingSeconds;
           const nextPomodoroRunning = task.timerRunning && nextPomodoro > 0;
           const nextElapsed = task.workTimerRunning
-            ? task.workElapsedSeconds + testDaySpeed
+            ? task.workElapsedSeconds + effectiveTestDaySpeed
             : task.workElapsedSeconds;
 
           return {
@@ -489,7 +516,7 @@ export const useMorningPlanner = (locale: Locale = "en") => {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [testDaySpeed, todayTasks]);
+  }, [effectiveTestDaySpeed, todayTasks]);
 
   return {
     activeTab,
@@ -516,6 +543,7 @@ export const useMorningPlanner = (locale: Locale = "en") => {
     openTaskDetails,
     pomodoroOverlayTask,
     removeSelectedTasks,
+    effectiveSelectedTestDate,
     selectedTestDate,
     selectedEnergy,
     selectedTask,
@@ -523,17 +551,26 @@ export const useMorningPlanner = (locale: Locale = "en") => {
     setIsHelpOpen,
     setSelectedTestDate: setSelectedTestDateState,
     setTestDaySpeed,
+    setTestModeSettings: setTestModeSettingsState,
     startTodayTaskPomodoro,
     stopTodayTaskPomodoro,
     startTodayTaskWorkTimer,
     tasks,
     tasksLocked,
     testDaySpeed,
+    testModeSettings,
+    effectiveTestDaySpeed,
     todayTasks,
     toggleTaskSelected,
     toggleTodayTaskDone,
     triggerGaugeRecalculation: animateGaugeRecalculation
   };
 };
+
+
+
+
+
+
 
 

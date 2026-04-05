@@ -1,4 +1,3 @@
-import { useI18n } from "../../../i18n";
 import { ModalShell } from "./ModalShell";
 
 interface Props {
@@ -6,17 +5,14 @@ interface Props {
   onClose: () => void;
 }
 
-export const Step2HelpModal = ({ isOpen, onClose }: Props) => {
-  const { copy } = useI18n();
-
-  return (
-    <ModalShell isOpen={isOpen} onClose={onClose} title={copy.ui.step2HelpModal.title}>
-      <p className="mb-2 text-secondary">{copy.ui.step2HelpModal.intro}</p>
-      <ul className="mb-0 ps-3">
-        {copy.ui.step2HelpModal.tips.map((tip) => (
-          <li key={tip}>{tip}</li>
-        ))}
-      </ul>
-    </ModalShell>
-  );
-};
+export const Step2HelpModal = ({ isOpen, onClose }: Props) => (
+  <ModalShell isOpen={isOpen} onClose={onClose} title="Step 2 Help" testId="morning-step-help-modal">
+    <p className="mb-2 text-secondary">Use this step to rank your tasks for today in a realistic order.</p>
+    <ul className="mb-0 ps-3">
+      <li>Drag cards with the handle on the left to reorder priorities.</li>
+      <li>Use the complexity marker to keep workload balanced.</li>
+      <li>Use the details button to open context and available actions per task.</li>
+      <li>When the order looks right, confirm tasks to move to Today.</li>
+    </ul>
+  </ModalShell>
+);

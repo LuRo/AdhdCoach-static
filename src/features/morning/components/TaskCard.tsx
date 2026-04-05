@@ -1,4 +1,4 @@
-import { useI18n } from "../../../i18n";
+import { useMemo } from "react";
 import { cn } from "../../../shared/utils/cn";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import type { Task } from "../types";
@@ -9,6 +9,7 @@ interface Props {
   onToggleSelected: (taskId: string, checked: boolean) => void;
   priority: number;
   task: Task;
+  testId?: string;
 }
 
 const complexityClassByValue: Record<number, string> = {
@@ -19,15 +20,27 @@ const complexityClassByValue: Record<number, string> = {
   5: "complexity-large"
 };
 
-export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, task }: Props) => {
-  const { copy } = useI18n();
-  const complexityClass = task.complexity >= 5 ? "complexity-large" : complexityClassByValue[task.complexity] ?? "complexity-medium";
+export const TaskCard = ({
+  isLocked,
+  onOpenDetails,
+  onToggleSelected,
+  priority,
+  task,
+  testId
+}: Props) => {
+  const complexityClass = useMemo(() => {
+    if (task.complexity >= 5) {
+      return "complexity-large";
+    }
+
+    return complexityClassByValue[task.complexity] ?? "complexity-medium";
+  }, [task.complexity]);
 
   return (
-    <article className="task-card p-3 p-lg-4">
+    <article className="task-card p-3 p-lg-4" data-testid={testId ?? `morning-task-card-${task.id}`}>
       <div className="d-flex align-items-center">
         <div className="d-flex align-items-center pt-1 ps-md-2 pe-md-2 ">
-          <button className="task-grip" type="button" aria-label={copy.ui.taskCard.dragAria} disabled={isLocked}>
+          <button className="task-grip" type="button" aria-label="Drag to reorder" disabled={isLocked} data-testid={testId ? `${testId}-drag-handle` : undefined}>
             <i className="bi bi-grip-vertical" />
           </button>
         </div>
@@ -38,7 +51,8 @@ export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, 
             type="checkbox"
             checked={task.selected}
             disabled={isLocked}
-            aria-label={copy.ui.taskCard.selectAria.replace("{{title}}", task.title)}
+            aria-label={`Select ${task.title} for removal`}
+            data-testid={testId ? `${testId}-select-checkbox` : undefined}
             onChange={(event) => onToggleSelected(task.id, event.currentTarget.checked)}
           />
         </div>
@@ -47,7 +61,8 @@ export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, 
           <span
             className={cn("complexity-pill my-auto", complexityClass)}
             role="img"
-            aria-label={copy.ui.taskCard.complexityAria.replace("{{value}}", String(task.complexity))}
+            aria-label={`Complexity ${task.complexity}`}
+            data-testid={testId ? `${testId}-complexity-indicator` : undefined}
           />
         </div>
 
@@ -65,7 +80,8 @@ export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, 
                 type="button"
                 variant="outline"
                 disabled={isLocked}
-                aria-label={copy.ui.taskCard.detailsAria}
+                aria-label="Open task details and actions"
+                testId={testId ? `${testId}-details-button` : undefined}
                 onClick={() => onOpenDetails(task.id)}
               >
                 <i className="bi bi-three-dots" />
@@ -77,3 +93,9 @@ export const TaskCard = ({ isLocked, onOpenDetails, onToggleSelected, priority, 
     </article>
   );
 };
+
+
+
+
+
+

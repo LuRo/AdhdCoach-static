@@ -1,4 +1,4 @@
-﻿import {
+import {
   BrowserRouter,
   Navigate,
   Route,
@@ -7,9 +7,7 @@
   useNavigate
 } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { useI18n } from "../i18n";
 import { DashboardLayout } from "../layouts/DashboardLayout";
-import { PAGE_FEATURES, type TabId } from "../features";
 import { AddTaskModal } from "../features/morning/components/AddTaskModal";
 import { PomodoroOverlay } from "../features/morning/components/PomodoroOverlay";
 import { Step2HelpModal } from "../features/morning/components/Step2HelpModal";
@@ -18,23 +16,25 @@ import { useMorningPlanner } from "../features/morning/hooks/useMorningPlanner";
 import { DebriefingPage } from "../features/morning/pages/DebriefingPage";
 import { MorningPage } from "../features/morning/pages/MorningPage";
 import { TodayPage } from "../features/morning/pages/TodayPage";
+import type { TabId } from "../features/morning/types";
 import { ProfilePage } from "../pages/ProfilePage";
 import { SettingsPage } from "../pages/SettingsPage";
 
 const TAB_PATHS: Record<TabId, string> = {
-  morning: PAGE_FEATURES.morning.path,
-  today: PAGE_FEATURES.today.path,
-  debriefing: PAGE_FEATURES.debriefing.path
+  morning: "/morning",
+  today: "/today",
+  debriefing: "/debriefing"
 };
 
 const pathToMainTab = (pathname: string): TabId | null => {
-  const feature = Object.values(PAGE_FEATURES).find((entry) => entry.path === pathname);
-  return feature?.id ?? null;
+  if (pathname === "/morning") return "morning";
+  if (pathname === "/today") return "today";
+  if (pathname === "/debriefing") return "debriefing";
+  return null;
 };
 
 const RoutedApp = () => {
-  const { locale } = useI18n();
-  const planner = useMorningPlanner(locale);
+  const planner = useMorningPlanner();
   const location = useLocation();
   const navigate = useNavigate();
   const lastMainTabRef = useRef<TabId>("morning");
@@ -73,13 +73,13 @@ const RoutedApp = () => {
         showMainTabs={isMainTabRoute}
       >
         <Routes>
-          <Route path="/" element={<Navigate to={TAB_PATHS.morning} replace />} />
-          <Route path={TAB_PATHS.morning} element={<MorningPage planner={planner} />} />
-          <Route path={TAB_PATHS.today} element={<TodayPage planner={planner} />} />
-          <Route path={TAB_PATHS.debriefing} element={<DebriefingPage />} />
-          <Route path="/settings" element={<SettingsPage onClose={handleCloseAuxPage} />} />
+          <Route path="/" element={<Navigate to="/morning" replace />} />
+          <Route path="/morning" element={<MorningPage planner={planner} />} />
+          <Route path="/today" element={<TodayPage planner={planner} />} />
+          <Route path="/debriefing" element={<DebriefingPage selectedTestDate={planner.effectiveSelectedTestDate} />} />
+          <Route path="/settings" element={<SettingsPage onClose={handleCloseAuxPage} selectedTestDate={planner.selectedTestDate} testDaySpeed={planner.testDaySpeed} testModeSettings={planner.testModeSettings} onTestModeSettingsChange={planner.setTestModeSettings} />} />
           <Route path="/profile" element={<ProfilePage onClose={handleCloseAuxPage} />} />
-          <Route path="*" element={<Navigate to={TAB_PATHS.morning} replace />} />
+          <Route path="*" element={<Navigate to="/morning" replace />} />
         </Routes>
       </DashboardLayout>
 
@@ -114,3 +114,5 @@ export const AppRoutes = () => (
     <RoutedApp />
   </BrowserRouter>
 );
+
+

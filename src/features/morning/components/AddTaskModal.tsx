@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useI18n } from "../../../i18n";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import type { BacklogTask, CreateTaskInput } from "../types";
+import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 
 interface Props {
   backlogTasks: BacklogTask[];
@@ -27,7 +26,6 @@ const estimateComplexityFromTitle = (title: string): number => {
 };
 
 export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, onCreateTask }: Props) => {
-  const { copy } = useI18n();
   const [stage, setStage] = useState<Stage>("backlog");
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
@@ -66,30 +64,32 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
 
   return (
     <>
-      <div className="modal fade show d-block add-task-modal" role="dialog" aria-modal="true" aria-label={copy.ui.addTaskModal.ariaLabel}>
+      <div className="modal fade show d-block add-task-modal" role="dialog" aria-modal="true" aria-label="Add task" data-testid="morning-add-task-modal">
         <div className="modal-dialog modal-dialog-centered add-task-modal-dialog">
           <div className="modal-content border-0 shadow-lg add-task-modal-content">
             <div className="modal-header">
-              <h2 className="modal-title fs-5">{stage === "backlog" ? copy.ui.addTaskModal.backlogTitle : copy.ui.addTaskModal.newTaskTitle}</h2>
-              <button type="button" className="btn-close" aria-label={copy.ui.addTaskModal.close} onClick={onClose} />
+              <h2 className="modal-title fs-5">{stage === "backlog" ? "Backlog" : "Create a new task"}</h2>
+              <button type="button" className="btn-close" aria-label="Close" data-testid="morning-add-task-close-button" onClick={onClose} />
             </div>
 
             <div className="modal-body">
               {stage === "backlog" ? (
                 <div className="d-flex flex-column gap-3">
-                  <p className="mb-0 text-secondary">{copy.ui.addTaskModal.intro}</p>
+                  <p className="mb-0 text-secondary">
+                    Choose a task from backlog or create a completely new one.
+                  </p>
 
-                  <div className="add-task-backlog-list d-flex flex-column gap-2">
+                  <div className="add-task-backlog-list d-flex flex-column gap-2" data-testid="morning-add-task-backlog-list">
                     {backlogTasks.length === 0 ? (
-                      <p className="mb-0 text-secondary small">{copy.ui.addTaskModal.emptyBacklog}</p>
+                      <p className="mb-0 text-secondary small">No backlog tasks available.</p>
                     ) : (
                       backlogTasks.map((task) => (
-                        <div key={task.id} className="add-task-backlog-item d-flex align-items-center justify-content-between gap-2">
+                        <div key={task.id} className="add-task-backlog-item d-flex align-items-center justify-content-between gap-2" data-testid={`morning-add-task-backlog-item-${task.id}`}>
                           <div>
                             <div className="fw-semibold">{task.title}</div>
                             <div className="small text-secondary">
                               {task.summary}
-                              {task.dueDate ? ` · due ${task.dueDate}` : ""}
+                              {task.dueDate ? ` Â· due ${task.dueDate}` : ""}
                             </div>
                           </div>
 
@@ -97,9 +97,10 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                             type="button"
                             className="rounded-pill px-3 py-1"
                             variant="outline"
+                            testId={`morning-add-task-backlog-add-button-${task.id}`}
                             onClick={() => onAddFromBacklog(task.id)}
                           >
-                            {copy.ui.addTaskModal.add}
+                            Add
                           </CoachButton>
                         </div>
                       ))
@@ -110,43 +111,44 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                 <div className="d-flex flex-column gap-3">
                   <div>
                     <label className="form-label fw-semibold" htmlFor="new-task-title">
-                      {copy.ui.addTaskModal.titleLabel} <span className="text-danger">*</span>
+                      Title <span className="text-danger">*</span>
                     </label>
                     <input
                       id="new-task-title"
                       className="form-control"
+                      data-testid="morning-add-task-title-input"
                       value={title}
                       onChange={(event) => setTitle(event.currentTarget.value)}
-                      placeholder={copy.ui.addTaskModal.titlePlaceholder}
+                      placeholder="What needs to be done?"
                     />
                   </div>
 
                   <div>
                     <label className="form-label fw-semibold" htmlFor="new-task-summary">
-                      {copy.ui.addTaskModal.summaryLabel}
+                      Subtext (optional)
                     </label>
                     <textarea
                       id="new-task-summary"
                       className="form-control"
+                      data-testid="morning-add-task-summary-input"
                       rows={2}
                       value={summary}
                       onChange={(event) => setSummary(event.currentTarget.value)}
-                      placeholder={copy.ui.addTaskModal.summaryPlaceholder}
+                      placeholder="Helpful context for the task"
                     />
                   </div>
 
                   <div className="d-flex align-items-center justify-content-between gap-2">
-                    <div className="small text-secondary">
-                      {copy.ui.addTaskModal.complexityLabel}: {complexity}
-                    </div>
+                    <div className="small text-secondary">Estimated complexity: {complexity}</div>
                     <CoachButton
                       type="button"
                       variant="outline"
                       className="rounded-pill px-3 py-1"
                       disabled={!canCreate}
+                      testId="morning-add-task-calculate-complexity-button"
                       onClick={() => setComplexity(estimateComplexityFromTitle(title))}
                     >
-                      {copy.ui.addTaskModal.calculateComplexity}
+                      Calculate complexity
                     </CoachButton>
                   </div>
 
@@ -155,22 +157,24 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                       id="store-in-backlog"
                       type="checkbox"
                       className="form-check-input"
+                      data-testid="morning-add-task-store-backlog-checkbox"
                       checked={storeInBacklog}
                       onChange={(event) => setStoreInBacklog(event.currentTarget.checked)}
                     />
                     <label className="form-check-label" htmlFor="store-in-backlog">
-                      {copy.ui.addTaskModal.storeInBacklog}
+                      Store in backlog
                     </label>
                   </div>
 
                   <div>
                     <label className="form-label fw-semibold" htmlFor="new-task-due-date">
-                      {copy.ui.addTaskModal.dueDateLabel}
+                      Due date (optional)
                     </label>
                     <input
                       id="new-task-due-date"
                       type="date"
                       className="form-control"
+                      data-testid="morning-add-task-due-date-input"
                       value={dueDate}
                       disabled={!storeInBacklog}
                       onChange={(event) => setDueDate(event.currentTarget.value)}
@@ -183,20 +187,22 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
             <div className="modal-footer d-flex justify-content-between">
               <div>
                 {stage === "new" ? (
-                  <CoachButton type="button" variant="outline" onClick={() => setStage("backlog")}>{copy.ui.addTaskModal.backToBacklog}</CoachButton>
+                  <CoachButton type="button" variant="outline" testId="morning-add-task-back-button" onClick={() => setStage("backlog")}>
+                    Back to backlog
+                  </CoachButton>
                 ) : null}
               </div>
 
               <div className="d-flex gap-2">
                 <CoachButton type="button" variant="outline" onClick={onClose}>
-                  {copy.ui.addTaskModal.close}
+                  Close
                 </CoachButton>
 
                 {stage === "backlog" ? (
-                  <CoachButton type="button" onClick={() => setStage("new")}>{copy.ui.addTaskModal.createNewTask}</CoachButton>
+                  <CoachButton type="button" testId="morning-add-task-create-new-button" onClick={() => setStage("new")}>Create new task</CoachButton>
                 ) : (
-                  <CoachButton type="button" disabled={!canCreate} onClick={handleCreate}>
-                    {storeInBacklog ? copy.ui.addTaskModal.saveToBacklog : copy.ui.addTaskModal.addToToday}
+                  <CoachButton type="button" disabled={!canCreate} testId="morning-add-task-submit-button" onClick={handleCreate}>
+                    {storeInBacklog ? "Save to backlog" : "Add to today"}
                   </CoachButton>
                 )}
               </div>

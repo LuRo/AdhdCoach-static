@@ -5,6 +5,7 @@ type Variant = "primary" | "outline" | "danger" | "ghost";
 
 interface Props extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> {
   variant?: Variant;
+  testId?: string;
 }
 
 const variantClassMap: Record<Variant, string> = {
@@ -14,8 +15,8 @@ const variantClassMap: Record<Variant, string> = {
   ghost: "btn btn-light"
 };
 
-export const CoachButton = ({ children, className, variant = "primary", ...props }: Props) => (
-  <button className={cn(variantClassMap[variant], className)} {...props}>
+export const CoachButton = ({ children, className, testId, variant = "primary", ...props }: Props) => (
+  <button className={cn(variantClassMap[variant], className)} data-testid={testId} {...props}>
     {children}
   </button>
 );

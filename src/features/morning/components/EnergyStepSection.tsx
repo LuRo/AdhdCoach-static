@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useI18n } from "../../../i18n";
 import type { EnergyLevel } from "../types";
 import { EnergyOption } from "./EnergyOption";
 
@@ -17,7 +16,6 @@ const options: Array<{ iconClass: string; level: EnergyLevel }> = [
 ];
 
 export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, selectedEnergy }: Props) => {
-  const { copy } = useI18n();
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const isOpen = currentStep === 1;
 
@@ -34,7 +32,7 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
   }, [isOpen]);
 
   return (
-    <section className="section-card tasks-glass-section p-3 p-lg-3 p-xl-3 energy-step-compact" aria-labelledby="energy-title">
+    <section className="section-card tasks-glass-section p-3 p-lg-3 p-xl-3 energy-step-compact" aria-labelledby="energy-title" data-testid="morning-energy-step-section">
       <div className="step-header mb-2">
         <div className="flex-grow-1">
           <button
@@ -45,7 +43,7 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
             onClick={() => onSelectStep(1)}
           >
             <h2 id="energy-title" className="h4 mb-0">
-              {copy.ui.energyStepSection.title}
+              Set your energy baseline
             </h2>
           </button>
         </div>
@@ -56,10 +54,12 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
         id="energy-body"
         className={isOpen ? "collapse show step-complete-body" : "collapse step-complete-body"}
       >
-        <p className="text-secondary mb-2">{copy.ui.energyStepSection.description}</p>
+        <p className="text-secondary mb-2">
+          Choose the level that best reflects what you can realistically sustain this morning.
+        </p>
 
         <div className="energy-choice">
-          <div className="energy-toggle gap-md-3" role="group" aria-label={copy.ui.energyStepSection.groupAria}>
+          <div className="energy-toggle gap-md-3" role="group" aria-label="Energy selection" data-testid="morning-energy-selection-group">
             {options.map((option) => (
               <EnergyOption
                 key={option.level}
@@ -68,6 +68,7 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
                 level={option.level}
                 onActivateSelected={() => onSelectStep(2)}
                 onSelect={onChooseEnergy}
+                testId={`morning-energy-option-${option.level.toLowerCase()}`}
               />
             ))}
           </div>
@@ -76,3 +77,4 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
     </section>
   );
 };
+
