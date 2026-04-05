@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Sortable, { type SortableEvent } from "sortablejs";
-import type { RemoveSelectedMode, Task } from "../types";
+import { useI18n } from "../../../i18n";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import type { RemoveSelectedMode, Task } from "../types";
 import { TaskCard } from "./TaskCard";
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   onShowHelp: () => void;
   onToggleSelected: (taskId: string, checked: boolean) => void;
   tasks: Task[];
+  testId?: string;
 }
 
 export const TasksStepSection = ({
@@ -32,8 +34,10 @@ export const TasksStepSection = ({
   onSelectStep,
   onShowHelp,
   onToggleSelected,
-  tasks
+  tasks,
+  testId
 }: Props) => {
+  const { copy } = useI18n();
   const isOpen = currentStep === 2;
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const taskListRef = useRef<HTMLDivElement | null>(null);
@@ -96,8 +100,8 @@ export const TasksStepSection = ({
       className="add-task-fab"
       variant="primary"
       disabled={isLocked}
-      aria-label="Add new task"
-      title="Add new task"
+      aria-label={copy.ui.tasksStepSection.addTaskAria}
+      title={copy.ui.tasksStepSection.addTaskAria}
       testId="morning-tasks-add-task-button"
       onClick={onAddTask}
     >
@@ -106,7 +110,7 @@ export const TasksStepSection = ({
   ) : null;
 
   return (
-    <section className="section-card tasks-glass-section p-3" aria-labelledby="tasks-title" data-testid="morning-tasks-step-section">
+    <section className="section-card tasks-glass-section p-3" aria-labelledby="tasks-title" data-testid={testId ?? "morning-tasks-step-section"}>
       <div className={isOpen ? "step-header mb-2" : "step-header mb-4 mb-collapsed"}>
         <div className="flex-grow-1">
           <button
@@ -117,12 +121,10 @@ export const TasksStepSection = ({
             onClick={() => onSelectStep(2)}
           >
             <h2 id="tasks-title" className="h4 mb-2">
-              Rank the task list
+              {copy.ui.tasksStepSection.title}
             </h2>
           </button>
-          <p className="text-secondary mb-0">
-            Drag tasks into the right order, check complexity load, and open details or actions as needed.
-          </p>
+          <p className="text-secondary mb-0">{copy.ui.tasksStepSection.description}</p>
         </div>
 
         <div className="step-header-actions d-flex align-items-center gap-2">
@@ -132,8 +134,8 @@ export const TasksStepSection = ({
             className="rounded-pill px-3 py-2"
             variant="danger"
             disabled={!canRemoveSelected || isLocked}
-            aria-label="Remove selected tasks"
-            title="Remove selected tasks"
+            aria-label={copy.ui.tasksStepSection.removeSelectedAria}
+            title={copy.ui.tasksStepSection.removeSelectedAria}
             testId="morning-tasks-remove-selected-button"
             onClick={() => setIsRemoveChoiceOpen(true)}
           >
@@ -146,7 +148,7 @@ export const TasksStepSection = ({
             variant="outline"
             onClick={onShowHelp}
           >
-            Help
+            {copy.ui.tasksStepSection.help}
           </CoachButton>
         </div>
       </div>
@@ -156,7 +158,7 @@ export const TasksStepSection = ({
         id="tasks-body"
         className={isOpen ? "collapse show step-complete-body" : "collapse step-complete-body"}
       >
-        <div ref={taskListRef} className="task-list-stage task-sortable-list d-flex flex-column gap-3" aria-label="Sortable task list" data-testid="morning-tasks-list">
+        <div ref={taskListRef} className="task-list-stage task-sortable-list d-flex flex-column gap-3" aria-label={copy.ui.tasksStepSection.title} data-testid="morning-tasks-list">
           {tasks.map((task, index) => (
             <TaskCard
               key={task.id}
@@ -179,7 +181,7 @@ export const TasksStepSection = ({
             testId="morning-tasks-confirm-button"
             onClick={onConfirm}
           >
-            Confirm tasks and go to Today
+            {copy.ui.tasksStepSection.confirm}
           </CoachButton>
         </div>
       </div>
@@ -188,24 +190,24 @@ export const TasksStepSection = ({
 
       {isRemoveChoiceOpen ? (
         <>
-          <div className="modal fade show d-block" role="dialog" aria-modal="true" aria-label="Remove selected tasks" data-testid="morning-remove-selected-modal">
+          <div className="modal fade show d-block" role="dialog" aria-modal="true" aria-label={copy.ui.tasksStepSection.removeModalTitle} data-testid="morning-remove-selected-modal">
             <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content border-0 shadow-lg">
                 <div className="modal-header">
-                  <h2 className="modal-title fs-5">Remove selected tasks</h2>
-                  <button type="button" className="btn-close" aria-label="Close" data-testid="morning-remove-selected-close-button" onClick={() => setIsRemoveChoiceOpen(false)} />
+                  <h2 className="modal-title fs-5">{copy.ui.tasksStepSection.removeModalTitle}</h2>
+                  <button type="button" className="btn-close" aria-label={copy.common.close} data-testid="morning-remove-selected-close-button" onClick={() => setIsRemoveChoiceOpen(false)} />
                 </div>
 
                 <div className="modal-body">
                   <p className="mb-0 text-secondary">
-                    Should selected tasks be completely deleted, or only removed from this planner and kept in backlog?
+                    {copy.ui.tasksStepSection.removeModalBody}
                   </p>
                 </div>
 
                 <div className="modal-footer remove-selected-actions">
                   <div className="remove-selected-cancel">
                     <CoachButton type="button" variant="outline" testId="morning-remove-selected-cancel-button" onClick={() => setIsRemoveChoiceOpen(false)}>
-                      Cancel
+                      {copy.common.cancel}
                     </CoachButton>
                   </div>
 
@@ -219,7 +221,7 @@ export const TasksStepSection = ({
                         setIsRemoveChoiceOpen(false);
                       }}
                     >
-                      Remove from planner
+                      {copy.ui.tasksStepSection.removeFromPlanner}
                     </CoachButton>
 
                     <CoachButton
@@ -231,7 +233,7 @@ export const TasksStepSection = ({
                         setIsRemoveChoiceOpen(false);
                       }}
                     >
-                      Delete completely
+                      {copy.ui.tasksStepSection.deleteCompletely}
                     </CoachButton>
                   </div>
                 </div>
@@ -245,6 +247,3 @@ export const TasksStepSection = ({
     </section>
   );
 };
-
-
-

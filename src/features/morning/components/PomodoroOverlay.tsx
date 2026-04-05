@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { PomodoroMinutes, TodayTask } from "../types";
+import { useI18n } from "../../../i18n";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 
 interface Props {
@@ -24,6 +25,7 @@ const formatSeconds = (seconds: number): string => {
 };
 
 export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
+  const { copy } = useI18n();
   const [selectedMinutes, setSelectedMinutes] = useState<PomodoroMinutes>(5);
 
   useEffect(() => {
@@ -37,8 +39,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
   }
 
   const totalPomodoroSeconds = task.pomodoroMinutes * 60;
-  const remainingFraction =
-    totalPomodoroSeconds > 0 ? Math.max(0, Math.min(task.timerRemainingSeconds / totalPomodoroSeconds, 1)) : 0;
+  const remainingFraction = totalPomodoroSeconds > 0 ? Math.max(0, Math.min(task.timerRemainingSeconds / totalPomodoroSeconds, 1)) : 0;
 
   const radius = 120;
   const circumference = 2 * Math.PI * radius;
@@ -46,17 +47,17 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
 
   return createPortal(
     <>
-      <div className="pomodoro-overlay" role="dialog" aria-modal="true" aria-label="Pomodoro timer overlay" data-testid="today-pomodoro-overlay">
+      <div className="pomodoro-overlay" role="dialog" aria-modal="true" aria-label={copy.ui.pomodoroOverlay.ariaLabel} data-testid="today-pomodoro-overlay">
         <div className="pomodoro-overlay-card">
           <div className="d-flex justify-content-between align-items-start gap-3 mb-3">
             <div>
-              <p className="text-uppercase small text-secondary mb-1">Pomodoro</p>
+              <p className="text-uppercase small text-secondary mb-1">{copy.ui.pomodoroOverlay.title}</p>
               <h2 className="h4 mb-1">{task.title}</h2>
-              <p className="text-secondary mb-0">{task.pomodoroMinutes}" cycle</p>
+              <p className="text-secondary mb-0">{copy.ui.pomodoroOverlay.cycle.replace("{{minutes}}", String(task.pomodoroMinutes))}</p>
             </div>
 
             <CoachButton type="button" variant="outline" onClick={onClose} testId="today-pomodoro-close-button">
-              Close
+              {copy.ui.pomodoroOverlay.close}
             </CoachButton>
           </div>
 
@@ -70,7 +71,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
                 testId={`today-pomodoro-duration-${minutes}-button`}
                 onClick={() => setSelectedMinutes(minutes)}
               >
-                {minutes}"
+                {minutes}m
               </CoachButton>
             ))}
 
@@ -81,21 +82,14 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
               testId="today-pomodoro-start-button"
               onClick={() => onStart(task.id, selectedMinutes)}
             >
-              <i className="bi bi-play-fill" /> Start
+              <i className="bi bi-play-fill" /> {copy.ui.pomodoroOverlay.start}
             </CoachButton>
           </div>
 
           <div className="pomodoro-overlay-timer">
             <svg viewBox="0 0 280 280" width="280" height="280" aria-hidden="true">
               <circle cx="140" cy="140" r={radius} className="pomodoro-overlay-track" />
-              <circle
-                cx="140"
-                cy="140"
-                r={radius}
-                className="pomodoro-overlay-progress"
-                strokeDasharray={circumference}
-                strokeDashoffset={dashOffset}
-              />
+              <circle cx="140" cy="140" r={radius} className="pomodoro-overlay-progress" strokeDasharray={circumference} strokeDashoffset={dashOffset} />
             </svg>
             <div className="pomodoro-overlay-time-row">
               <div className="pomodoro-overlay-time">{formatSeconds(task.timerRemainingSeconds)}</div>

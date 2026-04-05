@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useI18n } from "../i18n";
 import { CoachBadge } from "../shared/components/atoms/CoachBadge";
 import { CoachButton } from "../shared/components/atoms/CoachButton";
 import { SectionCard } from "../shared/components/atoms/SectionCard";
@@ -24,7 +25,9 @@ const cloneAnswerOptions = (answerOptions: DebriefQuestionAnswerOptions): Debrie
   [...answerOptions[2]] as DebriefAnswerOptions
 ];
 
-const formatDate = (value: string) => new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(value));
+const formatDate = (value: string, locale: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(value));
+
+const formatDateTime = (value: string, locale: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 
 const emptyTestModes: TestModeSettings = {
   enabled: false,
@@ -32,13 +35,8 @@ const emptyTestModes: TestModeSettings = {
   todaySpeedEnabled: false
 };
 
-export const SettingsPage = ({
-  onClose,
-  selectedTestDate,
-  testDaySpeed,
-  testModeSettings,
-  onTestModeSettingsChange
-}: Props) => {
+export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testModeSettings, onTestModeSettingsChange }: Props) => {
+  const { copy, locale } = useI18n();
   const [savedQuestionSet, setSavedQuestionSet] = useState(() => getQuestionSet());
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<0 | 1 | 2>(0);
   const [questionDrafts, setQuestionDrafts] = useState<[string, string, string]>(savedQuestionSet.questions);
@@ -107,16 +105,18 @@ export const SettingsPage = ({
   const showIndividualModes = testModeSettings.enabled;
 
   return (
-    <section className="section-panel active" id="settings-panel" aria-labelledby="Settings" role="tabpanel" data-testid="settings-page">
+    <section className="section-panel active" id="settings-panel" aria-labelledby="settings-page-title" role="tabpanel" data-testid="settings-page">
       <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
         <div className="d-flex flex-column gap-2">
-          <p className="text-uppercase small fw-semibold text-secondary mb-0">Settings</p>
-          <h1 className="h2 mb-0">Application settings</h1>
-          <p className="text-secondary mb-0">Configure the debrief question set and the test-mode switches used by Morning and Today.</p>
+          <p className="text-uppercase small fw-semibold text-secondary mb-0">{copy.settings.sectionLabel}</p>
+          <h1 id="settings-page-title" className="h2 mb-0">
+            {copy.settings.title}
+          </h1>
+          <p className="text-secondary mb-0">{copy.settings.description}</p>
         </div>
 
-        <CoachButton type="button" variant="outline" onClick={onClose} aria-label="Close settings page" testId="settings-close-button">
-          Close
+        <CoachButton type="button" variant="outline" onClick={onClose} aria-label={copy.settings.closeAria} testId="settings-close-button">
+          {copy.common.close}
         </CoachButton>
       </div>
 
@@ -125,24 +125,24 @@ export const SettingsPage = ({
           <div>
             <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
               <CoachBadge tone={testModeSettings.enabled ? "purple" : "warning"} className="rounded-pill px-3 py-2">
-                Test mode
+                {copy.settings.testModeBadge}
               </CoachBadge>
-              <span className="small text-secondary">{testModeSettings.enabled ? "On" : "Off"}</span>
+              <span className="small text-secondary">{testModeSettings.enabled ? copy.settings.toggleOn : copy.settings.toggleOff}</span>
             </div>
-            <h2 className="h4 mb-2">Master switch controls whether test options are available at all.</h2>
-            <p className="text-secondary mb-0">Turn it off and the individual modes are cleared and hidden everywhere.</p>
+            <h2 className="h4 mb-2">{copy.settings.masterHeading}</h2>
+            <p className="text-secondary mb-0">{copy.settings.masterDescription}</p>
           </div>
           <div className="text-end small text-secondary">
-            <div>Stored current day</div>
-            <div className="fw-semibold text-dark">{formatDate(selectedTestDate)}</div>
+            <div>{copy.settings.storedCurrentDay}</div>
+            <div className="fw-semibold text-dark">{formatDate(selectedTestDate, locale)}</div>
           </div>
         </div>
 
         <div className="d-grid gap-3">
           <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 p-3 rounded-4 border">
             <div>
-              <div className="fw-semibold">Master test mode</div>
-              <div className="small text-secondary">On enables the test controls below. Off clears them and hides them on every page.</div>
+              <div className="fw-semibold">{copy.settings.masterSwitchTitle}</div>
+              <div className="small text-secondary">{copy.settings.masterSwitchDescription}</div>
             </div>
             <div className="form-check form-switch m-0">
               <input
@@ -155,7 +155,7 @@ export const SettingsPage = ({
                 onChange={(event) => handleMasterToggle(event.target.checked)}
               />
               <label className="form-check-label small fw-semibold" htmlFor="test-mode-enabled">
-                {testModeSettings.enabled ? "On" : "Off"}
+                {testModeSettings.enabled ? copy.settings.toggleOn : copy.settings.toggleOff}
               </label>
             </div>
           </div>
@@ -165,8 +165,8 @@ export const SettingsPage = ({
               <div className="d-grid gap-3 p-3 rounded-4 border">
                 <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
                   <div>
-                    <div className="fw-semibold">Set current day manually</div>
-                    <div className="small text-secondary">Show the Morning date picker and store the selected day locally.</div>
+                    <div className="fw-semibold">{copy.settings.morningModeTitle}</div>
+                    <div className="small text-secondary">{copy.settings.morningModeDescription}</div>
                   </div>
                   <div className="form-check form-switch m-0">
                     <input
@@ -179,7 +179,7 @@ export const SettingsPage = ({
                       onChange={(event) => handleMorningToggle(event.target.checked)}
                     />
                     <label className="form-check-label small fw-semibold" htmlFor="test-mode-morning-date">
-                      {testModeSettings.morningDateEnabled ? "On" : "Off"}
+                      {testModeSettings.morningDateEnabled ? copy.settings.toggleOn : copy.settings.toggleOff}
                     </label>
                   </div>
                 </div>
@@ -188,8 +188,8 @@ export const SettingsPage = ({
               <div className="d-grid gap-3 p-3 rounded-4 border">
                 <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
                   <div>
-                    <div className="fw-semibold">Set live speed</div>
-                    <div className="small text-secondary">Show the Today speed selector and simulate the timer multiplier.</div>
+                    <div className="fw-semibold">{copy.settings.todaySpeedTitle}</div>
+                    <div className="small text-secondary">{copy.settings.todaySpeedDescription}</div>
                   </div>
                   <div className="form-check form-switch m-0">
                     <input
@@ -202,17 +202,17 @@ export const SettingsPage = ({
                       onChange={(event) => handleTodaySpeedToggle(event.target.checked)}
                     />
                     <label className="form-check-label small fw-semibold" htmlFor="test-mode-today-speed">
-                      {testModeSettings.todaySpeedEnabled ? "On" : "Off"}
+                      {testModeSettings.todaySpeedEnabled ? copy.settings.toggleOn : copy.settings.toggleOff}
                     </label>
                   </div>
                 </div>
                 <div className="small text-secondary">
-                  Active speed: {testModeSettings.todaySpeedEnabled ? `${testDaySpeed}x` : "1x live speed"}
+                  {copy.settings.activeSpeedLabel}: {testModeSettings.todaySpeedEnabled ? `${testDaySpeed}x` : copy.settings.liveSpeed}
                 </div>
               </div>
             </>
           ) : (
-            <div className="alert alert-info mb-0">Test options are hidden while master test mode is off.</div>
+            <div className="alert alert-info mb-0">{copy.settings.testOptionsHidden}</div>
           )}
         </div>
       </SectionCard>
@@ -221,17 +221,17 @@ export const SettingsPage = ({
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div>
             <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
-              <CoachBadge tone="purple" className="rounded-pill px-3 py-2">Debrief questions</CoachBadge>
-              <span className="small text-secondary">Version {version}</span>
+              <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.settings.debriefBadge}</CoachBadge>
+              <span className="small text-secondary">
+                {copy.settings.versionLabel} {version}
+              </span>
             </div>
-            <h2 className="h4 mb-2">Edit each question in its own tab.</h2>
-            <p className="text-secondary mb-0">Each tab controls one prompt and its own answer scale. Historical submissions keep the version that was active when they were saved.</p>
+            <h2 className="h4 mb-2">{copy.settings.questionSetHeading}</h2>
+            <p className="text-secondary mb-0">{copy.settings.questionSetDescription}</p>
           </div>
           <div className="text-end small text-secondary">
-            <div>Last updated</div>
-            <div className="fw-semibold text-dark">
-              {new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(savedAt))}
-            </div>
+            <div>{copy.settings.lastUpdated}</div>
+            <div className="fw-semibold text-dark">{formatDateTime(savedAt, locale)}</div>
           </div>
         </div>
 
@@ -244,7 +244,7 @@ export const SettingsPage = ({
               data-testid={`settings-question-tab-question-${index + 1}`}
               onClick={() => setActiveQuestionIndex(index as 0 | 1 | 2)}
             >
-              Question {index + 1}
+              {copy.settings.questionLabel.replace("{{index}}", String(index + 1))}
             </button>
           ))}
         </div>
@@ -252,7 +252,9 @@ export const SettingsPage = ({
         <div className="d-grid gap-4">
           <div className="d-grid gap-3">
             <label className="d-grid gap-1">
-              <span className="small text-secondary fw-semibold">Question {activeQuestionIndex + 1}</span>
+              <span className="small text-secondary fw-semibold">
+                {copy.settings.questionLabel.replace("{{index}}", String(activeQuestionIndex + 1))}
+              </span>
               <input
                 className="form-control"
                 data-testid={`settings-question-${activeQuestionIndex + 1}-input`}
@@ -264,12 +266,12 @@ export const SettingsPage = ({
 
           <div className="d-grid gap-3">
             <div className="d-flex flex-wrap align-items-center gap-2">
-              <CoachBadge tone="purple" className="rounded-pill px-3 py-2">Answer labels</CoachBadge>
-              <span className="small text-secondary">Used only for Question {activeQuestionIndex + 1}</span>
+              <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.settings.answerLabelsBadge}</CoachBadge>
+              <span className="small text-secondary">{copy.settings.answerLabelsUsedFor.replace("{{index}}", String(activeQuestionIndex + 1))}</span>
             </div>
             {activeAnswerDrafts.map((answer, index) => (
               <label key={index} className="d-grid gap-1">
-                <span className="small text-secondary fw-semibold">Answer {index + 1}</span>
+                <span className="small text-secondary fw-semibold">{copy.settings.answerLabel.replace("{{index}}", String(index + 1))}</span>
                 <input
                   className="form-control"
                   data-testid={`settings-question-${activeQuestionIndex + 1}-answer-${index + 1}-input`}
@@ -282,19 +284,19 @@ export const SettingsPage = ({
         </div>
 
         <div className="d-flex flex-wrap gap-2 mt-4">
-          <CoachButton type="button" testId="settings-save-question-set-button" onClick={handleSave}>Save question set</CoachButton>
+          <CoachButton type="button" testId="settings-save-question-set-button" onClick={handleSave}>
+            {copy.settings.saveQuestionSet}
+          </CoachButton>
           <CoachButton type="button" variant="outline" testId="settings-reset-question-set-button" onClick={handleReset}>
-            Reset to saved
+            {copy.settings.resetToSaved}
           </CoachButton>
         </div>
       </SectionCard>
 
       <SectionCard className="p-4 p-lg-5">
-        <span className="badge rounded-pill text-bg-light border mb-3">Planner defaults</span>
-        <h2 className="h4 mb-2">Local day simulation is stored per test date.</h2>
-        <p className="text-secondary mb-0">
-          Use the morning planner to select a test date, then save the plan and debrief answers locally for that day.
-        </p>
+        <span className="badge rounded-pill text-bg-light border mb-3">{copy.settings.plannerBadge}</span>
+        <h2 className="h4 mb-2">{copy.settings.plannerTitle}</h2>
+        <p className="text-secondary mb-0">{copy.settings.plannerText}</p>
       </SectionCard>
     </section>
   );

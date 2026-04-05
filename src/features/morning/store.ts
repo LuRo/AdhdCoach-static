@@ -282,5 +282,13 @@ export const getAnswerOptionsForQuestion = (questionIndex: 0 | 1 | 2) => getQues
 export const getAnswerOptionsForQuestionByVersion = (version: number, questionIndex: 0 | 1 | 2) =>
   getQuestionSetByVersion(version)?.answerOptions[questionIndex] ?? DEFAULT_QUESTION_SET.answerOptions[questionIndex];
 
+export const getAnswerOptions = (locale: "en" | "de" | "fr"): Array<{ value: DebriefAnswerValue; label: string }> => {
+  const labels =
+    locale === "de"
+      ? ["Gar nicht", "Ein wenig", "Etwas", "Größtenteils", "Sehr"]
+      : locale === "fr"
+        ? ["Pas du tout", "Un peu", "Assez", "Surtout", "Tout à fait"]
+        : ["Not at all", "A little", "Somewhat", "Mostly", "Very much"];
 
-
+  return labels.map((label, index) => ({ value: (index + 1) as DebriefAnswerValue, label }));
+};
