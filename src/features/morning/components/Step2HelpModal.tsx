@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const Step2HelpModal = ({ isOpen, onClose }: Props) => (
-  <ModalShell isOpen={isOpen} onClose={onClose} title="Step 2 Help">
+  <ModalShell isOpen={isOpen} onClose={onClose} title="Step 2 Help" testId="morning-step-help-modal">
     <p className="mb-2 text-secondary">Use this step to rank your tasks for today in a realistic order.</p>
     <ul className="mb-0 ps-3">
       <li>Drag cards with the handle on the left to reorder priorities.</li>

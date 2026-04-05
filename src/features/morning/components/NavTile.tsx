@@ -5,9 +5,10 @@ interface Props {
   activeTab: TabId;
   onSelect: (tabId: TabId) => void;
   tab: NavTab;
+  testId?: string;
 }
 
-export const NavTile = ({ activeTab, onSelect, tab }: Props) => {
+export const NavTile = ({ activeTab, onSelect, tab, testId }: Props) => {
   const isActive = activeTab === tab.id;
 
   return (
@@ -17,6 +18,7 @@ export const NavTile = ({ activeTab, onSelect, tab }: Props) => {
       role="tab"
       aria-selected={isActive}
       aria-controls={tab.panelId}
+      data-testid={testId}
       onClick={() => onSelect(tab.id)}
     >
       <i className={tab.iconClass} aria-hidden="true" />

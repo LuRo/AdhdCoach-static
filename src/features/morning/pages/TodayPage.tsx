@@ -21,5 +21,6 @@ export const TodayPage = ({ planner }: Props) => (
     onToggleDone={planner.toggleTodayTaskDone}
     tasks={planner.todayTasks}
     testDaySpeed={planner.testDaySpeed}
+    testModeSettings={planner.testModeSettings}
   />
 );

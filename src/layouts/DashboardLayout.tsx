@@ -24,7 +24,7 @@ export const DashboardLayout = ({
   showMainTabs = true
 }: Props) => (
   <div className="container py-4 py-lg-5 app-shell">
-    <div className={cn("p-1 p-lg-4")}>
+    <div className={cn("p-1 p-lg-4")} data-testid="dashboard-layout-shell">
       <TopNavigation
         onOpenHomePage={onOpenHomePage}
         onOpenProfilePage={onOpenProfilePage}

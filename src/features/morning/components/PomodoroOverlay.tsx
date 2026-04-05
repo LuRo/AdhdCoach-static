@@ -46,7 +46,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
 
   return createPortal(
     <>
-      <div className="pomodoro-overlay" role="dialog" aria-modal="true" aria-label="Pomodoro timer overlay">
+      <div className="pomodoro-overlay" role="dialog" aria-modal="true" aria-label="Pomodoro timer overlay" data-testid="today-pomodoro-overlay">
         <div className="pomodoro-overlay-card">
           <div className="d-flex justify-content-between align-items-start gap-3 mb-3">
             <div>
@@ -55,7 +55,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
               <p className="text-secondary mb-0">{task.pomodoroMinutes}" cycle</p>
             </div>
 
-            <CoachButton type="button" variant="outline" onClick={onClose}>
+            <CoachButton type="button" variant="outline" onClick={onClose} testId="today-pomodoro-close-button">
               Close
             </CoachButton>
           </div>
@@ -67,6 +67,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
                 type="button"
                 variant={selectedMinutes === minutes ? "primary" : "outline"}
                 className="rounded-pill px-2 py-1"
+                testId={`today-pomodoro-duration-${minutes}-button`}
                 onClick={() => setSelectedMinutes(minutes)}
               >
                 {minutes}"
@@ -77,6 +78,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
               type="button"
               variant="primary"
               className="rounded-pill px-3 py-1"
+              testId="today-pomodoro-start-button"
               onClick={() => onStart(task.id, selectedMinutes)}
             >
               <i className="bi bi-play-fill" /> Start
@@ -102,6 +104,7 @@ export const PomodoroOverlay = ({ onClose, onStart, onStop, task }: Props) => {
                 variant="outline"
                 className="rounded-pill px-3 py-1"
                 disabled={!task.timerRunning}
+                testId="today-pomodoro-stop-button"
                 onClick={() => onStop(task.id)}
               >
                 <i className="bi bi-stop-fill" />

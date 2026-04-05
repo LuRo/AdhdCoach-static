@@ -29,6 +29,7 @@ export interface TodayTask extends Task {
   timerRemainingSeconds: number;
   timerRunning: boolean;
   blocked: boolean;
+  blockedAt?: number | null;
   workElapsedSeconds: number;
   workTimerRunning: boolean;
 }

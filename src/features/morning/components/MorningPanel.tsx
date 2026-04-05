@@ -1,3 +1,4 @@
+import type { TestModeSettings } from "../store";
 import { cn } from "../../../shared/utils/cn";
 import type { EnergyLevel, RemoveSelectedMode, Task } from "../types";
 import { ComplexitySummaryCard } from "./ComplexitySummaryCard";
@@ -27,8 +28,16 @@ interface Props {
   selectedTestDate: string;
   tasks: Task[];
   tasksLocked: boolean;
+  testModeSettings: TestModeSettings;
   totalComplexity: number;
 }
+
+const formatDotDate = (value: Date) => {
+  const day = String(value.getDate()).padStart(2, "0");
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const year = value.getFullYear();
+  return `${day}.${month}.${year}`;
+};
 
 export const MorningPanel = ({
   canRemoveSelected,
@@ -52,87 +61,100 @@ export const MorningPanel = ({
   selectedTestDate,
   tasks,
   tasksLocked,
+  testModeSettings,
   totalComplexity
-}: Props) => (
-  <section
-    id="morning-panel"
-    className={cn("section-panel", isActive && "active")}
-    role="tabpanel"
-    aria-labelledby="Morning"
-  >
-    <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
-      <div className="flex-grow-1">
-        <p className="text-uppercase small fw-semibold text-secondary mb-2">Morning sequence</p>
-        <h1 className="h2 mb-2">Build a plan that matches today&apos;s capacity</h1>
-        <p className="text-secondary mb-3 mb-lg-0">
-          Capture energy first, then shape the task load before making a commitment.
-        </p>
-      </div>
+}: Props) => {
+  const showTestDateControl = testModeSettings.enabled && testModeSettings.morningDateEnabled;
+  const currentDateLabel = formatDotDate(new Date());
 
-      <div className="d-grid gap-2 min-w-0">
-        <label className="d-grid gap-1">
-          <span className="small text-secondary fw-semibold">Test date</span>
-          <input
-            type="date"
-            className="form-control"
-            value={selectedTestDate}
-            onChange={(event) => onTestDateChange(event.target.value)}
-          />
-        </label>
-        <div className="small text-secondary">Plan and debrief data are stored locally for this date.</div>
-      </div>
-
-      <ComplexitySummaryCard
-        gaugeAngle={gaugeAngle}
-        gaugeTransition={gaugeTransition}
-        onRecalculate={onRecalculateGauge}
-        snapshot={{ angle: gaugeAngle, status: complexityStatus, total: totalComplexity }}
-      />
-    </div>
-
-    <div
-      id="complexity-warning"
-      className={
-        totalComplexity > 10
-          ? "alert alert-danger d-flex align-items-center gap-2"
-          : "alert alert-danger d-none align-items-center gap-2"
-      }
-      role="alert"
+  return (
+    <section
+      id="morning-panel"
+      className={cn("section-panel", isActive && "active")}
+      role="tabpanel"
+      aria-labelledby="Morning"
+      data-testid="morning-panel"
     >
-      <i className="bi bi-exclamation-triangle-fill" />
-      <div>Total planned complexity is above the recommended threshold for a focused day.</div>
-    </div>
+      <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+        <div className="flex-grow-1">
+          <p className="text-uppercase small fw-semibold text-secondary mb-2">Morning sequence</p>
+          <h1 className="h2 mb-2">Build a plan that matches today&apos;s capacity</h1>
+          <p className="text-secondary mb-1">
+            Capture energy first, then shape the task load before making a commitment.
+          </p>
+          {!showTestDateControl ? (
+            <div className="h5 mb-0">{`Today is the ${currentDateLabel}`}</div>
+          ) : null}
+        </div>
 
-    <div className="morning-steps">
-      <div className="step-row align-items-start">
-        <StepMarker currentStep={currentStep} step={1} onSelectStep={onSelectStep} className="pt-md-3" />
+        <div className="d-grid gap-2 min-w-0">
+          {showTestDateControl ? (
+            <label className="d-grid gap-1">
+              <span className="small text-secondary fw-semibold">Set current day manually</span>
+              <input
+                type="date"
+                className="form-control"
+                data-testid="morning-selected-date-input"
+                value={selectedTestDate}
+                onChange={(event) => onTestDateChange(event.target.value)}
+              />
+            </label>
+          ) : null}
+        </div>
 
-        <EnergyStepSection
-          currentStep={currentStep}
-          onChooseEnergy={onChooseEnergy}
-          onSelectStep={onSelectStep}
-          selectedEnergy={selectedEnergy}
+        <ComplexitySummaryCard
+          gaugeAngle={gaugeAngle}
+          gaugeTransition={gaugeTransition}
+          onRecalculate={onRecalculateGauge}
+          snapshot={{ angle: gaugeAngle, status: complexityStatus, total: totalComplexity }}
         />
       </div>
 
-      <div className="step-row align-items-start">
-        <StepMarker currentStep={currentStep} step={2} onSelectStep={onSelectStep} className="pt-md-4" />
-
-        <TasksStepSection
-          canRemoveSelected={canRemoveSelected}
-          currentStep={currentStep}
-          isLocked={tasksLocked}
-          onAddTask={onAddTask}
-          onConfirm={onConfirmTasks}
-          onMoveTask={onMoveTask}
-          onOpenDetails={onOpenDetails}
-          onRemoveSelected={onRemoveSelected}
-          onSelectStep={onSelectStep}
-          onShowHelp={onShowHelp}
-          onToggleSelected={onToggleSelected}
-          tasks={tasks}
-        />
+      <div
+        id="complexity-warning"
+        className={
+          totalComplexity > 10
+            ? "alert alert-danger d-flex align-items-center gap-2"
+            : "alert alert-danger d-none align-items-center gap-2"
+        }
+        role="alert"
+        data-testid="morning-complexity-warning"
+      >
+        <i className="bi bi-exclamation-triangle-fill" />
+        <div>Total planned complexity is above the recommended threshold for a focused day.</div>
       </div>
-    </div>
-  </section>
-);
+
+      <div className="morning-steps" data-testid="morning-steps">
+        <div className="step-row align-items-start">
+          <StepMarker currentStep={currentStep} step={1} onSelectStep={onSelectStep} className="pt-md-3" />
+
+          <EnergyStepSection
+            currentStep={currentStep}
+            onChooseEnergy={onChooseEnergy}
+            onSelectStep={onSelectStep}
+            selectedEnergy={selectedEnergy}
+          />
+        </div>
+
+        <div className="step-row align-items-start">
+          <StepMarker currentStep={currentStep} step={2} onSelectStep={onSelectStep} className="pt-md-4" />
+
+          <TasksStepSection
+            canRemoveSelected={canRemoveSelected}
+            currentStep={currentStep}
+            isLocked={tasksLocked}
+            onAddTask={onAddTask}
+            onConfirm={onConfirmTasks}
+            onMoveTask={onMoveTask}
+            onOpenDetails={onOpenDetails}
+            onRemoveSelected={onRemoveSelected}
+            onSelectStep={onSelectStep}
+            onShowHelp={onShowHelp}
+            onToggleSelected={onToggleSelected}
+            tasks={tasks}
+          />
+        </div>
+      </div>
+    </section>
+  );
+};

@@ -1,5 +1,6 @@
 import { createPortal } from "react-dom";
 import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../types";
+import type { TestModeSettings } from "../store";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import { TodayTaskCard } from "./TodayTaskCard";
 
@@ -16,6 +17,7 @@ interface Props {
   onToggleDone: (taskId: string, checked: boolean) => void;
   tasks: TodayTask[];
   testDaySpeed: DaySpeedMultiplier;
+  testModeSettings: TestModeSettings;
 }
 
 const SPEED_OPTIONS: DaySpeedMultiplier[] = [1, 10, 20, 50, 100];
@@ -32,10 +34,12 @@ export const TodayPanel = ({
   onTestDaySpeedChange,
   onToggleDone,
   tasks,
-  testDaySpeed
+  testDaySpeed,
+  testModeSettings
 }: Props) => {
   const openTasks = tasks.filter((task) => !task.done);
   const achievedTasks = tasks.filter((task) => task.done);
+  const showTestSpeedControl = testModeSettings.enabled && testModeSettings.todaySpeedEnabled;
 
   const addTaskFab = isActive ? (
     <CoachButton
@@ -45,6 +49,7 @@ export const TodayPanel = ({
       variant="primary"
       aria-label="Add new task"
       title="Add new task"
+      testId="today-add-task-button"
       onClick={onAddTask}
     >
       <i className="bi bi-plus-lg" />
@@ -58,6 +63,7 @@ export const TodayPanel = ({
         className={isActive ? "section-panel active" : "section-panel"}
         role="tabpanel"
         aria-labelledby="Today"
+        data-testid="today-panel"
       >
         <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
           <div>
@@ -67,21 +73,27 @@ export const TodayPanel = ({
           </div>
 
           <div className="d-grid gap-2 min-w-0">
-            <span className="small fw-semibold text-secondary">Test day speed</span>
-            <div className="d-flex flex-wrap gap-2" role="group" aria-label="Test day speed">
-              {SPEED_OPTIONS.map((speed) => (
-                <CoachButton
-                  key={speed}
-                  type="button"
-                  variant={testDaySpeed === speed ? "primary" : "outline"}
-                  className="rounded-pill px-3 py-1"
-                  onClick={() => onTestDaySpeedChange(speed)}
-                >
-                  {speed}x
-                </CoachButton>
-              ))}
-            </div>
-            <div className="small text-secondary">Simulation only. All running timers advance at the selected speed.</div>
+            {showTestSpeedControl ? (
+              <>
+                <span className="small fw-semibold text-secondary">Test day speed</span>
+                <div className="d-flex flex-wrap gap-2" role="group" aria-label="Test day speed" data-testid="today-speed-group">
+                  {SPEED_OPTIONS.map((speed) => (
+                    <CoachButton
+                      key={speed}
+                      type="button"
+                      variant={testDaySpeed === speed ? "primary" : "outline"}
+                      className="rounded-pill px-3 py-1"
+                      onClick={() => onTestDaySpeedChange(speed)}
+                    >
+                      {speed}x
+                    </CoachButton>
+                  ))}
+                </div>
+                <div className="small text-secondary">Simulation only. All running timers advance at the selected speed.</div>
+              </>
+            ) : (
+              <div className="small text-secondary">Today is running at live speed.</div>
+            )}
           </div>
         </div>
 
@@ -95,7 +107,7 @@ export const TodayPanel = ({
             </div>
           </div>
 
-          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Today task list">
+          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Today task list" data-testid="today-open-task-list">
             {openTasks.length > 0 ? (
               openTasks.map((task, index) => (
                 <TodayTaskCard
@@ -110,6 +122,7 @@ export const TodayPanel = ({
                   onToggleDone={onToggleDone}
                   priority={index + 1}
                   task={task}
+                  testId={`today-open-task-item-${task.id}`}
                 />
               ))
             ) : (
@@ -128,7 +141,7 @@ export const TodayPanel = ({
             </div>
           </div>
 
-          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Achieved goals of today">
+          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Achieved goals of today" data-testid="today-achieved-task-list">
             {achievedTasks.length > 0 ? (
               achievedTasks.map((task) => (
                 <TodayTaskCard
@@ -142,6 +155,7 @@ export const TodayPanel = ({
                   onStopPomodoro={onStopPomodoro}
                   onToggleDone={onToggleDone}
                   task={task}
+                  testId={`today-achieved-task-item-${task.id}`}
                 />
               ))
             ) : (

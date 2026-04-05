@@ -5,7 +5,7 @@ interface Props {
 }
 
 export const ProfilePage = ({ onClose }: Props) => (
-  <section className="section-panel active" id="profile-panel" aria-labelledby="Profile" role="tabpanel">
+  <section className="section-panel active" id="profile-panel" aria-labelledby="Profile" role="tabpanel" data-testid="profile-page">
     <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
       <div className="d-flex flex-column gap-2">
         <p className="text-uppercase small fw-semibold text-secondary mb-0">Profile</p>
@@ -13,7 +13,7 @@ export const ProfilePage = ({ onClose }: Props) => (
         <p className="text-secondary mb-0">Review account details, coaching preferences, and activity context.</p>
       </div>
 
-      <CoachButton type="button" variant="outline" onClick={onClose} aria-label="Close profile page">
+      <CoachButton type="button" variant="outline" onClick={onClose} aria-label="Close profile page" testId="profile-close-button">
         Close
       </CoachButton>
     </div>

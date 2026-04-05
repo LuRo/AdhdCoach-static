@@ -8,9 +8,9 @@ interface Props {
 }
 
 export const TaskDetailsModal = ({ isOpen, onClose, task }: Props) => (
-  <ModalShell isOpen={isOpen} onClose={onClose} primaryActionLabel="Mark ready" title={task?.title ?? "Task details"}>
+  <ModalShell isOpen={isOpen} onClose={onClose} primaryActionLabel="Mark ready" title={task?.title ?? "Task details"} testId="task-details-modal">
     <p className="mb-0 text-secondary">{task?.details}</p>
-    <div className="task-modal-actions d-flex flex-wrap mt-3">
+    <div className="task-modal-actions d-flex flex-wrap mt-3" data-testid="task-details-actions">
       {task?.actions.map((actionLabel) => (
         <button
           key={actionLabel}

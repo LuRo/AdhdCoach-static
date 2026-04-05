@@ -5,17 +5,18 @@ interface Props extends PropsWithChildren {
   isOpen: boolean;
   onClose: () => void;
   primaryActionLabel?: string;
+  testId?: string;
   title: string;
 }
 
-export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, title }: Props) => {
+export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, testId, title }: Props) => {
   if (!isOpen) {
     return null;
   }
 
   return (
     <>
-      <div className="modal fade show d-block" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="modal fade show d-block" role="dialog" aria-modal="true" aria-label={title} data-testid={testId}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header">
@@ -35,7 +36,7 @@ export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, titl
         </div>
       </div>
 
-      <div className="modal-backdrop fade show" onClick={onClose} />
+      <div className="modal-backdrop fade show" onClick={onClose} data-testid={testId ? `${testId}-backdrop` : undefined} />
     </>
   );
 };

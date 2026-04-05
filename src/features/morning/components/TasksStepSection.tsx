@@ -98,6 +98,7 @@ export const TasksStepSection = ({
       disabled={isLocked}
       aria-label="Add new task"
       title="Add new task"
+      testId="morning-tasks-add-task-button"
       onClick={onAddTask}
     >
       <i className="bi bi-plus-lg" />
@@ -105,7 +106,7 @@ export const TasksStepSection = ({
   ) : null;
 
   return (
-    <section className="section-card tasks-glass-section p-3" aria-labelledby="tasks-title">
+    <section className="section-card tasks-glass-section p-3" aria-labelledby="tasks-title" data-testid="morning-tasks-step-section">
       <div className={isOpen ? "step-header mb-2" : "step-header mb-4 mb-collapsed"}>
         <div className="flex-grow-1">
           <button
@@ -133,6 +134,7 @@ export const TasksStepSection = ({
             disabled={!canRemoveSelected || isLocked}
             aria-label="Remove selected tasks"
             title="Remove selected tasks"
+            testId="morning-tasks-remove-selected-button"
             onClick={() => setIsRemoveChoiceOpen(true)}
           >
             <i className="bi bi-trash" />
@@ -154,7 +156,7 @@ export const TasksStepSection = ({
         id="tasks-body"
         className={isOpen ? "collapse show step-complete-body" : "collapse step-complete-body"}
       >
-        <div ref={taskListRef} className="task-list-stage task-sortable-list d-flex flex-column gap-3" aria-label="Sortable task list">
+        <div ref={taskListRef} className="task-list-stage task-sortable-list d-flex flex-column gap-3" aria-label="Sortable task list" data-testid="morning-tasks-list">
           {tasks.map((task, index) => (
             <TaskCard
               key={task.id}
@@ -163,6 +165,7 @@ export const TasksStepSection = ({
               onToggleSelected={onToggleSelected}
               priority={index + 1}
               task={task}
+              testId={`morning-tasks-task-item-${task.id}`}
             />
           ))}
         </div>
@@ -173,6 +176,7 @@ export const TasksStepSection = ({
             className="rounded-pill px-4"
             type="button"
             disabled={isLocked}
+            testId="morning-tasks-confirm-button"
             onClick={onConfirm}
           >
             Confirm tasks and go to Today
@@ -184,12 +188,12 @@ export const TasksStepSection = ({
 
       {isRemoveChoiceOpen ? (
         <>
-          <div className="modal fade show d-block" role="dialog" aria-modal="true" aria-label="Remove selected tasks">
+          <div className="modal fade show d-block" role="dialog" aria-modal="true" aria-label="Remove selected tasks" data-testid="morning-remove-selected-modal">
             <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content border-0 shadow-lg">
                 <div className="modal-header">
                   <h2 className="modal-title fs-5">Remove selected tasks</h2>
-                  <button type="button" className="btn-close" aria-label="Close" onClick={() => setIsRemoveChoiceOpen(false)} />
+                  <button type="button" className="btn-close" aria-label="Close" data-testid="morning-remove-selected-close-button" onClick={() => setIsRemoveChoiceOpen(false)} />
                 </div>
 
                 <div className="modal-body">
@@ -200,7 +204,7 @@ export const TasksStepSection = ({
 
                 <div className="modal-footer remove-selected-actions">
                   <div className="remove-selected-cancel">
-                    <CoachButton type="button" variant="outline" onClick={() => setIsRemoveChoiceOpen(false)}>
+                    <CoachButton type="button" variant="outline" testId="morning-remove-selected-cancel-button" onClick={() => setIsRemoveChoiceOpen(false)}>
                       Cancel
                     </CoachButton>
                   </div>
@@ -209,6 +213,7 @@ export const TasksStepSection = ({
                     <CoachButton
                       type="button"
                       variant="outline"
+                      testId="morning-remove-selected-from-planner-button"
                       onClick={() => {
                         onRemoveSelected("remove");
                         setIsRemoveChoiceOpen(false);
@@ -220,6 +225,7 @@ export const TasksStepSection = ({
                     <CoachButton
                       type="button"
                       variant="danger"
+                      testId="morning-remove-selected-delete-button"
                       onClick={() => {
                         onRemoveSelected("delete");
                         setIsRemoveChoiceOpen(false);

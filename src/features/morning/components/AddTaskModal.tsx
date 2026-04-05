@@ -64,12 +64,12 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
 
   return (
     <>
-      <div className="modal fade show d-block add-task-modal" role="dialog" aria-modal="true" aria-label="Add task">
+      <div className="modal fade show d-block add-task-modal" role="dialog" aria-modal="true" aria-label="Add task" data-testid="morning-add-task-modal">
         <div className="modal-dialog modal-dialog-centered add-task-modal-dialog">
           <div className="modal-content border-0 shadow-lg add-task-modal-content">
             <div className="modal-header">
               <h2 className="modal-title fs-5">{stage === "backlog" ? "Backlog" : "Create a new task"}</h2>
-              <button type="button" className="btn-close" aria-label="Close" onClick={onClose} />
+              <button type="button" className="btn-close" aria-label="Close" data-testid="morning-add-task-close-button" onClick={onClose} />
             </div>
 
             <div className="modal-body">
@@ -79,12 +79,12 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                     Choose a task from backlog or create a completely new one.
                   </p>
 
-                  <div className="add-task-backlog-list d-flex flex-column gap-2">
+                  <div className="add-task-backlog-list d-flex flex-column gap-2" data-testid="morning-add-task-backlog-list">
                     {backlogTasks.length === 0 ? (
                       <p className="mb-0 text-secondary small">No backlog tasks available.</p>
                     ) : (
                       backlogTasks.map((task) => (
-                        <div key={task.id} className="add-task-backlog-item d-flex align-items-center justify-content-between gap-2">
+                        <div key={task.id} className="add-task-backlog-item d-flex align-items-center justify-content-between gap-2" data-testid={`morning-add-task-backlog-item-${task.id}`}>
                           <div>
                             <div className="fw-semibold">{task.title}</div>
                             <div className="small text-secondary">
@@ -97,6 +97,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                             type="button"
                             className="rounded-pill px-3 py-1"
                             variant="outline"
+                            testId={`morning-add-task-backlog-add-button-${task.id}`}
                             onClick={() => onAddFromBacklog(task.id)}
                           >
                             Add
@@ -115,6 +116,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                     <input
                       id="new-task-title"
                       className="form-control"
+                      data-testid="morning-add-task-title-input"
                       value={title}
                       onChange={(event) => setTitle(event.currentTarget.value)}
                       placeholder="What needs to be done?"
@@ -128,6 +130,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                     <textarea
                       id="new-task-summary"
                       className="form-control"
+                      data-testid="morning-add-task-summary-input"
                       rows={2}
                       value={summary}
                       onChange={(event) => setSummary(event.currentTarget.value)}
@@ -142,6 +145,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                       variant="outline"
                       className="rounded-pill px-3 py-1"
                       disabled={!canCreate}
+                      testId="morning-add-task-calculate-complexity-button"
                       onClick={() => setComplexity(estimateComplexityFromTitle(title))}
                     >
                       Calculate complexity
@@ -153,6 +157,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                       id="store-in-backlog"
                       type="checkbox"
                       className="form-check-input"
+                      data-testid="morning-add-task-store-backlog-checkbox"
                       checked={storeInBacklog}
                       onChange={(event) => setStoreInBacklog(event.currentTarget.checked)}
                     />
@@ -169,6 +174,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                       id="new-task-due-date"
                       type="date"
                       className="form-control"
+                      data-testid="morning-add-task-due-date-input"
                       value={dueDate}
                       disabled={!storeInBacklog}
                       onChange={(event) => setDueDate(event.currentTarget.value)}
@@ -181,7 +187,7 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
             <div className="modal-footer d-flex justify-content-between">
               <div>
                 {stage === "new" ? (
-                  <CoachButton type="button" variant="outline" onClick={() => setStage("backlog")}>
+                  <CoachButton type="button" variant="outline" testId="morning-add-task-back-button" onClick={() => setStage("backlog")}>
                     Back to backlog
                   </CoachButton>
                 ) : null}
@@ -193,9 +199,9 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
                 </CoachButton>
 
                 {stage === "backlog" ? (
-                  <CoachButton type="button" onClick={() => setStage("new")}>Create new task</CoachButton>
+                  <CoachButton type="button" testId="morning-add-task-create-new-button" onClick={() => setStage("new")}>Create new task</CoachButton>
                 ) : (
-                  <CoachButton type="button" disabled={!canCreate} onClick={handleCreate}>
+                  <CoachButton type="button" disabled={!canCreate} testId="morning-add-task-submit-button" onClick={handleCreate}>
                     {storeInBacklog ? "Save to backlog" : "Add to today"}
                   </CoachButton>
                 )}

@@ -14,6 +14,7 @@ interface Props {
   onToggleDone: (taskId: string, checked: boolean) => void;
   priority?: number;
   task: TodayTask;
+  testId?: string;
 }
 
 const complexityClassByValue: Record<number, string> = {
@@ -61,7 +62,8 @@ export const TodayTaskCard = ({
   onStopPomodoro,
   onToggleDone,
   priority,
-  task
+  task,
+  testId
 }: Props) => {
   const complexityClass = useMemo(() => {
     if (task.complexity >= 5) {
@@ -83,7 +85,7 @@ export const TodayTaskCard = ({
   const borderProgress = Math.max(0, Math.min(task.workElapsedSeconds / fourHoursSeconds, 1));
 
   return (
-    <article className={cn("task-card today-task-card p-3 p-lg-4", isDone && "today-task-card-done")}>
+    <article className={cn("task-card today-task-card p-3 p-lg-4", isDone && "today-task-card-done")} data-testid={testId ?? `morning-today-task-card-${task.id}`}>
       {task.workElapsedSeconds > 0 ? (
         <div className="today-task-work-progress" aria-hidden="true">
           <div className="today-task-work-progress-fill" style={{ width: `${borderProgress * 100}%` }} />
@@ -107,6 +109,7 @@ export const TodayTaskCard = ({
               type="checkbox"
               checked={isDone}
               aria-label={`Mark ${task.title} as done`}
+              data-testid={testId ? `${testId}-done-checkbox` : undefined}
               onChange={(event) => onToggleDone(task.id, event.currentTarget.checked)}
             />
 
@@ -115,6 +118,7 @@ export const TodayTaskCard = ({
                 className={cn("complexity-pill my-auto", complexityClass)}
                 role="img"
                 aria-label={`Complexity ${task.complexity}`}
+                data-testid={testId ? `${testId}-complexity-indicator` : undefined}
               />
             </div>
           </div>
@@ -131,6 +135,7 @@ export const TodayTaskCard = ({
                     type="button"
                     variant="outline"
                     className="rounded-pill px-3 py-1"
+                    testId={testId ? `${testId}-start-work-button` : undefined}
                     onClick={() => onStartWorkTimer(task.id)}
                   >
                     <i className="bi bi-play-fill" /> <span className="task-action-label">Play</span>
@@ -140,6 +145,7 @@ export const TodayTaskCard = ({
                     type="button"
                     variant="outline"
                     className="rounded-pill px-3 py-1"
+                    testId={testId ? `${testId}-block-button` : undefined}
                     onClick={() => onBlockTask(task.id)}
                   >
                     <i className="bi bi-check2-square" /> <span className="task-action-label">Block</span>
@@ -175,6 +181,7 @@ export const TodayTaskCard = ({
                       type="button"
                       variant={task.pomodoroMinutes === minutes && task.timerRunning ? "primary" : "outline"}
                       className="rounded-pill px-2 py-1 today-duration-btn"
+                      testId={testId ? `${testId}-duration-${minutes}-button` : undefined}
                       onClick={() => onStartPomodoro(task.id, minutes)}
                     >
                       {minutes}"
@@ -185,6 +192,7 @@ export const TodayTaskCard = ({
                 <button
                   type="button"
                   className="today-timer-visual d-flex align-items-center gap-2"
+                  data-testid={testId ? `${testId}-timer-visual` : undefined}
                   onClick={() => onOpenPomodoroOverlay(task.id)}
                 >
                   <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">
@@ -206,6 +214,7 @@ export const TodayTaskCard = ({
                   variant="outline"
                   className="rounded-pill px-2 py-1"
                   disabled={!task.timerRunning}
+                  testId={testId ? `${testId}-stop-pomodoro-button` : undefined}
                   onClick={() => onStopPomodoro(task.id)}
                 >
                   <i className="bi bi-stop-fill" />

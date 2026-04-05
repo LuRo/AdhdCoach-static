@@ -32,7 +32,7 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
   }, [isOpen]);
 
   return (
-    <section className="section-card tasks-glass-section p-3 p-lg-3 p-xl-3 energy-step-compact" aria-labelledby="energy-title">
+    <section className="section-card tasks-glass-section p-3 p-lg-3 p-xl-3 energy-step-compact" aria-labelledby="energy-title" data-testid="morning-energy-step-section">
       <div className="step-header mb-2">
         <div className="flex-grow-1">
           <button
@@ -59,7 +59,7 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
         </p>
 
         <div className="energy-choice">
-          <div className="energy-toggle gap-md-3" role="group" aria-label="Energy selection">
+          <div className="energy-toggle gap-md-3" role="group" aria-label="Energy selection" data-testid="morning-energy-selection-group">
             {options.map((option) => (
               <EnergyOption
                 key={option.level}
@@ -68,6 +68,7 @@ export const EnergyStepSection = ({ currentStep, onChooseEnergy, onSelectStep, s
                 level={option.level}
                 onActivateSelected={() => onSelectStep(2)}
                 onSelect={onChooseEnergy}
+                testId={`morning-energy-option-${option.level.toLowerCase()}`}
               />
             ))}
           </div>

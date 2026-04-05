@@ -9,6 +9,7 @@ interface Props {
   onToggleSelected: (taskId: string, checked: boolean) => void;
   priority: number;
   task: Task;
+  testId?: string;
 }
 
 const complexityClassByValue: Record<number, string> = {
@@ -24,7 +25,8 @@ export const TaskCard = ({
   onOpenDetails,
   onToggleSelected,
   priority,
-  task
+  task,
+  testId
 }: Props) => {
   const complexityClass = useMemo(() => {
     if (task.complexity >= 5) {
@@ -35,10 +37,10 @@ export const TaskCard = ({
   }, [task.complexity]);
 
   return (
-    <article className="task-card p-3 p-lg-4">
+    <article className="task-card p-3 p-lg-4" data-testid={testId ?? `morning-task-card-${task.id}`}>
       <div className="d-flex align-items-center">
         <div className="d-flex align-items-center pt-1 ps-md-2 pe-md-2 ">
-          <button className="task-grip" type="button" aria-label="Drag to reorder" disabled={isLocked}>
+          <button className="task-grip" type="button" aria-label="Drag to reorder" disabled={isLocked} data-testid={testId ? `${testId}-drag-handle` : undefined}>
             <i className="bi bi-grip-vertical" />
           </button>
         </div>
@@ -50,6 +52,7 @@ export const TaskCard = ({
             checked={task.selected}
             disabled={isLocked}
             aria-label={`Select ${task.title} for removal`}
+            data-testid={testId ? `${testId}-select-checkbox` : undefined}
             onChange={(event) => onToggleSelected(task.id, event.currentTarget.checked)}
           />
         </div>
@@ -59,6 +62,7 @@ export const TaskCard = ({
             className={cn("complexity-pill my-auto", complexityClass)}
             role="img"
             aria-label={`Complexity ${task.complexity}`}
+            data-testid={testId ? `${testId}-complexity-indicator` : undefined}
           />
         </div>
 
@@ -77,6 +81,7 @@ export const TaskCard = ({
                 variant="outline"
                 disabled={isLocked}
                 aria-label="Open task details and actions"
+                testId={testId ? `${testId}-details-button` : undefined}
                 onClick={() => onOpenDetails(task.id)}
               >
                 <i className="bi bi-three-dots" />

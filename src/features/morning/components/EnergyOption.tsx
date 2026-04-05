@@ -7,6 +7,7 @@ interface Props {
   level: EnergyLevel;
   onActivateSelected: () => void;
   onSelect: (level: EnergyLevel) => void;
+  testId?: string;
 }
 
 export const EnergyOption = ({
@@ -14,7 +15,8 @@ export const EnergyOption = ({
   isSelected,
   level,
   onActivateSelected,
-  onSelect
+  onSelect,
+  testId
 }: Props) => {
   const id = `energy-${level.toLowerCase()}`;
 
@@ -26,6 +28,7 @@ export const EnergyOption = ({
         type="radio"
         name="energy"
         checked={isSelected}
+        data-testid={testId}
         onChange={() => onSelect(level)}
       />
       <label

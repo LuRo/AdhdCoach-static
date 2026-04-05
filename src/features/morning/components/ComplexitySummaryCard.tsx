@@ -16,7 +16,7 @@ const badgeTone = (status: ComplexitySnapshot["status"]): "purple" | "warning" |
 };
 
 export const ComplexitySummaryCard = ({ gaugeAngle, gaugeTransition, onRecalculate, snapshot }: Props) => (
-  <SectionCard className="px-3 py-3 px-md-4 d-flex align-items-center gap-3">
+  <SectionCard className="px-3 py-3 px-md-4 d-flex align-items-center gap-3" testId="morning-complexity-summary-card">
     <div className="flex-grow-1 complexity-card">
       <div className="d-flex justify-content-between align-items-center gap-2 mb-2">
         <span className="fw-semibold">Daily complexity</span>
@@ -25,6 +25,7 @@ export const ComplexitySummaryCard = ({ gaugeAngle, gaugeTransition, onRecalcula
 
       <div
         id="complexity-gauge-control"
+        data-testid="morning-complexity-gauge-control"
         className="complexity-gauge"
         role="button"
         tabIndex={0}

@@ -76,8 +76,8 @@ const RoutedApp = () => {
           <Route path="/" element={<Navigate to="/morning" replace />} />
           <Route path="/morning" element={<MorningPage planner={planner} />} />
           <Route path="/today" element={<TodayPage planner={planner} />} />
-          <Route path="/debriefing" element={<DebriefingPage />} />
-          <Route path="/settings" element={<SettingsPage onClose={handleCloseAuxPage} />} />
+          <Route path="/debriefing" element={<DebriefingPage selectedTestDate={planner.effectiveSelectedTestDate} />} />
+          <Route path="/settings" element={<SettingsPage onClose={handleCloseAuxPage} selectedTestDate={planner.selectedTestDate} testDaySpeed={planner.testDaySpeed} testModeSettings={planner.testModeSettings} onTestModeSettingsChange={planner.setTestModeSettings} />} />
           <Route path="/profile" element={<ProfilePage onClose={handleCloseAuxPage} />} />
           <Route path="*" element={<Navigate to="/morning" replace />} />
         </Routes>
@@ -114,4 +114,5 @@ export const AppRoutes = () => (
     <RoutedApp />
   </BrowserRouter>
 );
+
 

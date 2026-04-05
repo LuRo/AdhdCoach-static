@@ -7,12 +7,13 @@ interface Props {
 }
 
 export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSettingsPage }: Props) => (
-  <nav className="navbar navbar-expand-lg px-1 px-lg-2" aria-label="Top navigation">
+  <nav className="navbar navbar-expand-lg px-1 px-lg-2" aria-label="Top navigation" data-testid="top-navigation">
     <div className="container-fluid px-0 align-items-center">
       <button
         type="button"
         className="navbar-brand d-flex align-items-center gap-3 me-0 border-0 bg-transparent p-0"
         aria-label="ADHD Coach home"
+        data-testid="top-navigation-home-button"
         onClick={onOpenHomePage}
       >
         <img src="/adhd-logo.svg" alt="ADHD Coach logo" className="brand-logo" />
@@ -24,6 +25,7 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
           variant="outline"
           type="button"
           aria-label="Open settings"
+          testId="top-navigation-settings-button"
           onClick={onOpenSettingsPage}
         >
           <i className="bi bi-gear" />
@@ -33,6 +35,7 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
           type="button"
           className="border-0 p-0 bg-transparent rounded-circle"
           aria-label="Open profile"
+          data-testid="top-navigation-profile-button"
           onClick={onOpenProfilePage}
         >
           <img
@@ -42,7 +45,7 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
           />
         </button>
 
-        <CoachButton className="rounded-pill px-3 px-md-4" type="button">
+        <CoachButton className="rounded-pill px-3 px-md-4" type="button" testId="top-navigation-logout-button">
           Logout
         </CoachButton>
       </div>
