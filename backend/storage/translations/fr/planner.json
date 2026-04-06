@@ -1,0 +1,10 @@
+{
+  "complexityWarning": "La complexité totale prévue dépasse le seuil recommandé pour une journée de concentration.",
+  "localStorageNote": "Le plan et les données de débriefing sont stockés localement pour cette date.",
+  "manualDayLabel": "Définir manuellement le jour actuel",
+  "morningIntro": "Commence par l'énergie, puis ajuste la charge des tâches avant de t'engager.",
+  "morningSequence": "Séquence du matin",
+  "morningTitle": "Construis un plan qui correspond à la capacité d'aujourd'hui",
+  "testDateLabel": "Date de test",
+  "todayIs": "Nous sommes le {{date}}"
+}

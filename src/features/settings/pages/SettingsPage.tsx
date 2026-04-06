@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { EditableTranslation, TranslationEditToggle, TranslationListEditorModal, useI18n } from "../../../i18n";
-import { CoachBadge } from "../../../shared/components/atoms/CoachBadge";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
-import { SectionCard } from "../../../shared/components/atoms/SectionCard";
+import { EditableTranslation, TranslationEditToggle, TranslationListEditorModal, useI18n } from "../../../lib/i18n";
+import { CoachBadge } from "../../../components/ui/CoachBadge";
+import { CoachButton } from "../../../components/ui/CoachButton";
+import { SectionCard } from "../../../components/ui/SectionCard";
 import {
   getQuestionSet,
   saveQuestionSet,

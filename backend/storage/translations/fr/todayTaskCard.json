@@ -1,0 +1,10 @@
+{
+  "block": "Bloquer",
+  "blocked": "Bloquée",
+  "complexityAria": "Complexité {{value}}",
+  "markDoneAria": "Marquer {{title}} comme terminée",
+  "minutesSuffix": "min",
+  "openPomodoroAria": "Ouvrir Pomodoro",
+  "play": "Lancer",
+  "tracking": "Suivi"
+}

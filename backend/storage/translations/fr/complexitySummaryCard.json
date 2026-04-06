@@ -1,0 +1,9 @@
+{
+  "levels.high": "Élevé",
+  "levels.light": "Léger",
+  "levels.moderate": "Modéré",
+  "pointsLabel": "points",
+  "recalculateAria": "Recalculer la jauge de complexité du jour",
+  "threshold": "Seuil recommandé : 10 points",
+  "title": "Complexité du jour"
+}

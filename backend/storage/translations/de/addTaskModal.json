@@ -1,0 +1,22 @@
+{
+  "add": "Hinzufügen",
+  "addToToday": "Zu heute hinzufügen",
+  "ariaLabel": "Aufgabe hinzufügen",
+  "backlogTitle": "Backlog",
+  "backToBacklog": "Zurück zum Backlog",
+  "calculateComplexity": "Komplexität berechnen",
+  "close": "Schließen",
+  "complexityLabel": "Geschätzte Komplexität",
+  "createNewTask": "Neue Aufgabe erstellen",
+  "dueDateLabel": "Fälligkeitsdatum (optional)",
+  "duePrefix": "fällig am",
+  "emptyBacklog": "Keine Backlog-Aufgaben verfügbar.",
+  "intro": "Wähle eine Aufgabe aus dem Backlog oder erstelle eine komplett neue.",
+  "newTaskTitle": "Neue Aufgabe erstellen",
+  "saveToBacklog": "Im Backlog speichern",
+  "storeInBacklog": "Im Backlog speichern",
+  "summaryLabel": "Untertext (optional)",
+  "summaryPlaceholder": "Hilfreicher Kontext für die Aufgabe",
+  "titleLabel": "Titel",
+  "titlePlaceholder": "Was muss erledigt werden?"
+}

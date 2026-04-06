@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { CoachButton } from "../../../components/ui/CoachButton";
 
 import type { PropsWithChildren } from "react";
 

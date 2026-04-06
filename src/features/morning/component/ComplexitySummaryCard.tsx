@@ -1,6 +1,6 @@
-﻿import { useTranslation } from "react-i18next";
-import { CoachBadge } from "../../../shared/components/atoms/CoachBadge";
-import { SectionCard } from "../../../shared/components/atoms/SectionCard";
+import { useTranslation } from "react-i18next";
+import { CoachBadge } from "../../../components/ui/CoachBadge";
+import { SectionCard } from "../../../components/ui/SectionCard";
 import type { ComplexitySnapshot } from "../types";
 
 interface Props {

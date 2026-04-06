@@ -1,4 +1,4 @@
-import { cn } from "../../../shared/utils/cn";
+import { cn } from "../../../lib/utils/cn";
 import type { EnergyLevel } from "../types";
 
 interface Props {

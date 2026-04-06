@@ -1,0 +1,6 @@
+{
+  "complexityAria": "Complexité {{value}}",
+  "detailsAria": "Ouvrir les détails et actions de la tâche",
+  "dragAria": "Faire glisser pour réorganiser",
+  "selectAria": "Sélectionner {{title}} pour suppression"
+}

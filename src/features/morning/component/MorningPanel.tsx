@@ -1,8 +1,8 @@
-﻿import type { TestModeSettings } from "../store";
-import { cn } from "../../../shared/utils/cn";
+import type { TestModeSettings } from "../store";
+import { cn } from "../../../lib/utils/cn";
 import type { EnergyLevel, RemoveSelectedMode, Task } from "../types";
 import { useTranslation } from "react-i18next";
-import { EditableTranslation } from "../../../i18n";
+import { EditableTranslation } from "../../../lib/i18n";
 import { ComplexitySummaryCard } from "./ComplexitySummaryCard";
 import { EnergyStepSection } from "./EnergyStepSection";
 import { TasksStepSection } from "./TasksStepSection";

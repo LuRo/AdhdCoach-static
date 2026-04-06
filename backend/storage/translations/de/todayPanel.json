@@ -1,0 +1,15 @@
+{
+  "achievedDescription": "Erledigte Einträge werden hier automatisch verschoben.",
+  "achievedTitle": "Heutige erledigte Ziele",
+  "allCompleted": "Alle geplanten Aufgaben sind erledigt.",
+  "eyebrow": "Heute ausführen",
+  "intro": "Klicke auf den Timer-Kreis, um das Pomodoro-Overlay zu öffnen.",
+  "liveSpeedNote": "Heute läuft in Echtzeitgeschwindigkeit.",
+  "noCompleted": "Noch keine erledigten Ziele.",
+  "simulationNote": "Nur Simulation. Alle laufenden Timer laufen mit der gewählten Geschwindigkeit weiter.",
+  "speedAria": "Test-Tagesgeschwindigkeit",
+  "speedLabel": "Test-Tagesgeschwindigkeit",
+  "tasksDescription": "Nur die oberste nicht blockierte Aufgabe kann starten. Blockieren gibt die nächste Aufgabe frei.",
+  "tasksTitle": "Aufgaben für heute",
+  "title": "Arbeite nach deinem bestätigten Morgenplan"
+}

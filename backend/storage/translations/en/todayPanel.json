@@ -1,0 +1,15 @@
+{
+  "achievedDescription": "Completed items are moved here automatically.",
+  "achievedTitle": "Achieved goals of today",
+  "allCompleted": "All planned tasks are completed.",
+  "eyebrow": "Today execution",
+  "intro": "Click the timer circle to open the Pomodoro overlay.",
+  "liveSpeedNote": "Today is running at live speed.",
+  "noCompleted": "No completed goals yet.",
+  "simulationNote": "Simulation only. All running timers advance at the selected speed.",
+  "speedAria": "Test day speed",
+  "speedLabel": "Test day speed",
+  "tasksDescription": "Only the top unblocked task can start. Block unlocks the next task.",
+  "tasksTitle": "Today tasks",
+  "title": "Work from your confirmed morning plan"
+}

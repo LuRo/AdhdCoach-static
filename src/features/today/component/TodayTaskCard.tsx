@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useI18n } from "../../../i18n";
-import { cn } from "../../../shared/utils/cn";
+import { useI18n } from "../../../lib/i18n";
+import { cn } from "../../../lib/utils/cn";
 import type { PomodoroMinutes, TodayTask } from "../../morning/types";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { CoachButton } from "../../../components/ui/CoachButton";
 
 interface Props {
   isActiveTask: boolean;

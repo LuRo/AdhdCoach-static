@@ -1,0 +1,7 @@
+{
+  "ariaLabel": "Fenêtre du minuteur Pomodoro",
+  "close": "Fermer",
+  "cycle": "Cycle de {{minutes}} minutes",
+  "start": "Démarrer",
+  "title": "Pomodoro"
+}

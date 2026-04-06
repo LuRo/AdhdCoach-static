@@ -1,0 +1,12 @@
+{
+  "addTaskAria": "Add new task",
+  "confirm": "Confirm tasks and go to Today",
+  "deleteCompletely": "Delete completely",
+  "description": "Drag tasks into the right order, check complexity load, and open details or actions as needed.",
+  "help": "Help",
+  "removeFromPlanner": "Remove from planner",
+  "removeModalBody": "Should selected tasks be completely deleted, or only removed from this planner and kept in backlog?",
+  "removeModalTitle": "Remove selected tasks",
+  "removeSelectedAria": "Remove selected tasks",
+  "title": "Rank the task list"
+}

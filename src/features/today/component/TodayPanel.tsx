@@ -1,8 +1,8 @@
 import { createPortal } from "react-dom";
-import { useI18n } from "../../../i18n";
+import { useI18n } from "../../../lib/i18n";
 import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../../morning/types";
 import type { TestModeSettings } from "../../morning/store";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { CoachButton } from "../../../components/ui/CoachButton";
 import { TodayTaskCard } from "./TodayTaskCard";
 
 interface Props {

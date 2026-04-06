@@ -1,0 +1,15 @@
+{
+  "achievedDescription": "Les éléments terminés sont déplacés ici automatiquement.",
+  "achievedTitle": "Objectifs accomplis aujourd'hui",
+  "allCompleted": "Toutes les tâches prévues sont terminées.",
+  "eyebrow": "Exécution du jour",
+  "intro": "Cliquez sur le cercle du minuteur pour ouvrir la fenêtre Pomodoro.",
+  "liveSpeedNote": "Aujourd'hui fonctionne à la vitesse réelle.",
+  "noCompleted": "Aucun objectif terminé pour le moment.",
+  "simulationNote": "Simulation uniquement. Tous les minuteurs en cours avancent à la vitesse sélectionnée.",
+  "speedAria": "Vitesse du jour de test",
+  "speedLabel": "Vitesse du jour de test",
+  "tasksDescription": "Seule la tâche supérieure non bloquée peut démarrer. Le blocage débloque la tâche suivante.",
+  "tasksTitle": "Tâches du jour",
+  "title": "Travaillez à partir de votre plan du matin confirmé"
+}

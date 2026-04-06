@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "adhd-coach-static",
   "private": true,
   "version": "0.1.0",
@@ -11,7 +11,8 @@
     "test:ui": "playwright test",
     "test:ui:headed": "playwright test --headed",
     "test:ui:report": "playwright show-report",
-    "i18n:coverage": "node scripts/check-translation-coverage.mjs"
+    "i18n:coverage": "node scripts/check-translation-coverage.mjs",
+    "i18n:migrate-ui-to-backend": "node scripts/migrate-ui-to-backend-storage.mjs"
   },
   "dependencies": {
     "i18next": "^26.0.3",

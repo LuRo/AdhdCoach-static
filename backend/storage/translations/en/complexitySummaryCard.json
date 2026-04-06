@@ -1,0 +1,9 @@
+{
+  "levels.high": "High",
+  "levels.light": "Light",
+  "levels.moderate": "Moderate",
+  "pointsLabel": "points",
+  "recalculateAria": "Recalculate daily complexity gauge",
+  "threshold": "Recommended threshold: 10 points",
+  "title": "Daily complexity"
+}

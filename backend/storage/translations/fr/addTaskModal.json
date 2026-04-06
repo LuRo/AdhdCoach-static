@@ -1,0 +1,22 @@
+{
+  "add": "Ajouter",
+  "addToToday": "Ajouter à Aujourd'hui",
+  "ariaLabel": "Ajouter une tâche",
+  "backlogTitle": "Backlog",
+  "backToBacklog": "Retour au backlog",
+  "calculateComplexity": "Calculer la complexité",
+  "close": "Fermer",
+  "complexityLabel": "Complexité estimée",
+  "createNewTask": "Créer une nouvelle tâche",
+  "dueDateLabel": "Date d'échéance (facultative)",
+  "duePrefix": "échéance",
+  "emptyBacklog": "Aucune tâche de backlog disponible.",
+  "intro": "Choisissez une tâche depuis le backlog ou créez-en une totalement nouvelle.",
+  "newTaskTitle": "Créer une nouvelle tâche",
+  "saveToBacklog": "Enregistrer dans le backlog",
+  "storeInBacklog": "Enregistrer dans le backlog",
+  "summaryLabel": "Sous-texte (facultatif)",
+  "summaryPlaceholder": "Contexte utile pour la tâche",
+  "titleLabel": "Titre",
+  "titlePlaceholder": "Qu'est-ce qu'il faut faire ?"
+}

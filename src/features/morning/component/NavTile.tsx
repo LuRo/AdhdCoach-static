@@ -1,5 +1,5 @@
 ﻿import { useTranslation } from "react-i18next";
-import { cn } from "../../../shared/utils/cn";
+import { cn } from "../../../lib/utils/cn";
 import type { NavTab, TabId } from "../types";
 
 interface Props {

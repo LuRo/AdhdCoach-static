@@ -1,0 +1,10 @@
+{
+  "block": "Block",
+  "blocked": "Blocked",
+  "complexityAria": "Complexity {{value}}",
+  "markDoneAria": "Mark {{title}} as done",
+  "minutesSuffix": "m",
+  "openPomodoroAria": "Open Pomodoro",
+  "play": "Play",
+  "tracking": "Tracking"
+}

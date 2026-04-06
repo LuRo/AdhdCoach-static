@@ -1,0 +1,6 @@
+{
+  "complexityAria": "Complexity {{value}}",
+  "detailsAria": "Open task details and actions",
+  "dragAria": "Drag to reorder",
+  "selectAria": "Select {{title}} for removal"
+}

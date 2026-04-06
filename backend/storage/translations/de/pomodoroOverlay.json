@@ -1,0 +1,7 @@
+{
+  "ariaLabel": "Pomodoro-Timer-Overlay",
+  "close": "Schließen",
+  "cycle": "{{minutes}}-Minuten-Zyklus",
+  "start": "Starten",
+  "title": "Pomodoro"
+}

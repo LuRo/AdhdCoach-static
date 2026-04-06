@@ -1,0 +1,22 @@
+{
+  "add": "Add",
+  "addToToday": "Add to today",
+  "ariaLabel": "Add task",
+  "backlogTitle": "Backlog",
+  "backToBacklog": "Back to backlog",
+  "calculateComplexity": "Calculate complexity",
+  "close": "Close",
+  "complexityLabel": "Estimated complexity",
+  "createNewTask": "Create new task",
+  "dueDateLabel": "Due date (optional)",
+  "duePrefix": "due",
+  "emptyBacklog": "No backlog tasks available.",
+  "intro": "Choose a task from backlog or create a completely new one.",
+  "newTaskTitle": "Create a new task",
+  "saveToBacklog": "Save to backlog",
+  "storeInBacklog": "Store in backlog",
+  "summaryLabel": "Subtext (optional)",
+  "summaryPlaceholder": "Helpful context for the task",
+  "titleLabel": "Title",
+  "titlePlaceholder": "What needs to be done?"
+}

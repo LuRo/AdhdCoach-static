@@ -1,0 +1,10 @@
+{
+    "complexityWarning": "Total planned complexity is above the recommended threshold for a focused day.",
+    "localStorageNote": "Plan and debrief data are stored locally for this date.",
+    "manualDayLabel": "Set current day manually",
+    "morningIntro": "Capture energy first, then shape the task load before making a commitment.",
+    "morningSequence": "Morning sequence",
+    "morningTitle": "Erstelle einen Plan, der zur heutigen Kapazität passt ddasd",
+    "testDateLabel": "Test date",
+    "todayIs": "Today is the {{date}}"
+}

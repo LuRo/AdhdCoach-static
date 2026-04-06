@@ -1,0 +1,12 @@
+{
+  "addTaskAria": "Neue Aufgabe hinzufügen",
+  "confirm": "Aufgaben bestätigen und zu Heute wechseln",
+  "deleteCompletely": "Vollständig löschen",
+  "description": "Ziehe Aufgaben in die richtige Reihenfolge, prüfe die Komplexitätslast und öffne bei Bedarf Details oder Aktionen.",
+  "help": "Hilfe",
+  "removeFromPlanner": "Aus dem Planer entfernen",
+  "removeModalBody": "Sollen ausgewählte Aufgaben vollständig gelöscht oder nur aus diesem Planer entfernt und im Backlog behalten werden?",
+  "removeModalTitle": "Ausgewählte Aufgaben entfernen",
+  "removeSelectedAria": "Ausgewählte Aufgaben entfernen",
+  "title": "Aufgabenliste priorisieren"
+}

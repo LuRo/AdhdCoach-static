@@ -1,5 +1,5 @@
-import { useI18n } from "../../../i18n";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { useI18n } from "../../../lib/i18n";
+import { CoachButton } from "../../../components/ui/CoachButton";
 import { useTranslation } from "react-i18next";
 
 interface Props {

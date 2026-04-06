@@ -1,0 +1,10 @@
+{
+  "complexityWarning": "Die gesamte geplante Komplexität liegt über dem empfohlenen Grenzwert für einen fokussierten Tag.",
+  "localStorageNote": "Plan- und Debrief-Daten werden für dieses Datum lokal gespeichert.",
+  "manualDayLabel": "Aktuellen Tag manuell setzen",
+  "morningIntro": "Erfasse zuerst deine Energie und forme dann die Aufgabenlast, bevor du dich festlegst.",
+  "morningSequence": "Morgenablauf",
+  "morningTitle": "Erstelle einen Plan, der zur heutigen Kapazität passt",
+  "testDateLabel": "Testdatum",
+  "todayIs": "Heute ist der {{date}}"
+}

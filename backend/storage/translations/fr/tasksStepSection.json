@@ -1,0 +1,12 @@
+{
+  "addTaskAria": "Ajouter une tâche",
+  "confirm": "Confirmer les tâches et passer à Aujourd'hui",
+  "deleteCompletely": "Supprimer complètement",
+  "description": "Faites glisser les tâches dans le bon ordre, vérifiez la charge de complexité et ouvrez les détails ou actions si nécessaire.",
+  "help": "Aide",
+  "removeFromPlanner": "Retirer du planificateur",
+  "removeModalBody": "Les tâches sélectionnées doivent-elles être entièrement supprimées ou seulement retirées de ce planificateur et conservées dans le backlog ?",
+  "removeModalTitle": "Supprimer les tâches sélectionnées",
+  "removeSelectedAria": "Supprimer les tâches sélectionnées",
+  "title": "Classer la liste de tâches"
+}

@@ -1,7 +1,7 @@
-﻿import { useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { cn } from "../../../shared/utils/cn";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { cn } from "../../../lib/utils/cn";
+import { CoachButton } from "../../../components/ui/CoachButton";
 import type { Task } from "../types";
 
 interface Props {

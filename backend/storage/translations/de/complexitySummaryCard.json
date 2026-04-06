@@ -1,0 +1,9 @@
+{
+  "levels.high": "Hoch",
+  "levels.light": "Leicht",
+  "levels.moderate": "Mittel",
+  "pointsLabel": "Punkte",
+  "recalculateAria": "Tägliche Komplexitätsanzeige neu berechnen",
+  "threshold": "Empfohlener Grenzwert: 10 Punkte",
+  "title": "Tägliche Komplexität"
+}

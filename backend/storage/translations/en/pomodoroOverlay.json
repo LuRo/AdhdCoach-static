@@ -1,0 +1,7 @@
+{
+  "ariaLabel": "Pomodoro timer overlay",
+  "close": "Close",
+  "cycle": "{{minutes}} minute cycle",
+  "start": "Start",
+  "title": "Pomodoro"
+}

@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Sortable, { type SortableEvent } from "sortablejs";
 import { useTranslation } from "react-i18next";
-import { CoachButton } from "../../../shared/components/atoms/CoachButton";
-import { TrashBinButton } from "../../../shared/components/atoms/TrashBinButton";
+import { CoachButton } from "../../../components/ui/CoachButton";
+import { TrashBinButton } from "../../../components/ui/TrashBinButton";
 import type { RemoveSelectedMode, Task } from "../types";
 import { TaskCard } from "./TaskCard";
 
