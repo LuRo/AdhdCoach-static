@@ -3,6 +3,7 @@ import { EditableTranslation, TranslationEditToggle, TranslationListEditorModal,
 import { CoachBadge } from "../../../components/ui/CoachBadge";
 import { CoachButton } from "../../../components/ui/CoachButton";
 import { SectionCard } from "../../../components/ui/SectionCard";
+import { generateMultipleChoiceAnswers } from "../../../lib/api/generateMultipleChoiceAnswers";
 import {
   getQuestionSet,
   saveQuestionSet,
@@ -24,6 +25,9 @@ const cloneAnswerOptions = (answerOptions: DebriefQuestionAnswerOptions): Debrie
   [...answerOptions[1]] as DebriefAnswerOptions,
   [...answerOptions[2]] as DebriefAnswerOptions
 ];
+
+const toDebriefAnswerOptions = (items: string[]): DebriefAnswerOptions =>
+  [items[0] ?? "", items[1] ?? "", items[2] ?? "", items[3] ?? "", items[4] ?? ""] as DebriefAnswerOptions;
 
 const formatDate = (value: string, locale: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(value));
 
@@ -47,7 +51,11 @@ const translationCopy = {
     editOptions: "Edit options",
     listEditorTitle: "Edit answer options",
     listItemLabel: "Answer option",
-    listAdd: "Add option"
+    listAdd: "Add option",
+    generateOptions: "Generate options",
+    generatingOptions: "Generating options...",
+    generateMissingQuestion: "Enter a question first.",
+    generateFailed: "Failed to generate options. Try again."
   },
   de: {
     sectionLabel: "Übersetzung",
@@ -66,7 +74,11 @@ const translationCopy = {
     editOptions: "Optionen bearbeiten",
     listEditorTitle: "Antwortoptionen bearbeiten",
     listItemLabel: "Antwortoption",
-    listAdd: "Option hinzufügen"
+    listAdd: "Option hinzufügen",
+    generateOptions: "Optionen erzeugen",
+    generatingOptions: "Optionen werden erzeugt...",
+    generateMissingQuestion: "Bitte zuerst eine Frage eingeben.",
+    generateFailed: "Optionen konnten nicht erzeugt werden. Bitte erneut versuchen."
   },
   fr: {
     sectionLabel: "Traduction",
@@ -85,7 +97,11 @@ const translationCopy = {
     editOptions: "Modifier les options",
     listEditorTitle: "Modifier les options de réponse",
     listItemLabel: "Option de réponse",
-    listAdd: "Ajouter une option"
+    listAdd: "Ajouter une option",
+    generateOptions: "Générer des options",
+    generatingOptions: "Génération des options...",
+    generateMissingQuestion: "Saisissez d'abord une question.",
+    generateFailed: "Échec de la génération des options. Réessayez."
   }
 } as const;
 
@@ -104,6 +120,8 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
   const [version, setVersion] = useState(savedQuestionSet.version);
   const [savedAt, setSavedAt] = useState(savedQuestionSet.updatedAt);
   const [isListEditorOpen, setIsListEditorOpen] = useState(false);
+  const [isGeneratingAnswerOptions, setIsGeneratingAnswerOptions] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
 
   const updateQuestion = (index: 0 | 1 | 2, value: string) => {
     setQuestionDrafts((previous) => {
@@ -133,6 +151,40 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
   const handleReset = () => {
     setQuestionDrafts(savedQuestionSet.questions);
     setAnswerDrafts(cloneAnswerOptions(savedQuestionSet.answerOptions));
+    setGenerateError(null);
+  };
+
+  const handleGenerateAnswerOptions = async () => {
+    const question = questionDrafts[activeQuestionIndex]?.trim();
+    if (!question) {
+      setGenerateError(translationCopy[locale].generateMissingQuestion);
+      return;
+    }
+
+    setGenerateError(null);
+    setIsGeneratingAnswerOptions(true);
+
+    try {
+      const generated = await generateMultipleChoiceAnswers({
+        question,
+        locale,
+        count: 5
+      });
+
+      setAnswerDrafts((previous) => {
+        const next = cloneAnswerOptions(previous);
+        next[activeQuestionIndex] = toDebriefAnswerOptions(generated);
+        return next;
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message.trim().length > 0) {
+        setGenerateError(error.message);
+      } else {
+        setGenerateError(translationCopy[locale].generateFailed);
+      }
+    } finally {
+      setIsGeneratingAnswerOptions(false);
+    }
   };
 
   const handleMasterToggle = (enabled: boolean) => {
@@ -163,6 +215,9 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
   };
 
   const activeAnswerDrafts = answerDrafts[activeQuestionIndex];
+  const visibleAnswerDrafts = activeAnswerDrafts
+    .map((answer, index) => ({ answer, index }))
+    .filter(({ answer }) => answer.trim().length > 0);
   const showIndividualModes = testModeSettings.enabled;
 
   return (
@@ -268,13 +323,18 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
                 <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.settings.answerLabelsBadge}</CoachBadge>
                 <span className="small text-secondary">{copy.settings.answerLabelsUsedFor.replace("{{index}}", String(activeQuestionIndex + 1))}</span>
               </div>
-              {translationEnabled ? (
-                <CoachButton type="button" variant="outline" onClick={() => setIsListEditorOpen(true)}>
-                  {translationCopy[locale].editOptions}
+              <div className="d-flex flex-wrap gap-2">
+                <CoachButton type="button" variant="outline" onClick={handleGenerateAnswerOptions} disabled={isGeneratingAnswerOptions}>
+                  {isGeneratingAnswerOptions ? translationCopy[locale].generatingOptions : translationCopy[locale].generateOptions}
                 </CoachButton>
-              ) : null}
+                {translationEnabled ? (
+                  <CoachButton type="button" variant="outline" onClick={() => setIsListEditorOpen(true)}>
+                    {translationCopy[locale].editOptions}
+                  </CoachButton>
+                ) : null}
+              </div>
             </div>
-            {activeAnswerDrafts.map((answer, index) => (
+            {visibleAnswerDrafts.map(({ answer, index }) => (
               <label key={index} className="d-grid gap-1">
                 <span className="small text-secondary fw-semibold">{copy.settings.answerLabel.replace("{{index}}", String(index + 1))}</span>
                 <input
@@ -285,6 +345,7 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
                 />
               </label>
             ))}
+            {generateError ? <div className="small text-danger">{generateError}</div> : null}
           </div>
         </div>
 
@@ -306,7 +367,7 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
 
       <TranslationListEditorModal
         isOpen={isListEditorOpen}
-        items={activeAnswerDrafts}
+        items={activeAnswerDrafts.filter((entry) => entry.trim().length > 0)}
         title={translationCopy[locale].listEditorTitle}
         itemLabel={translationCopy[locale].listItemLabel}
         addLabel={translationCopy[locale].listAdd}
@@ -316,13 +377,7 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
         onSave={(items) => {
           setAnswerDrafts((previous) => {
             const next = cloneAnswerOptions(previous);
-            next[activeQuestionIndex] = [
-              items[0] ?? "",
-              items[1] ?? "",
-              items[2] ?? "",
-              items[3] ?? "",
-              items[4] ?? ""
-            ] as DebriefAnswerOptions;
+            next[activeQuestionIndex] = toDebriefAnswerOptions(items);
             return next;
           });
           setIsListEditorOpen(false);

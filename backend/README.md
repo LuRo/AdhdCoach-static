@@ -1,16 +1,18 @@
 # Translation API (PHP)
 
-This backend provides a minimal translation store for UI labels.
+This backend provides a minimal translation store for UI labels and an AI helper for multiple-choice option generation.
 
 ## Endpoints
 
 - `GET /api/v1/translations/{lng}/{ns}`
 - `PUT /api/v1/translations/{lng}/{ns}`
+- `POST /api/v1/multiple-choice-options`
 
 Examples:
 
 - `GET http://localhost:8082/api/v1/translations/de/settings`
 - `PUT http://localhost:8082/api/v1/translations/de/settings`
+- `POST http://localhost:8082/api/v1/multiple-choice-options`
 
 ## Payload format
 
@@ -28,6 +30,16 @@ Examples:
 or a plain object of key/value pairs.
 
 Values set to `null` remove the key.
+
+`POST /api/v1/multiple-choice-options` accepts:
+
+```json
+{
+  "question": "What helped you stay focused today?",
+  "locale": "en",
+  "count": 5
+}
+```
 
 ## Storage format
 
@@ -74,3 +86,10 @@ The frontend uses:
 - `VITE_TRANSLATIONS_API_BASE_URL`
 
 Default is `http://localhost:8082`.
+
+## AI generation environment
+
+For `POST /api/v1/multiple-choice-options`, set:
+
+- `OPENAI_API_KEY` (required)
+- `OPENAI_MODEL` (optional, default: `gpt-4o-mini`)

@@ -1,4 +1,4 @@
-﻿import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import i18n, { ensureBackendTranslationsLoaded } from "./i18n";
 import { LOCALES, normalizeLocale, type Locale } from "./locale";
@@ -27,6 +27,15 @@ type LegacyCopy = {
     answerLabel: string;
     saveQuestionSet: string;
     resetToSaved: string;
+    testModeBadge: string;
+    testModeTitle: string;
+    testModeDescription: string;
+    testModeMasterLabel: string;
+    testModeMasterHint: string;
+    testModeMorningLabel: string;
+    testModeMorningHint: string;
+    testModeTodayLabel: string;
+    testModeTodayHint: string;
     plannerBadge: string;
     plannerTitle: string;
     plannerText: string;
@@ -76,6 +85,15 @@ const legacyCopyByLocale: Record<Locale, Omit<LegacyCopy, "ui">> = {
       answerLabel: "Answer {{index}}",
       saveQuestionSet: "Save question set",
       resetToSaved: "Reset to saved",
+      testModeBadge: "Test mode",
+      testModeTitle: "Enable local test controls",
+      testModeDescription: "Choose whether test mode is enabled and which pages should show test-only controls.",
+      testModeMasterLabel: "Enable test mode",
+      testModeMasterHint: "When disabled, all test controls are hidden and live defaults are used.",
+      testModeMorningLabel: "Morning page date override",
+      testModeMorningHint: "Show manual date selection on Morning.",
+      testModeTodayLabel: "Today page speed override",
+      testModeTodayHint: "Show simulation speed controls on Today.",
       plannerBadge: "Planner defaults",
       plannerTitle: "Local day simulation is stored per test date.",
       plannerText: "Use the morning planner to select a test date, then save the plan and debrief answers locally for that day."
@@ -110,6 +128,15 @@ const legacyCopyByLocale: Record<Locale, Omit<LegacyCopy, "ui">> = {
       answerLabel: "Antwort {{index}}",
       saveQuestionSet: "Fragenset speichern",
       resetToSaved: "Auf Gespeichert zurÃ¼cksetzen",
+      testModeBadge: "Testmodus",
+      testModeTitle: "Lokale Teststeuerung aktivieren",
+      testModeDescription: "Lege fest, ob der Testmodus aktiv ist und auf welchen Seiten Test-Controls angezeigt werden.",
+      testModeMasterLabel: "Testmodus aktivieren",
+      testModeMasterHint: "Wenn deaktiviert, sind alle Test-Controls ausgeblendet und Live-Standards aktiv.",
+      testModeMorningLabel: "Datums-Override auf Morgen",
+      testModeMorningHint: "Manuelle Datumsauswahl auf der Morgen-Seite anzeigen.",
+      testModeTodayLabel: "Geschwindigkeits-Override auf Heute",
+      testModeTodayHint: "Simulations-Geschwindigkeitsregler auf der Heute-Seite anzeigen.",
       plannerBadge: "Planer-Standards",
       plannerTitle: "Die lokale Tages-Simulation wird pro Testdatum gespeichert.",
       plannerText: "Im Morgenplaner das Testdatum wÃ¤hlen und dann Plan sowie Reflexionsantworten lokal fÃ¼r diesen Tag speichern."
@@ -144,6 +171,15 @@ const legacyCopyByLocale: Record<Locale, Omit<LegacyCopy, "ui">> = {
       answerLabel: "RÃ©ponse {{index}}",
       saveQuestionSet: "Enregistrer le jeu de questions",
       resetToSaved: "Revenir Ã  la version enregistrÃ©e",
+      testModeBadge: "Mode test",
+      testModeTitle: "Activer les controles de test locaux",
+      testModeDescription: "Definissez si le mode test est active et sur quelles pages les controles de test doivent apparaitre.",
+      testModeMasterLabel: "Activer le mode test",
+      testModeMasterHint: "Quand il est desactive, tous les controles de test sont masques et les valeurs normales sont utilisees.",
+      testModeMorningLabel: "Surcharge de date sur Matin",
+      testModeMorningHint: "Afficher la selection manuelle de la date sur Matin.",
+      testModeTodayLabel: "Surcharge de vitesse sur Aujourd'hui",
+      testModeTodayHint: "Afficher les controles de vitesse de simulation sur Aujourd'hui.",
       plannerBadge: "Valeurs par dÃ©faut du planificateur",
       plannerTitle: "La simulation locale de la journÃ©e est enregistrÃ©e par date de test.",
       plannerText: "Utiliser le planificateur du matin pour choisir une date de test, puis enregistrer localement le plan et les rÃ©ponses de dÃ©briefing pour cette journÃ©e."
