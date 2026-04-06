@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useI18n } from "../../../lib/i18n";
 import { CoachBadge } from "../../../components/ui/CoachBadge";
 import { CoachButton } from "../../../components/ui/CoachButton";
@@ -167,13 +167,13 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
         <SectionCard className="app-hero mb-4">
           <div className="app-hero-content d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center h-100">
             <PageIntroBlock
-              namespaceKey="debriefing.panel"
-              labelI18nKey="debriefing.panel.label"
-              titleI18nKey="debriefing.panel.title"
-              introI18nKey="debriefing.panel.intro"
-              labelDefaultText="Append-only reflection trail"
-              titleDefaultText="Close the day without turning it into a scorecard."
-              introDefaultText="Review the work, notice the friction honestly, and leave with one practical adjustment for tomorrow."
+              namespaceKey="debriefingPage"
+              labelI18nKey="debriefingPage.heroEyebrow"
+              titleI18nKey="debriefingPage.heroTitle"
+              introI18nKey="debriefingPage.heroLead"
+              labelDefaultText={debriefingUi.heroEyebrow ?? "Append-only reflection trail"}
+              titleDefaultText={debriefingUi.heroTitle ?? "Close the day without turning it into a scorecard."}
+              introDefaultText={debriefingUi.heroLead ?? "Review the work, notice the friction honestly, and leave with one practical adjustment for tomorrow."}
             />            
             <DebriefSummaryCard
               selectedTestDate={selectedTestDate}
@@ -384,3 +384,5 @@ const CircleAverage = ({ label, value, count, countLabel, locale }: { label: str
     </div>
   );
 };
+
+

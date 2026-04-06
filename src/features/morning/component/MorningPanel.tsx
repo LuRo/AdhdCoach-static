@@ -1,5 +1,6 @@
-import type { TestModeSettings } from "../store";
+﻿import type { TestModeSettings } from "../store";
 import { cn } from "../../../lib/utils/cn";
+import { useI18n } from "../../../lib/i18n";
 import type { EnergyLevel, RemoveSelectedMode, Task } from "../types";
 import { InlineTranslation } from "../../../components/ui/InlineTranslation";
 import { PageIntroBlock } from "../../../components/ui/PageIntroBlock";
@@ -68,6 +69,8 @@ export const MorningPanel = ({
   testModeSettings,
   totalComplexity
 }: Props) => {
+  const { copy } = useI18n();
+  const plannerUi = copy.ui.planner as any;
   const showTestDateControl = testModeSettings.enabled && testModeSettings.morningDateEnabled;
   const currentDateLabel = formatDotDate(new Date());
 
@@ -82,10 +85,13 @@ export const MorningPanel = ({
       <SectionCard className="app-hero mb-4">
         <div className="app-hero-content d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 h-100">
           <PageIntroBlock
-            namespaceKey="morning.panel"
-            labelDefaultText="Morning sequence"
-            titleDefaultText="Build a plan that matches today's capacity"
-            introDefaultText="Capture energy first, then shape the task load before making a commitment."
+            namespaceKey="planner"
+            labelI18nKey="planner.morningSequence"
+            titleI18nKey="planner.morningTitle"
+            introI18nKey="planner.morningIntro"
+            labelDefaultText={plannerUi.morningSequence ?? "Morning sequence"}
+            titleDefaultText={plannerUi.morningTitle ?? "Build a plan that matches today's capacity"}
+            introDefaultText={plannerUi.morningIntro ?? "Capture energy first, then shape the task load before making a commitment."}
             optionalContent={(
               <MorningIntroDetail
                 currentDateLabel={currentDateLabel}
@@ -159,3 +165,5 @@ export const MorningPanel = ({
     </section>
   );
 };
+
+

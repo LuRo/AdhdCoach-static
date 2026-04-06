@@ -1,4 +1,4 @@
-import { createPortal } from "react-dom";
+﻿import { createPortal } from "react-dom";
 import { useI18n } from "../../../lib/i18n";
 import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../../morning/types";
 import type { TestModeSettings } from "../../morning/store";
@@ -6,6 +6,7 @@ import { CoachButton } from "../../../components/ui/CoachButton";
 import { SectionCard } from "../../../components/ui/SectionCard";
 import { PageIntroBlock } from "../../../components/ui/PageIntroBlock";
 import { TodayTaskCard } from "./TodayTaskCard";
+import { TodayHeroDetail } from "./TodayHeroDetail";
 
 interface Props {
   activeTaskId: string | null;
@@ -23,7 +24,6 @@ interface Props {
   testModeSettings: TestModeSettings;
 }
 
-const SPEED_OPTIONS: DaySpeedMultiplier[] = [1, 10, 20, 50, 100];
 
 export const TodayPanel = ({
   activeTaskId,
@@ -41,7 +41,8 @@ export const TodayPanel = ({
   testModeSettings
 }: Props) => {
   const { copy } = useI18n();
-  const ui = copy.ui.todayPanel;
+  const ui = copy.ui.todayPanel as any;
+  const tasksUi = copy.ui.tasksStepSection as any;
   const openTasks = tasks.filter((task) => !task.done);
   const achievedTasks = tasks.filter((task) => task.done);
   const showTestSpeedControl = testModeSettings.enabled && testModeSettings.todaySpeedEnabled;
@@ -52,8 +53,8 @@ export const TodayPanel = ({
       type="button"
       className="add-task-fab"
       variant="primary"
-      aria-label={copy.ui.tasksStepSection.addTaskAria}
-      title={copy.ui.tasksStepSection.addTaskAria}
+      aria-label={tasksUi.addTaskAria}
+      title={tasksUi.addTaskAria}
       testId="today-add-task-button"
       onClick={onAddTask}
     >
@@ -73,35 +74,21 @@ export const TodayPanel = ({
         <SectionCard className="app-hero mb-4">
           <div className="app-hero-content d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 h-100">
             <PageIntroBlock
-              namespaceKey="today.panel"
-              labelDefaultText="Today execution"
-              titleDefaultText="Work from your confirmed morning plan"
-              introDefaultText="Click the timer circle to open the Pomodoro overlay."
+              namespaceKey="todayPanel"
+              labelI18nKey="todayPanel.eyebrow"
+              titleI18nKey="todayPanel.title"
+              introI18nKey="todayPanel.intro"
+              labelDefaultText={ui.eyebrow ?? "Today execution"}
+              titleDefaultText={ui.title ?? "Work from your confirmed morning plan"}
+              introDefaultText={ui.intro ?? "Click the timer circle to open the Pomodoro overlay."}
             />
 
-            <div className="d-grid gap-2 min-w-0">
-              {showTestSpeedControl ? (
-                <>
-                  <span className="small fw-semibold text-secondary">{ui.speedLabel}</span>
-                  <div className="d-flex flex-wrap gap-2" role="group" aria-label={ui.speedAria} data-testid="today-speed-group">
-                    {SPEED_OPTIONS.map((speed) => (
-                      <CoachButton
-                        key={speed}
-                        type="button"
-                        variant={testDaySpeed === speed ? "primary" : "outline"}
-                        className="rounded-pill px-3 py-1"
-                        onClick={() => onTestDaySpeedChange(speed)}
-                      >
-                        {speed}x
-                      </CoachButton>
-                    ))}
-                  </div>
-                  <div className="small text-secondary">{ui.simulationNote}</div>
-                </>
-              ) : (
-                <div className="small text-secondary">{ui.liveSpeedNote}</div>
-              )}
-            </div>
+            <TodayHeroDetail
+              onTestDaySpeedChange={onTestDaySpeedChange}
+              showTestSpeedControl={showTestSpeedControl}
+              testDaySpeed={testDaySpeed}
+              ui={ui}
+            />
           </div>
         </SectionCard>
 
@@ -177,6 +164,8 @@ export const TodayPanel = ({
     </>
   );
 };
+
+
 
 
 

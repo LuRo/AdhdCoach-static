@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { CoachButton } from "../ui/CoachButton";
 import { LogoButton } from "../ui/LogoButton";
 import { LOCALES, type Locale, useI18n } from "../../lib/i18n";
@@ -51,14 +51,12 @@ export const TopNavigation = ({ onOpenHomePage, onOpenProfilePage, onOpenSetting
             testId="top-navigation-profile-button"
             onClick={onOpenProfilePage}
           >
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Crect width='84' height='84' rx='42' fill='%23ead9cc'/%3E%3Ccircle cx='42' cy='32' r='16' fill='%23845b45'/%3E%3Cpath d='M16 72c5-14 16-21 26-21s21 7 26 21' fill='%23c96f36'/%3E%3C/svg%3E"
-              alt=""
-              className="user-avatar"
-            />
+            <span className="user-avatar d-inline-flex align-items-center justify-content-center" aria-hidden="true">
+              <i className="bi bi-person-fill fs-4" />
+            </span>
           </CoachButton>
 
-          <CoachButton className="rounded-pill px-2 px-md-4" type="button" aria-label={t("Logout")} testId="top-navigation-logout-button">
+          <CoachButton className="px-2 px-md-4" type="button" aria-label={t("Logout")} testId="top-navigation-logout-button">
             <i className="bi bi-box-arrow-right d-md-none" aria-hidden="true" />
             <span className="d-none d-md-inline">{t("Logout")}</span>
           </CoachButton>

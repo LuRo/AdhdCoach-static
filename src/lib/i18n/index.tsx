@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
+﻿import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import i18n, { ensureBackendTranslationsLoaded } from "./i18n";
 import { LOCALES, normalizeLocale, type Locale } from "./locale";
@@ -82,17 +82,17 @@ const legacyCopyByLocale: Record<Locale, Omit<LegacyCopy, "ui">> = {
     }
   },
   de: {
-    common: { close: "Schliessen", cancel: "Abbrechen", save: "Speichern", reset: "Zurücksetzen", add: "Hinzufügen" },
-    locale: { label: "Sprache", en: "English", de: "Deutsch", fr: "Französisch" },
-    nav: { homeAria: "ADHD Coach Startseite", settingsAria: "Einstellungen öffnen", profileAria: "Profil öffnen", logout: "Abmelden", sectionsAria: "Hauptbereiche" },
+    common: { close: "Schliessen", cancel: "Abbrechen", save: "Speichern", reset: "ZurÃ¼cksetzen", add: "HinzufÃ¼gen" },
+    locale: { label: "Sprache", en: "English", de: "Deutsch", fr: "FranzÃ¶sisch" },
+    nav: { homeAria: "ADHD Coach Startseite", settingsAria: "Einstellungen Ã¶ffnen", profileAria: "Profil Ã¶ffnen", logout: "Abmelden", sectionsAria: "Hauptbereiche" },
     profile: {
       sectionLabel: "Profil",
       title: "Benutzerprofil",
-      description: "Kontodetails, Coaching-Einstellungen und den Aktivitätskontext prüfen.",
+      description: "Kontodetails, Coaching-Einstellungen und den AktivitÃ¤tskontext prÃ¼fen.",
       closeAria: "Profilseite schliessen",
       badge: "Profil",
       scaffoldTitle: "Profilseite Platzhalter",
-      scaffoldText: "Hier Avatar, Identitätsfelder und profilspezifische Aktionen hinzufügen."
+      scaffoldText: "Hier Avatar, IdentitÃ¤tsfelder und profilspezifische Aktionen hinzufÃ¼gen."
     },
     settings: {
       sectionLabel: "Einstellungen",
@@ -106,47 +106,47 @@ const legacyCopyByLocale: Record<Locale, Omit<LegacyCopy, "ui">> = {
       lastUpdated: "Zuletzt aktualisiert",
       questionLabel: "Frage {{index}}",
       answerLabelsBadge: "Antwortlabels",
-      answerLabelsUsedFor: "Nur für Frage {{index}} verwendet",
+      answerLabelsUsedFor: "Nur fÃ¼r Frage {{index}} verwendet",
       answerLabel: "Antwort {{index}}",
       saveQuestionSet: "Fragenset speichern",
-      resetToSaved: "Auf Gespeichert zurücksetzen",
+      resetToSaved: "Auf Gespeichert zurÃ¼cksetzen",
       plannerBadge: "Planer-Standards",
       plannerTitle: "Die lokale Tages-Simulation wird pro Testdatum gespeichert.",
-      plannerText: "Im Morgenplaner das Testdatum wählen und dann Plan sowie Reflexionsantworten lokal für diesen Tag speichern."
+      plannerText: "Im Morgenplaner das Testdatum wÃ¤hlen und dann Plan sowie Reflexionsantworten lokal fÃ¼r diesen Tag speichern."
     }
   },
   fr: {
-    common: { close: "Fermer", cancel: "Annuler", save: "Enregistrer", reset: "Réinitialiser", add: "Ajouter" },
-    locale: { label: "Langue", en: "Anglais", de: "Allemand", fr: "Français" },
-    nav: { homeAria: "Accueil ADHD Coach", settingsAria: "Ouvrir les paramètres", profileAria: "Ouvrir le profil", logout: "Se déconnecter", sectionsAria: "Sections principales" },
+    common: { close: "Fermer", cancel: "Annuler", save: "Enregistrer", reset: "RÃ©initialiser", add: "Ajouter" },
+    locale: { label: "Langue", en: "Anglais", de: "Allemand", fr: "FranÃ§ais" },
+    nav: { homeAria: "Accueil ADHD Coach", settingsAria: "Ouvrir les paramÃ¨tres", profileAria: "Ouvrir le profil", logout: "Se dÃ©connecter", sectionsAria: "Sections principales" },
     profile: {
       sectionLabel: "Profil",
       title: "Profil utilisateur",
-      description: "Consulter les informations du compte, les préférences de coaching et le contexte d'activité.",
+      description: "Consulter les informations du compte, les prÃ©fÃ©rences de coaching et le contexte d'activitÃ©.",
       closeAria: "Fermer la page de profil",
       badge: "Profil",
       scaffoldTitle: "Structure de page de profil",
-      scaffoldText: "Ajouter ici un avatar, des champs d'identité et des actions spécifiques au profil."
+      scaffoldText: "Ajouter ici un avatar, des champs d'identitÃ© et des actions spÃ©cifiques au profil."
     },
     settings: {
-      sectionLabel: "Paramètres",
-      title: "Paramètres de l'application",
-      description: "Configurer le jeu de questions de débriefing et les valeurs par défaut du planning.",
-      closeAria: "Fermer la page des paramètres",
-      debriefBadge: "Questions de débriefing",
+      sectionLabel: "ParamÃ¨tres",
+      title: "ParamÃ¨tres de l'application",
+      description: "Configurer le jeu de questions de dÃ©briefing et les valeurs par dÃ©faut du planning.",
+      closeAria: "Fermer la page des paramÃ¨tres",
+      debriefBadge: "Questions de dÃ©briefing",
       versionLabel: "Version",
       questionSetHeading: "Modifier chaque question dans son propre onglet.",
-      questionSetDescription: "Chaque onglet contrôle une question et son échelle de réponses. Les envois historiques conservent la version active au moment de l'enregistrement.",
-      lastUpdated: "Dernière mise à jour",
+      questionSetDescription: "Chaque onglet contrÃ´le une question et son Ã©chelle de rÃ©ponses. Les envois historiques conservent la version active au moment de l'enregistrement.",
+      lastUpdated: "DerniÃ¨re mise Ã  jour",
       questionLabel: "Question {{index}}",
-      answerLabelsBadge: "Libellés des réponses",
-      answerLabelsUsedFor: "Utilisé uniquement pour la question {{index}}",
-      answerLabel: "Réponse {{index}}",
+      answerLabelsBadge: "LibellÃ©s des rÃ©ponses",
+      answerLabelsUsedFor: "UtilisÃ© uniquement pour la question {{index}}",
+      answerLabel: "RÃ©ponse {{index}}",
       saveQuestionSet: "Enregistrer le jeu de questions",
-      resetToSaved: "Revenir à la version enregistrée",
-      plannerBadge: "Valeurs par défaut du planificateur",
-      plannerTitle: "La simulation locale de la journée est enregistrée par date de test.",
-      plannerText: "Utiliser le planificateur du matin pour choisir une date de test, puis enregistrer localement le plan et les réponses de débriefing pour cette journée."
+      resetToSaved: "Revenir Ã  la version enregistrÃ©e",
+      plannerBadge: "Valeurs par dÃ©faut du planificateur",
+      plannerTitle: "La simulation locale de la journÃ©e est enregistrÃ©e par date de test.",
+      plannerText: "Utiliser le planificateur du matin pour choisir une date de test, puis enregistrer localement le plan et les rÃ©ponses de dÃ©briefing pour cette journÃ©e."
     }
   }
 };
@@ -232,12 +232,21 @@ export const useI18n = (): I18nValue => {
   return context;
 };
 
+export const preloadAllTranslationsInBackground = () => {
+  LOCALES.forEach((targetLocale) => {
+    void ensureBackendTranslationsLoaded(targetLocale);
+    void loadUiCopyFromBackend(targetLocale).catch(() => {
+      // Ignore preload failures so the active locale still loads on demand.
+    });
+  });
+};
 export { LOCALES };
 export type { Locale } from "./locale";
 export { EditableTranslation } from "./EditableTranslation";
 export { TranslationListEditorModal } from "./TranslationListEditorModal";
 export { TranslationEditToggle } from "./TranslationEditToggle";
 export { useTranslationEditMode } from "./TranslationEditModeContext";
+
 
 
 

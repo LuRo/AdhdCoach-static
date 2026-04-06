@@ -49,7 +49,7 @@
   .today-task-card:focus-within,
   .today-task-card:active {
     background: #ffffff !important;
-    border-color: transparent !important;
+    border-color: #d9d9d9 !important;
     box-shadow: none !important;
   }
 
@@ -61,5 +61,51 @@
     min-width: 2.1rem;
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
+  }
+
+  .summary-card {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  button,
+  .btn,
+  .btn-group > .btn,
+  .nav-tile,
+  .btn.nav-tile {
+    border-radius: 0 !important;
+  }
+
+  .rounded-pill,
+  .btn.rounded-pill,
+  .badge.rounded-pill,
+  .nav-pills .nav-link {
+    border-radius: 999px !important;
+  }
+
+  .section-card,
+  .tasks-glass-section,
+  .today-section-card,
+  .task-list-stage,
+  .task-card,
+  .today-task-card,
+  .summary-card,
+  .debrief-summary-card,
+  .debrief-stat-card,
+  .debrief-rating-card,
+  .pomodoro-overlay-card {
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .task-card::after,
+  .today-task-card::after,
+  .summary-card::after,
+  .debrief-summary-card::after,
+  .debrief-stat-card::after,
+  .debrief-rating-card::after,
+  .pomodoro-overlay-card::after {
+    border: 0 !important;
   }
 }

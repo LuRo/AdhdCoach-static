@@ -1,7 +1,8 @@
-import { useId, useMemo, useState, type KeyboardEvent } from "react";
+﻿import { useId, useMemo, useState, type KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { saveTranslation } from "../api/saveTranslation";
 import { useTranslationEditMode } from "./TranslationEditModeContext";
+import { normalizeLocale } from "./locale";
 import { updateI18nextResource } from "./updateI18nextResource";
 
 type EditableTranslationProps = {
@@ -77,20 +78,26 @@ export const EditableTranslation = ({
 
   const handleSave = async () => {
     const value = draft.trim();
-    const lng = i18n.language ?? i18n.resolvedLanguage;
+    const resolvedLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en";
+    const normalizedLanguage = normalizeLocale(resolvedLanguage);
 
     setError(null);
     setIsSaving(true);
 
     try {
       await saveTranslation({
-        lng,
+        lng: normalizedLanguage,
         ns,
         key: i18nKey,
         value
       });
 
-      updateI18nextResource(i18n, lng, ns, i18nKey, value);
+      updateI18nextResource(i18n, normalizedLanguage, ns, i18nKey, value);
+
+      if (resolvedLanguage !== normalizedLanguage) {
+        updateI18nextResource(i18n, resolvedLanguage, ns, i18nKey, value);
+      }
+
       setEditing(false);
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : "Failed to save translation.");
@@ -216,4 +223,3 @@ export const EditableTranslation = ({
     </span>
   );
 };
-
