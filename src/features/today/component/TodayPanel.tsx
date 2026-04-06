@@ -46,6 +46,7 @@ export const TodayPanel = ({
   const openTasks = tasks.filter((task) => !task.done);
   const achievedTasks = tasks.filter((task) => task.done);
   const showTestSpeedControl = testModeSettings.enabled && testModeSettings.todaySpeedEnabled;
+  const showTodayHeroDetail = testModeSettings.enabled;
 
   const addTaskFab = isActive ? (
     <CoachButton
@@ -83,12 +84,14 @@ export const TodayPanel = ({
               introDefaultText={ui.intro ?? "Click the timer circle to open the Pomodoro overlay."}
             />
 
-            <TodayHeroDetail
-              onTestDaySpeedChange={onTestDaySpeedChange}
-              showTestSpeedControl={showTestSpeedControl}
-              testDaySpeed={testDaySpeed}
-              ui={ui}
-            />
+            {showTodayHeroDetail ? (
+              <TodayHeroDetail
+                onTestDaySpeedChange={onTestDaySpeedChange}
+                showTestSpeedControl={showTestSpeedControl}
+                testDaySpeed={testDaySpeed}
+                ui={ui}
+              />
+            ) : null}
           </div>
         </SectionCard>
 

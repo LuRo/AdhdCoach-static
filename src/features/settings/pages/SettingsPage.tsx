@@ -359,6 +359,59 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
         </div>
       </SectionCard>
 
+      <SectionCard className="p-4 p-lg-5 mb-4" data-testid="settings-test-mode-section">
+        <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+          <div>
+            <span className="badge rounded-pill text-bg-light border mb-3">{copy.settings.testModeBadge}</span>
+            <h2 className="h4 mb-2">{copy.settings.testModeTitle}</h2>
+            <p className="text-secondary mb-0">{copy.settings.testModeDescription}</p>
+          </div>
+        </div>
+
+        <div className="d-grid gap-3">
+          <label className="form-check form-switch" htmlFor="settings-test-mode-enabled">
+            <input
+              id="settings-test-mode-enabled"
+              type="checkbox"
+              className="form-check-input"
+              data-testid="settings-test-mode-enabled"
+              checked={testModeSettings.enabled}
+              onChange={(event) => handleMasterToggle(event.currentTarget.checked)}
+            />
+            <span className="form-check-label fw-semibold">{copy.settings.testModeMasterLabel}</span>
+            <div className="small text-secondary">{copy.settings.testModeMasterHint}</div>
+          </label>
+
+          <label className="form-check form-switch" htmlFor="settings-test-mode-morning" aria-disabled={!showIndividualModes}>
+            <input
+              id="settings-test-mode-morning"
+              type="checkbox"
+              className="form-check-input"
+              data-testid="settings-test-mode-morning"
+              checked={testModeSettings.morningDateEnabled}
+              disabled={!showIndividualModes}
+              onChange={(event) => handleMorningToggle(event.currentTarget.checked)}
+            />
+            <span className="form-check-label fw-semibold">{copy.settings.testModeMorningLabel}</span>
+            <div className="small text-secondary">{copy.settings.testModeMorningHint}</div>
+          </label>
+
+          <label className="form-check form-switch" htmlFor="settings-test-mode-today" aria-disabled={!showIndividualModes}>
+            <input
+              id="settings-test-mode-today"
+              type="checkbox"
+              className="form-check-input"
+              data-testid="settings-test-mode-today"
+              checked={testModeSettings.todaySpeedEnabled}
+              disabled={!showIndividualModes}
+              onChange={(event) => handleTodaySpeedToggle(event.currentTarget.checked)}
+            />
+            <span className="form-check-label fw-semibold">{copy.settings.testModeTodayLabel}</span>
+            <div className="small text-secondary">{copy.settings.testModeTodayHint}</div>
+          </label>
+        </div>
+      </SectionCard>
+
       <SectionCard className="p-4 p-lg-5">
         <span className="badge rounded-pill text-bg-light border mb-3">{copy.settings.plannerBadge}</span>
         <h2 className="h4 mb-2">{copy.settings.plannerTitle}</h2>
