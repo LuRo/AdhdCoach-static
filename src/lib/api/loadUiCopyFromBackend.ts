@@ -7,26 +7,53 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 };
 
+const isArrayIndex = (segment: string) => /^\d+$/.test(segment);
+
 const setByPath = (target: Record<string, unknown>, path: string, value: string) => {
   const segments = path.split(".").filter(Boolean);
   if (segments.length === 0) {
     return;
   }
 
-  let current: Record<string, unknown> = target;
+  let current: Record<string, unknown> | unknown[] = target;
 
   for (let index = 0; index < segments.length - 1; index += 1) {
     const segment = segments[index];
-    const next = current[segment];
+    const nextSegment = segments[index + 1];
+    const nextShouldBeArray = isArrayIndex(nextSegment);
+    const slotIndex = Number(segment);
 
-    if (!isRecord(next)) {
-      current[segment] = {};
+    if (Array.isArray(current)) {
+      const currentValue = current[slotIndex];
+      if (nextShouldBeArray) {
+        if (!Array.isArray(currentValue)) {
+          current[slotIndex] = [];
+        }
+      } else if (!isRecord(currentValue)) {
+        current[slotIndex] = {};
+      }
+      current = current[slotIndex] as Record<string, unknown> | unknown[];
+      continue;
     }
 
-    current = current[segment] as Record<string, unknown>;
+    const currentValue = current[segment];
+    if (nextShouldBeArray) {
+      if (!Array.isArray(currentValue)) {
+        current[segment] = [];
+      }
+    } else if (!isRecord(currentValue)) {
+      current[segment] = {};
+    }
+    current = current[segment] as Record<string, unknown> | unknown[];
   }
 
-  current[segments[segments.length - 1]] = value;
+  const finalSegment = segments[segments.length - 1];
+  if (Array.isArray(current)) {
+    current[Number(finalSegment)] = value;
+    return;
+  }
+
+  current[finalSegment] = value;
 };
 
 const unflattenTranslations = (flatEntries: Record<string, string>): Record<string, unknown> => {

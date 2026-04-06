@@ -7,7 +7,7 @@ import {
   useNavigate
 } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import { DashboardLayout } from "../layouts/DashboardLayout";
+import { DashboardLayout } from "../components/layout/DashboardLayout";
 import { AddTaskModal } from "../features/morning/component/AddTaskModal";
 import { PomodoroOverlay } from "../features/today/component/PomodoroOverlay";
 import { Step2HelpModal } from "../features/morning/component/Step2HelpModal";
@@ -98,9 +98,7 @@ const RoutedApp = () => {
 };
 
 export const AppRoutes = () => (
-  <BrowserRouter>
+  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <RoutedApp />
   </BrowserRouter>
 );
-
-

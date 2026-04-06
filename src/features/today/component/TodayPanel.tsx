@@ -3,6 +3,8 @@ import { useI18n } from "../../../lib/i18n";
 import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../../morning/types";
 import type { TestModeSettings } from "../../morning/store";
 import { CoachButton } from "../../../components/ui/CoachButton";
+import { SectionCard } from "../../../components/ui/SectionCard";
+import { PageIntroBlock } from "../../../components/ui/PageIntroBlock";
 import { TodayTaskCard } from "./TodayTaskCard";
 
 interface Props {
@@ -68,37 +70,40 @@ export const TodayPanel = ({
         aria-labelledby="Today"
         data-testid="today-panel"
       >
-        <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
-          <div>
-            <p className="text-uppercase small fw-semibold text-secondary mb-2">{ui.eyebrow}</p>
-            <h1 className="h2 mb-2">{ui.title}</h1>
-            <p className="text-secondary mb-0">{ui.intro}</p>
-          </div>
+        <SectionCard className="app-hero mb-4">
+          <div className="app-hero-content d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 h-100">
+            <PageIntroBlock
+              namespaceKey="today.panel"
+              labelDefaultText="Today execution"
+              titleDefaultText="Work from your confirmed morning plan"
+              introDefaultText="Click the timer circle to open the Pomodoro overlay."
+            />
 
-          <div className="d-grid gap-2 min-w-0">
-            {showTestSpeedControl ? (
-              <>
-                <span className="small fw-semibold text-secondary">{ui.speedLabel}</span>
-                <div className="d-flex flex-wrap gap-2" role="group" aria-label={ui.speedAria} data-testid="today-speed-group">
-                  {SPEED_OPTIONS.map((speed) => (
-                    <CoachButton
-                      key={speed}
-                      type="button"
-                      variant={testDaySpeed === speed ? "primary" : "outline"}
-                      className="rounded-pill px-3 py-1"
-                      onClick={() => onTestDaySpeedChange(speed)}
-                    >
-                      {speed}x
-                    </CoachButton>
-                  ))}
-                </div>
-                <div className="small text-secondary">{ui.simulationNote}</div>
-              </>
-            ) : (
-              <div className="small text-secondary">{ui.liveSpeedNote}</div>
-            )}
+            <div className="d-grid gap-2 min-w-0">
+              {showTestSpeedControl ? (
+                <>
+                  <span className="small fw-semibold text-secondary">{ui.speedLabel}</span>
+                  <div className="d-flex flex-wrap gap-2" role="group" aria-label={ui.speedAria} data-testid="today-speed-group">
+                    {SPEED_OPTIONS.map((speed) => (
+                      <CoachButton
+                        key={speed}
+                        type="button"
+                        variant={testDaySpeed === speed ? "primary" : "outline"}
+                        className="rounded-pill px-3 py-1"
+                        onClick={() => onTestDaySpeedChange(speed)}
+                      >
+                        {speed}x
+                      </CoachButton>
+                    ))}
+                  </div>
+                  <div className="small text-secondary">{ui.simulationNote}</div>
+                </>
+              ) : (
+                <div className="small text-secondary">{ui.liveSpeedNote}</div>
+              )}
+            </div>
           </div>
-        </div>
+        </SectionCard>
 
         <section className="section-card tasks-glass-section today-section-card p-3" aria-labelledby="today-tasks-title">
           <div className="step-header mb-2">

@@ -3,6 +3,8 @@ import { useI18n } from "../../../lib/i18n";
 import { CoachBadge } from "../../../components/ui/CoachBadge";
 import { CoachButton } from "../../../components/ui/CoachButton";
 import { SectionCard } from "../../../components/ui/SectionCard";
+import { PageIntroBlock } from "../../../components/ui/PageIntroBlock";
+import { DebriefSummaryCard } from "../component/DebriefSummaryCard";
 import {
   appendSubmissionForDate,
   getAnswerOptions,
@@ -76,9 +78,9 @@ const averageForQuestion = (submissions: DebriefSubmission[], key: "q1" | "q2" |
 const buildCoachingSummary = (
   metrics: ReturnType<typeof deriveMetrics>,
   locale: "en" | "de" | "fr",
-  copy: ReturnType<typeof useI18n>["copy"]
+  ui: any
 ) => {
-  const ui = copy.ui.debriefingPage;
+
   const labels = ui.localeLabels;
   const dominantCause = metrics.external >= metrics.internal ? labels.causes.external : labels.causes.internal;
 
@@ -115,6 +117,7 @@ const buildCoachingSummary = (
 
 export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props) => {
   const { copy, locale } = useI18n();
+  const debriefingUi = copy.ui.debriefingPage as any;
   const [questionSet] = useState(() => getQuestionSet());
   const [selectedTestDate] = useState(() => selectedTestDateProp ?? getSelectedTestDate());
   const [submissions, setSubmissions] = useState<DebriefSubmission[]>(() => getSubmissionsForDate(selectedTestDate));
@@ -122,11 +125,11 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
     q1: 4,
     q2: 3,
     q3: 4,
-    note: copy.ui.debriefingPage.initialNote
+    note: debriefingUi.initialNote
   });
 
   const metrics = useMemo(() => deriveMetrics(), []);
-  const coaching = useMemo(() => buildCoachingSummary(metrics, locale, copy), [metrics, locale, copy]);
+  const coaching = useMemo(() => buildCoachingSummary(metrics, locale, debriefingUi), [metrics, locale, debriefingUi]);
   const answerOptions = useMemo(() => getAnswerOptions(locale), [locale]);
   const averages = useMemo(
     () => ({
@@ -150,32 +153,34 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
     setSubmissions((previous) => [...previous, record]);
   };
 
-  const labels = copy.ui.debriefingPage.localeLabels;
-  const timeStatus = copy.ui.debriefingPage.status[metrics.timeStatusKey];
+  const labels = debriefingUi.localeLabels;
+  const timeStatus = debriefingUi.status[metrics.timeStatusKey];
+  const strategyItems = Array.isArray(debriefingUi.strategy)
+    ? debriefingUi.strategy
+    : typeof debriefingUi.strategy === "string"
+      ? [debriefingUi.strategy]
+      : Object.values(debriefingUi.strategy ?? {}).filter((item): item is string => typeof item === "string");
 
   return (
     <section id="debriefing-panel" className="section-panel active" role="tabpanel" aria-labelledby="debriefing-heading">
       <div className="debrief-page">
-        <SectionCard className="debrief-hero p-4 p-lg-5 mb-4">
-          <div className="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-start">
-            <div className="flex-grow-1">
-              <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
-                <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.ui.debriefingPage.heroBadge}</CoachBadge>
-                <span className="text-uppercase small fw-semibold text-secondary">{copy.ui.debriefingPage.heroEyebrow}</span>
-              </div>
-              <h1 id="debriefing-heading" className="display-6 fw-semibold mb-2">{copy.ui.debriefingPage.heroTitle}</h1>
-              <p className="lead text-secondary mb-0">{copy.ui.debriefingPage.heroLead}</p>
-            </div>
-            <div className="debrief-summary-box">
-              <div className="small text-secondary text-uppercase fw-semibold mb-1">{copy.ui.debriefingPage.selectedDate}</div>
-              <div className="fw-semibold mb-2">{selectedTestDate}</div>
-              <div className="d-flex flex-wrap gap-2">
-                <CoachBadge tone={metrics.timeStatusKey === "onTrack" ? "purple" : "warning"} className="rounded-pill px-3 py-2">{timeStatus}</CoachBadge>
-                <CoachBadge tone={metrics.totalInterruptions >= 3 ? "danger" : "purple"} className="rounded-pill px-3 py-2">
-                  {metrics.totalInterruptions} {copy.ui.debriefingPage.interruptionHeading}
-                </CoachBadge>
-              </div>
-            </div>
+        <SectionCard className="app-hero mb-4">
+          <div className="app-hero-content d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center h-100">
+            <PageIntroBlock
+              namespaceKey="debriefing.panel"
+              labelI18nKey="debriefing.panel.label"
+              titleI18nKey="debriefing.panel.title"
+              introI18nKey="debriefing.panel.intro"
+              labelDefaultText="Append-only reflection trail"
+              titleDefaultText="Close the day without turning it into a scorecard."
+              introDefaultText="Review the work, notice the friction honestly, and leave with one practical adjustment for tomorrow."
+            />            
+            <DebriefSummaryCard
+              selectedTestDate={selectedTestDate}
+              timeStatus={timeStatus}
+              timeStatusKey={metrics.timeStatusKey}
+              totalInterruptions={metrics.totalInterruptions}
+            />
           </div>
         </SectionCard>
 
@@ -184,10 +189,10 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
             <SectionCard className="p-4 mb-4">
               <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                 <div>
-                  <h2 className="h4 mb-1">{copy.ui.debriefingPage.summaryHeading}</h2>
-                  <p className="text-secondary mb-0">{copy.ui.debriefingPage.summaryLead}</p>
+                  <h2 className="h4 mb-1">{debriefingUi.summaryHeading}</h2>
+                  <p className="text-secondary mb-0">{debriefingUi.summaryLead}</p>
                 </div>
-                <CoachBadge tone={metrics.totalInterruptions >= 3 ? "warning" : "purple"} className="rounded-pill px-3 py-2">{copy.ui.debriefingPage.versionLabel} {questionSet.version}</CoachBadge>
+                <CoachBadge tone={metrics.totalInterruptions >= 3 ? "warning" : "purple"} className="rounded-pill px-3 py-2">{debriefingUi.versionLabel} {questionSet.version}</CoachBadge>
               </div>
               <div className="debrief-copy p-3 rounded-4 mb-3">
                 <p className="mb-2 fw-semibold">{coaching.acknowledgment}</p>
@@ -195,17 +200,17 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
                 <p className="mb-0 fw-semibold text-purple">{coaching.nextStep}</p>
               </div>
               <div className="row g-3">
-                <div className="col-md-4"><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{copy.ui.debriefingPage.actualFocus}</div><div className="h3 mb-0">{formatMinutes(metrics.actualMinutes, locale)}</div><div className="small text-secondary">{copy.ui.debriefingPage.actualFocusNote}</div></div></div>
-                <div className="col-md-4"><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{copy.ui.debriefingPage.expectedBaseline}</div><div className="h3 mb-0">60m</div><div className="small text-secondary">{copy.ui.debriefingPage.expectedBaselineNote}</div></div></div>
-                <div className="col-md-4"><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{copy.ui.debriefingPage.timeRatio}</div><div className="h3 mb-0">{formatPercent(metrics.timeRatio, locale)}</div><div className="small text-secondary">{timeStatus}</div></div></div>
+                <div className="col-md-4"><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{debriefingUi.actualFocus}</div><div className="h3 mb-0">{formatMinutes(metrics.actualMinutes, locale)}</div><div className="small text-secondary">{debriefingUi.actualFocusNote}</div></div></div>
+                <div className="col-md-4"><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{debriefingUi.expectedBaseline}</div><div className="h3 mb-0">60m</div><div className="small text-secondary">{debriefingUi.expectedBaselineNote}</div></div></div>
+                <div className="col-md-4"><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{debriefingUi.timeRatio}</div><div className="h3 mb-0">{formatPercent(metrics.timeRatio, locale)}</div><div className="small text-secondary">{timeStatus}</div></div></div>
               </div>
             </SectionCard>
 
             <SectionCard className="p-4 mb-4">
               <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                 <div>
-                  <h2 className="h4 mb-1">{copy.ui.debriefingPage.questionsHeading}</h2>
-                  <p className="text-secondary mb-0">{copy.ui.debriefingPage.questionsLead}</p>
+                  <h2 className="h4 mb-1">{debriefingUi.questionsHeading}</h2>
+                  <p className="text-secondary mb-0">{debriefingUi.questionsLead}</p>
                 </div>
                 <CoachBadge tone="purple" className="rounded-pill px-3 py-2">v{questionSet.version}</CoachBadge>
               </div>
@@ -217,10 +222,10 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
                     <div key={question} className="debrief-question-block">
                       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
                         <div>
-                          <div className="small text-secondary fw-semibold">{copy.ui.debriefingPage.questionLabel.replace("{{index}}", String(index + 1))}</div>
+                          <div className="small text-secondary fw-semibold">{debriefingUi.questionLabel.replace("{{index}}", String(index + 1))}</div>
                           <div className="h5 mb-0">{question}</div>
                         </div>
-                        <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.ui.debriefingPage.storedValueHidden}</CoachBadge>
+                        <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{debriefingUi.storedValueHidden}</CoachBadge>
                       </div>
                       <div className="row g-2">
                         {answerOptions.map((option) => {
@@ -244,7 +249,7 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
               </div>
 
               <label className="mt-4 d-block">
-                <span className="small text-secondary fw-semibold mb-1 d-block">{copy.ui.debriefingPage.optionalNote}</span>
+                <span className="small text-secondary fw-semibold mb-1 d-block">{debriefingUi.optionalNote}</span>
                 <textarea
                   className="form-control"
                   rows={3}
@@ -254,24 +259,24 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
               </label>
 
               <div className="d-flex flex-wrap gap-2 mt-3">
-                <CoachButton type="button" onClick={submitDebrief}>{copy.ui.debriefingPage.submit}</CoachButton>
+                <CoachButton type="button" onClick={submitDebrief}>{debriefingUi.submit}</CoachButton>
               </div>
             </SectionCard>
 
             <SectionCard className="p-4">
               <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
                 <div>
-                  <h2 className="h4 mb-1">{copy.ui.debriefingPage.historyHeading}</h2>
-                  <p className="text-secondary mb-0">{copy.ui.debriefingPage.historyLead}</p>
+                  <h2 className="h4 mb-1">{debriefingUi.historyHeading}</h2>
+                  <p className="text-secondary mb-0">{debriefingUi.historyLead}</p>
                 </div>
-                <CoachButton variant="outline" type="button">{copy.ui.debriefingPage.simulateCheckin}</CoachButton>
+                <CoachButton variant="outline" type="button">{debriefingUi.simulateCheckin}</CoachButton>
               </div>
 
               <div className="d-grid gap-4 mb-4">
                 <div className="row g-3">
-                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "1")} value={averages.q1} count={submissions.length} countLabel={copy.ui.debriefingPage.localeLabels.submissions} locale={locale} /></div>
-                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "2")} value={averages.q2} count={submissions.length} countLabel={copy.ui.debriefingPage.localeLabels.submissions} locale={locale} /></div>
-                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "3")} value={averages.q3} count={submissions.length} countLabel={copy.ui.debriefingPage.localeLabels.submissions} locale={locale} /></div>
+                  <div className="col-12 col-md-4"><CircleAverage label={debriefingUi.questionLabel.replace("{{index}}", "1")} value={averages.q1} count={submissions.length} countLabel={debriefingUi.localeLabels.submissions} locale={locale} /></div>
+                  <div className="col-12 col-md-4"><CircleAverage label={debriefingUi.questionLabel.replace("{{index}}", "2")} value={averages.q2} count={submissions.length} countLabel={debriefingUi.localeLabels.submissions} locale={locale} /></div>
+                  <div className="col-12 col-md-4"><CircleAverage label={debriefingUi.questionLabel.replace("{{index}}", "3")} value={averages.q3} count={submissions.length} countLabel={debriefingUi.localeLabels.submissions} locale={locale} /></div>
                 </div>
               </div>
 
@@ -279,7 +284,7 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
                 {submissions.length > 0 ? submissions.slice().reverse().map((submission) => (
                   <div key={submission.submittedAt} className="debrief-history-item p-3">
                     <div className="d-flex flex-wrap justify-content-between gap-2 mb-2">
-                      <strong>{copy.ui.debriefingPage.submissionVersion.replace("{{version}}", String(submission.questionSetVersion))}</strong>
+                      <strong>{debriefingUi.submissionVersion.replace("{{version}}", String(submission.questionSetVersion))}</strong>
                       <span className="small text-secondary">{formatDateTime(submission.submittedAt, locale)}</span>
                     </div>
                     <div className="d-grid gap-2">
@@ -296,47 +301,47 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
                     </div>
                     {submission.answers.note ? <p className="mb-0 text-secondary mt-2">{submission.answers.note}</p> : null}
                   </div>
-                )) : <div className="text-secondary">{copy.ui.debriefingPage.noSubmissions}</div>}
+                )) : <div className="text-secondary">{debriefingUi.noSubmissions}</div>}
               </div>
             </SectionCard>
           </div>
 
           <div className="col-12 col-lg-5">
             <SectionCard className="p-4 mb-4">
-              <h2 className="h4 mb-3">{copy.ui.debriefingPage.interruptionHeading}</h2>
+              <h2 className="h4 mb-3">{debriefingUi.interruptionHeading}</h2>
               <div className="row g-3">
-                {[ [copy.ui.debriefingPage.status.highFriction, metrics.internal], [copy.ui.debriefingPage.status.onTrack, metrics.external], [copy.ui.debriefingPage.checkinSentLabel, metrics.auto], [copy.ui.debriefingPage.checkinAnsweredLabel, metrics.manual] ].map(([label, value]) => (
+                {[ [debriefingUi.status.highFriction, metrics.internal], [debriefingUi.status.onTrack, metrics.external], [debriefingUi.checkinSentLabel, metrics.auto], [debriefingUi.checkinAnsweredLabel, metrics.manual] ].map(([label, value]) => (
                   <div className="col-6" key={label as string}><div className="debrief-stat-card p-3 h-100"><div className="small text-secondary text-uppercase fw-semibold">{label}</div><div className="h3 mb-0">{value as number}</div></div></div>
                 ))}
               </div>
               <div className="debrief-stat-card p-3 mt-3">
-                <div className="small text-secondary text-uppercase fw-semibold">{copy.ui.debriefingPage.interruptionTime}</div>
+                <div className="small text-secondary text-uppercase fw-semibold">{debriefingUi.interruptionTime}</div>
                 <div className="h4 mb-0">{formatMinutes(metrics.interruptedMinutes, locale)}</div>
-                <div className="small text-secondary">{copy.ui.debriefingPage.checkinsSummary.replace("{{sent}}", String(metrics.checkinsSent)).replace("{{answered}}", String(metrics.checkinsAnswered))}</div>
+                <div className="small text-secondary">{debriefingUi.checkinsSummary.replace("{{sent}}", String(metrics.checkinsSent)).replace("{{answered}}", String(metrics.checkinsAnswered))}</div>
               </div>
             </SectionCard>
 
             <SectionCard className="p-4 mb-4">
-              <h2 className="h4 mb-3">{copy.ui.debriefingPage.strategyHeading}</h2>
+              <h2 className="h4 mb-3">{debriefingUi.strategyHeading}</h2>
               <ul className="debrief-list mb-0">
-                {copy.ui.debriefingPage.strategy.map((item: string) => (
+                {strategyItems.map((item: string) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </SectionCard>
 
             <SectionCard className="p-4">
-              <h2 className="h4 mb-3">{copy.ui.debriefingPage.eventLogHeading}</h2>
+              <h2 className="h4 mb-3">{debriefingUi.eventLogHeading}</h2>
               <div className="d-grid gap-2 debrief-event-log">
                 {metrics.eventLog.map((event) => (
                   <div key={`${event.type}-${event.at}`} className="debrief-event-item p-3">
                     <div className="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-1">
                       <strong>
                         {event.type === "interruption_logged"
-                          ? copy.ui.debriefingPage.interruptionLabel.replace("{{kind}}", labels.kind[event.kind])
+                          ? debriefingUi.interruptionLabel.replace("{{kind}}", labels.kind[event.kind])
                           : event.type === "checkin_prompt_sent"
-                            ? copy.ui.debriefingPage.checkinSentLabel
-                            : copy.ui.debriefingPage.checkinAnsweredLabel}
+                            ? debriefingUi.checkinSentLabel
+                            : debriefingUi.checkinAnsweredLabel}
                       </strong>
                       <span className="small text-secondary">{formatTimeOnly(event.at, locale)}</span>
                     </div>
@@ -344,8 +349,8 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
                       {event.type === "interruption_logged"
                         ? `${event.capture} / ${event.trigger}${event.note ? ` / ${event.note}` : ""}`
                         : event.type === "checkin_prompt_sent"
-                          ? copy.ui.debriefingPage.channelLabel.replace("{{channel}}", labels.channel[event.channel])
-                          : copy.ui.debriefingPage.answerLabel.replace("{{answer}}", labels.answer[event.answer])}
+                          ? debriefingUi.channelLabel.replace("{{channel}}", labels.channel[event.channel])
+                          : debriefingUi.answerLabel.replace("{{answer}}", labels.answer[event.answer])}
                     </div>
                   </div>
                 ))}

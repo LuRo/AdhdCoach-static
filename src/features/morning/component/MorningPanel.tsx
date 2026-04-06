@@ -1,12 +1,14 @@
 import type { TestModeSettings } from "../store";
 import { cn } from "../../../lib/utils/cn";
 import type { EnergyLevel, RemoveSelectedMode, Task } from "../types";
-import { useTranslation } from "react-i18next";
-import { EditableTranslation } from "../../../lib/i18n";
+import { InlineTranslation } from "../../../components/ui/InlineTranslation";
+import { PageIntroBlock } from "../../../components/ui/PageIntroBlock";
+import { SectionCard } from "../../../components/ui/SectionCard";
 import { ComplexitySummaryCard } from "./ComplexitySummaryCard";
 import { EnergyStepSection } from "./EnergyStepSection";
 import { TasksStepSection } from "./TasksStepSection";
 import { StepMarker } from "./StepMarker";
+import { MorningIntroDetail } from "./MorningIntroDetail";
 
 interface Props {
   canRemoveSelected: boolean;
@@ -66,7 +68,6 @@ export const MorningPanel = ({
   testModeSettings,
   totalComplexity
 }: Props) => {
-  const { t } = useTranslation();
   const showTestDateControl = testModeSettings.enabled && testModeSettings.morningDateEnabled;
   const currentDateLabel = formatDotDate(new Date());
 
@@ -78,44 +79,31 @@ export const MorningPanel = ({
       aria-labelledby="Morning"
       data-testid="morning-panel"
     >
-      <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
-        <div className="flex-grow-1">
-          <p className="text-uppercase small fw-semibold text-secondary mb-2">
-            <EditableTranslation i18nKey="Morning sequence" defaultText="Morning sequence" />
-          </p>
-          <h1 className="h2 mb-2">
-            <EditableTranslation i18nKey="Build a plan that matches today's capacity" defaultText="Build a plan that matches today's capacity" />
-          </h1>
-          <p className="text-secondary mb-1">
-            <EditableTranslation i18nKey="Capture energy first, then shape the task load before making a commitment." defaultText="Capture energy first, then shape the task load before making a commitment." />
-          </p>
-          {!showTestDateControl ? (
-            <div className="h5 mb-0">{t("Today is the {{date}}", { date: currentDateLabel })}</div>
-          ) : null}
-        </div>
-
-        <div className="d-grid gap-2 min-w-0">
-          {showTestDateControl ? (
-            <label className="d-grid gap-1">
-              <span className="small text-secondary fw-semibold">{t("Set current day manually")}</span>
-              <input
-                type="date"
-                className="form-control"
-                data-testid="morning-selected-date-input"
-                value={selectedTestDate}
-                onChange={(event) => onTestDateChange(event.target.value)}
+      <SectionCard className="app-hero mb-4">
+        <div className="app-hero-content d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 h-100">
+          <PageIntroBlock
+            namespaceKey="morning.panel"
+            labelDefaultText="Morning sequence"
+            titleDefaultText="Build a plan that matches today's capacity"
+            introDefaultText="Capture energy first, then shape the task load before making a commitment."
+            optionalContent={(
+              <MorningIntroDetail
+                currentDateLabel={currentDateLabel}
+                onTestDateChange={onTestDateChange}
+                selectedTestDate={selectedTestDate}
+                showTestDateControl={showTestDateControl}
               />
-            </label>
-          ) : null}
-        </div>
+            )}
+          />
 
-        <ComplexitySummaryCard
-          gaugeAngle={gaugeAngle}
-          gaugeTransition={gaugeTransition}
-          onRecalculate={onRecalculateGauge}
-          snapshot={{ angle: gaugeAngle, status: complexityStatus, total: totalComplexity }}
-        />
-      </div>
+          <ComplexitySummaryCard
+            gaugeAngle={gaugeAngle}
+            gaugeTransition={gaugeTransition}
+            onRecalculate={onRecalculateGauge}
+            snapshot={{ angle: gaugeAngle, status: complexityStatus, total: totalComplexity }}
+          />
+        </div>
+      </SectionCard>
 
       <div
         id="complexity-warning"
@@ -129,7 +117,11 @@ export const MorningPanel = ({
       >
         <i className="bi bi-exclamation-triangle-fill" />
         <div>
-          <EditableTranslation i18nKey="Total planned complexity is above the recommended threshold for a focused day." defaultText="Total planned complexity is above the recommended threshold for a focused day." />
+          <InlineTranslation
+            namespaceKey="morning.panel"
+            translationKey="complexityWarning"
+            defaultText="Total planned complexity is above the recommended threshold for a focused day."
+          />
         </div>
       </div>
 
