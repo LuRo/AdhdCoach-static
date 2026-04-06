@@ -1,4 +1,4 @@
-import type { BacklogTask, DaySpeedMultiplier, EnergyLevel, StepId, Task, TodayTask } from "./types";
+﻿import type { BacklogTask, DaySpeedMultiplier, EnergyLevel, StepId, Task, TodayTask } from "./types";
 
 export type DebriefAnswerValue = 1 | 2 | 3 | 4 | 5;
 export type DebriefAnswerOptions = [string, string, string, string, string];
@@ -267,7 +267,7 @@ export const appendSubmissionForDate = (testDate: string, submission: DebriefSub
     ...db,
     submissionsByDate: {
       ...db.submissionsByDate,
-      [testDate]: [submission]
+      [testDate]: [...previous, submission]
     }
   });
 };
@@ -292,3 +292,4 @@ export const getAnswerOptions = (locale: "en" | "de" | "fr"): Array<{ value: Deb
 
   return labels.map((label, index) => ({ value: (index + 1) as DebriefAnswerValue, label }));
 };
+

@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useI18n } from "../../../i18n";
 import { CoachBadge } from "../../../shared/components/atoms/CoachBadge";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
@@ -12,7 +12,7 @@ import {
   getSubmissionsForDate,
   type DebriefAnswerValue,
   type DebriefSubmission
-} from "../store";
+} from "../../morning/store";
 
 type InterruptionKind = "internal" | "external";
 
@@ -20,7 +20,6 @@ type EventRecord =
   | { type: "interruption_logged"; kind: InterruptionKind; capture: "auto" | "manual"; trigger: string; durationSeconds?: number; note?: string; at: string }
   | { type: "checkin_prompt_sent"; channel: "in_app" | "push"; promptType: "still_on_task"; at: string }
   | { type: "checkin_prompt_answered"; answer: "yes_still_on_task" | "paused" | "switched"; interruptionKind: InterruptionKind | "none"; at: string };
-
 
 interface Props {
   selectedTestDate?: string;
@@ -36,36 +35,6 @@ const getTimeStatusKey = (timeRatio: number) => {
   if (timeRatio <= 1.5) return "extraRunway" as const;
   return "highFriction" as const;
 };
-
-const initialNotes = {
-  en: "The first reset worked once messages were closed.",
-  de: "Der erste Neustart funktionierte, sobald die Nachrichten geschlossen waren.",
-  fr: "La premi�re remise � z�ro a fonctionn� une fois les messages ferm�s."
-} as const;
-
-const localeLabels = {
-  en: {
-    causes: { external: "external context switches", internal: "internal distractions" },
-    kind: { internal: "internal", external: "external" },
-    channel: { in_app: "in-app", push: "push" },
-    answer: { yes_still_on_task: "yes, still on task", paused: "paused", switched: "switched" },
-    submissions: "submissions"
-  },
-  de: {
-    causes: { external: "externe Kontextwechsel", internal: "interne Ablenkungen" },
-    kind: { internal: "intern", external: "extern" },
-    channel: { in_app: "In-App", push: "Push" },
-    answer: { yes_still_on_task: "ja, noch bei der Aufgabe", paused: "pausiert", switched: "gewechselt" },
-    submissions: "Einreichungen"
-  },
-  fr: {
-    causes: { external: "changements de contexte externes", internal: "distractions internes" },
-    kind: { internal: "interne", external: "externe" },
-    channel: { in_app: "dans l'application", push: "push" },
-    answer: { yes_still_on_task: "oui, toujours sur la t�che", paused: "en pause", switched: "chang�" },
-    submissions: "soumissions"
-  }
-} as const;
 
 const deriveMetrics = () => {
   const startedAt = new Date("2026-04-04T08:12:00.000Z").getTime();
@@ -106,12 +75,12 @@ const averageForQuestion = (submissions: DebriefSubmission[], key: "q1" | "q2" |
 
 const buildCoachingSummary = (
   metrics: ReturnType<typeof deriveMetrics>,
-  locale: keyof typeof localeLabels,
+  locale: "en" | "de" | "fr",
   copy: ReturnType<typeof useI18n>["copy"]
 ) => {
-  const labels = localeLabels[locale];
-  const dominantCause = metrics.external >= metrics.internal ? labels.causes.external : labels.causes.internal;
   const ui = copy.ui.debriefingPage;
+  const labels = ui.localeLabels;
+  const dominantCause = metrics.external >= metrics.internal ? labels.causes.external : labels.causes.internal;
 
   if (metrics.totalInterruptions >= 3) {
     return {
@@ -153,7 +122,7 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
     q1: 4,
     q2: 3,
     q3: 4,
-    note: initialNotes[locale]
+    note: copy.ui.debriefingPage.initialNote
   });
 
   const metrics = useMemo(() => deriveMetrics(), []);
@@ -181,7 +150,7 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
     setSubmissions((previous) => [...previous, record]);
   };
 
-  const labels = localeLabels[locale];
+  const labels = copy.ui.debriefingPage.localeLabels;
   const timeStatus = copy.ui.debriefingPage.status[metrics.timeStatusKey];
 
   return (
@@ -300,9 +269,9 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
 
               <div className="d-grid gap-4 mb-4">
                 <div className="row g-3">
-                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "1")} value={averages.q1} count={submissions.length} countLabel={localeLabels[locale].submissions} locale={locale} /></div>
-                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "2")} value={averages.q2} count={submissions.length} countLabel={localeLabels[locale].submissions} locale={locale} /></div>
-                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "3")} value={averages.q3} count={submissions.length} countLabel={localeLabels[locale].submissions} locale={locale} /></div>
+                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "1")} value={averages.q1} count={submissions.length} countLabel={copy.ui.debriefingPage.localeLabels.submissions} locale={locale} /></div>
+                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "2")} value={averages.q2} count={submissions.length} countLabel={copy.ui.debriefingPage.localeLabels.submissions} locale={locale} /></div>
+                  <div className="col-12 col-md-4"><CircleAverage label={copy.ui.debriefingPage.questionLabel.replace("{{index}}", "3")} value={averages.q3} count={submissions.length} countLabel={copy.ui.debriefingPage.localeLabels.submissions} locale={locale} /></div>
                 </div>
               </div>
 
@@ -316,7 +285,7 @@ export const DebriefingPage = ({ selectedTestDate: selectedTestDateProp }: Props
                     <div className="d-grid gap-2">
                       {(getQuestionSetByVersion(submission.questionSetVersion)?.questions ?? questionSet.questions).map((question, index) => {
                         const answerKey = `q${index + 1}` as "q1" | "q2" | "q3";
-                        const answerLabel = answerOptions.find((option) => option.value === submission.answers[answerKey])?.label ?? "�";
+                        const answerLabel = answerOptions.find((option) => option.value === submission.answers[answerKey])?.label ?? "-";
                         return (
                           <div key={question} className="small">
                             <span className="fw-semibold">{question}</span>
@@ -410,7 +379,3 @@ const CircleAverage = ({ label, value, count, countLabel, locale }: { label: str
     </div>
   );
 };
-
-
-
-

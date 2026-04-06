@@ -1,16 +1,15 @@
-﻿import { useState } from "react";
-import { InlineTranslationText } from "../i18n/InlineTranslationText";
-import { useI18n } from "../i18n";
-import { CoachBadge } from "../shared/components/atoms/CoachBadge";
-import { CoachButton } from "../shared/components/atoms/CoachButton";
-import { SectionCard } from "../shared/components/atoms/SectionCard";
+import { useState } from "react";
+import { EditableTranslation, TranslationEditToggle, TranslationListEditorModal, useI18n } from "../../../i18n";
+import { CoachBadge } from "../../../shared/components/atoms/CoachBadge";
+import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { SectionCard } from "../../../shared/components/atoms/SectionCard";
 import {
   getQuestionSet,
   saveQuestionSet,
   type DebriefAnswerOptions,
   type DebriefQuestionAnswerOptions,
   type TestModeSettings
-} from "../features/morning/store";
+} from "../../morning/store";
 
 interface Props {
   onClose: () => void;
@@ -35,48 +34,61 @@ const translationCopy = {
     sectionLabel: "Translation",
     title: "In-page translation",
     description: "Show the interface in the selected language.",
-    helperOn: "The UI follows the active language.",
-    helperOff: "The UI stays in English until you turn translation back on.",
+    helperOn: "Translation edit mode is enabled. Double click a label or use the edit icon.",
+    helperOff: "Translation edit mode is disabled. Regular users only see translated text.",
     enableLabel: "Enabled",
     disableLabel: "Disabled",
     editorTitle: "Inline translation editor",
-    editorLead: "Edit the current locale copy directly. Empty fields revert to the default translation.",
-    groupCommon: "Common labels",
+    editorLead: "Example fields below use the new reusable EditableTranslation component.",
+    groupCommon: "Examples",
     groupNav: "Navigation labels",
     groupPages: "Page headings",
-    groupPlanner: "Planner labels"
+    groupPlanner: "Planner labels",
+    editOptions: "Edit options",
+    listEditorTitle: "Edit answer options",
+    listItemLabel: "Answer option",
+    listAdd: "Add option"
   },
   de: {
     sectionLabel: "Übersetzung",
     title: "Übersetzung in der App",
     description: "Zeige die Oberfläche in der gewählten Sprache an.",
-    helperOn: "Die Oberfläche folgt der aktiven Sprache.",
-    helperOff: "Die Oberfläche bleibt auf Englisch, bis du die Übersetzung wieder einschaltest.",
+    helperOn: "Der Übersetzungs-Bearbeitungsmodus ist aktiv. Doppelklick oder Stift-Symbol zum Bearbeiten.",
+    helperOff: "Der Übersetzungs-Bearbeitungsmodus ist inaktiv. Normale Nutzer sehen nur Übersetzungen.",
     enableLabel: "Ein",
     disableLabel: "Aus",
     editorTitle: "Inline-Übersetzungseditor",
-    editorLead: "Bearbeite die aktuelle Sprachfassung direkt. Leere Felder fallen auf die Standardübersetzung zurück.",
-    groupCommon: "Allgemeine Labels",
+    editorLead: "Die Beispiel-Felder unten nutzen die neue wiederverwendbare EditableTranslation-Komponente.",
+    groupCommon: "Beispiele",
     groupNav: "Navigationslabels",
     groupPages: "Seitentitel",
-    groupPlanner: "Planer-Labels"
+    groupPlanner: "Planer-Labels",
+    editOptions: "Optionen bearbeiten",
+    listEditorTitle: "Antwortoptionen bearbeiten",
+    listItemLabel: "Antwortoption",
+    listAdd: "Option hinzufügen"
   },
   fr: {
     sectionLabel: "Traduction",
     title: "Traduction dans l'application",
     description: "Affiche l'interface dans la langue sélectionnée.",
-    helperOn: "L'interface suit la langue active.",
-    helperOff: "L'interface reste en anglais jusqu'à ce que vous réactiviez la traduction.",
+    helperOn: "Le mode d'édition des traductions est activé. Double-cliquez ou utilisez l'icône d'édition.",
+    helperOff: "Le mode d'édition des traductions est désactivé. Les utilisateurs voient uniquement le texte traduit.",
     enableLabel: "Activée",
     disableLabel: "Désactivée",
     editorTitle: "Editeur de traduction en ligne",
-    editorLead: "Modifiez directement la copie de la langue courante. Les champs vides reviennent à la traduction par défaut.",
-    groupCommon: "Libellés courants",
+    editorLead: "Les champs d'exemple ci-dessous utilisent le nouveau composant réutilisable EditableTranslation.",
+    groupCommon: "Exemples",
     groupNav: "Libellés de navigation",
     groupPages: "Titres de page",
-    groupPlanner: "Libellés du planificateur"
+    groupPlanner: "Libellés du planificateur",
+    editOptions: "Modifier les options",
+    listEditorTitle: "Modifier les options de réponse",
+    listItemLabel: "Option de réponse",
+    listAdd: "Ajouter une option"
   }
 } as const;
+
 const emptyTestModes: TestModeSettings = {
   enabled: false,
   morningDateEnabled: false,
@@ -84,13 +96,14 @@ const emptyTestModes: TestModeSettings = {
 };
 
 export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testModeSettings, onTestModeSettingsChange }: Props) => {
-  const { copy, locale, translationEnabled, setTranslationEnabled } = useI18n();
+  const { copy, locale, translationEnabled } = useI18n();
   const [savedQuestionSet, setSavedQuestionSet] = useState(() => getQuestionSet());
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<0 | 1 | 2>(0);
   const [questionDrafts, setQuestionDrafts] = useState<[string, string, string]>(savedQuestionSet.questions);
   const [answerDrafts, setAnswerDrafts] = useState<DebriefQuestionAnswerOptions>(cloneAnswerOptions(savedQuestionSet.answerOptions));
   const [version, setVersion] = useState(savedQuestionSet.version);
   const [savedAt, setSavedAt] = useState(savedQuestionSet.updatedAt);
+  const [isListEditorOpen, setIsListEditorOpen] = useState(false);
 
   const updateQuestion = (index: 0 | 1 | 2, value: string) => {
     setQuestionDrafts((previous) => {
@@ -156,19 +169,13 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
     <section className="section-panel active" id="settings-panel" aria-labelledby="settings-page-title" role="tabpanel" data-testid="settings-page">
       <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
         <div className="d-flex flex-column gap-2">
-          <p className="text-uppercase small fw-semibold text-secondary mb-0">
-            <InlineTranslationText path="settings.sectionLabel" value={copy.settings.sectionLabel} />
-          </p>
-          <h1 id="settings-page-title" className="h2 mb-0">
-            <InlineTranslationText path="settings.title" value={copy.settings.title} multiline />
-          </h1>
-          <p className="text-secondary mb-0">
-            <InlineTranslationText path="settings.description" value={copy.settings.description} multiline />
-          </p>
+          <p className="text-uppercase small fw-semibold text-secondary mb-0">{copy.settings.sectionLabel}</p>
+          <h1 id="settings-page-title" className="h2 mb-0">{copy.settings.title}</h1>
+          <p className="text-secondary mb-0">{copy.settings.description}</p>
         </div>
 
         <CoachButton type="button" variant="outline" onClick={onClose} aria-label={copy.settings.closeAria} testId="settings-close-button">
-          <InlineTranslationText path="common.close" value={copy.common.close} />
+          {copy.common.close}
         </CoachButton>
       </div>
 
@@ -184,19 +191,7 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
             <h2 className="h4 mb-2">{translationCopy[locale].title}</h2>
             <p className="text-secondary mb-0">{translationCopy[locale].description}</p>
           </div>
-          <div className="form-check form-switch m-0">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              id="translation-enabled"
-              checked={translationEnabled}
-              onChange={(event) => setTranslationEnabled(event.target.checked)}
-            />
-            <label className="form-check-label small fw-semibold" htmlFor="translation-enabled">
-              {translationEnabled ? translationCopy[locale].enableLabel : translationCopy[locale].disableLabel}
-            </label>
-          </div>
+          <TranslationEditToggle />
         </div>
         <div className="small text-secondary">{translationEnabled ? translationCopy[locale].helperOn : translationCopy[locale].helperOff}</div>
       </SectionCard>
@@ -211,82 +206,11 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
             <p className="text-secondary mb-0">{translationCopy[locale].editorLead}</p>
           </div>
 
-          <div className="d-grid gap-4">
-            <div>
-              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupCommon}</div>
-              <div className="d-grid gap-3">
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">close</span>
-                  <InlineTranslationText path="common.close" value={copy.common.close} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">save</span>
-                  <InlineTranslationText path="common.save" value={copy.common.save} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">cancel</span>
-                  <InlineTranslationText path="common.cancel" value={copy.common.cancel} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">reset</span>
-                  <InlineTranslationText path="common.reset" value={copy.common.reset} className="w-100" multiline />
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupNav}</div>
-              <div className="d-grid gap-3">
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">logout</span>
-                  <InlineTranslationText path="nav.logout" value={copy.nav.logout} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">settings aria</span>
-                  <InlineTranslationText path="nav.settingsAria" value={copy.nav.settingsAria} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">profile aria</span>
-                  <InlineTranslationText path="nav.profileAria" value={copy.nav.profileAria} className="w-100" multiline />
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupPages}</div>
-              <div className="d-grid gap-3">
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">profile title</span>
-                  <InlineTranslationText path="profile.title" value={copy.profile.title} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">settings title</span>
-                  <InlineTranslationText path="settings.title" value={copy.settings.title} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">settings description</span>
-                  <InlineTranslationText path="settings.description" value={copy.settings.description} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">question set heading</span>
-                  <InlineTranslationText path="settings.questionSetHeading" value={copy.settings.questionSetHeading} className="w-100" multiline />
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <div className="small text-secondary fw-semibold mb-2">{translationCopy[locale].groupPlanner}</div>
-              <div className="d-grid gap-3">
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">planner title</span>
-                  <InlineTranslationText path="settings.plannerTitle" value={copy.settings.plannerTitle} className="w-100" multiline />
-                </label>
-                <label className="d-grid gap-1">
-                  <span className="small text-secondary fw-semibold">planner text</span>
-                  <InlineTranslationText path="settings.plannerText" value={copy.settings.plannerText} className="w-100" multiline />
-                </label>
-              </div>
-            </div>
+          <div className="d-grid gap-3">
+            <div className="small text-secondary fw-semibold mb-1">{translationCopy[locale].groupCommon}</div>
+            <EditableTranslation i18nKey="common.save" defaultText="Save" />
+            <EditableTranslation i18nKey="auth.login.title" defaultText="Sign in" tag="h3" className="mb-0" />
+            <EditableTranslation i18nKey="form.description" defaultText="Please fill out all required fields." />
           </div>
         </SectionCard>
       ) : null}
@@ -339,9 +263,16 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
           </div>
 
           <div className="d-grid gap-3">
-            <div className="d-flex flex-wrap align-items-center gap-2">
-              <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.settings.answerLabelsBadge}</CoachBadge>
-              <span className="small text-secondary">{copy.settings.answerLabelsUsedFor.replace("{{index}}", String(activeQuestionIndex + 1))}</span>
+            <div className="d-flex flex-wrap align-items-center gap-2 justify-content-between">
+              <div className="d-flex flex-wrap align-items-center gap-2">
+                <CoachBadge tone="purple" className="rounded-pill px-3 py-2">{copy.settings.answerLabelsBadge}</CoachBadge>
+                <span className="small text-secondary">{copy.settings.answerLabelsUsedFor.replace("{{index}}", String(activeQuestionIndex + 1))}</span>
+              </div>
+              {translationEnabled ? (
+                <CoachButton type="button" variant="outline" onClick={() => setIsListEditorOpen(true)}>
+                  {translationCopy[locale].editOptions}
+                </CoachButton>
+              ) : null}
             </div>
             {activeAnswerDrafts.map((answer, index) => (
               <label key={index} className="d-grid gap-1">
@@ -372,6 +303,31 @@ export const SettingsPage = ({ onClose, selectedTestDate, testDaySpeed, testMode
         <h2 className="h4 mb-2">{copy.settings.plannerTitle}</h2>
         <p className="text-secondary mb-0">{copy.settings.plannerText}</p>
       </SectionCard>
+
+      <TranslationListEditorModal
+        isOpen={isListEditorOpen}
+        items={activeAnswerDrafts}
+        title={translationCopy[locale].listEditorTitle}
+        itemLabel={translationCopy[locale].listItemLabel}
+        addLabel={translationCopy[locale].listAdd}
+        cancelLabel={copy.common.cancel}
+        saveLabel={copy.common.save}
+        onClose={() => setIsListEditorOpen(false)}
+        onSave={(items) => {
+          setAnswerDrafts((previous) => {
+            const next = cloneAnswerOptions(previous);
+            next[activeQuestionIndex] = [
+              items[0] ?? "",
+              items[1] ?? "",
+              items[2] ?? "",
+              items[3] ?? "",
+              items[4] ?? ""
+            ] as DebriefAnswerOptions;
+            return next;
+          });
+          setIsListEditorOpen(false);
+        }}
+      />
     </section>
   );
 };

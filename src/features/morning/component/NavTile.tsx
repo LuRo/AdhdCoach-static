@@ -1,3 +1,4 @@
+﻿import { useTranslation } from "react-i18next";
 import { cn } from "../../../shared/utils/cn";
 import type { NavTab, TabId } from "../types";
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export const NavTile = ({ activeTab, onSelect, tab, testId }: Props) => {
+  const { t } = useTranslation();
   const isActive = activeTab === tab.id;
 
   return (
@@ -23,8 +25,8 @@ export const NavTile = ({ activeTab, onSelect, tab, testId }: Props) => {
     >
       <i className={tab.iconClass} aria-hidden="true" />
       <span className="text-start">
-        <span className="d-block fw-semibold">{tab.title}</span>
-        <span className="small opacity-75">{tab.subtitle}</span>
+        <span className="d-block fw-semibold">{t(tab.title)}</span>
+        <span className="small opacity-75">{t(tab.subtitle)}</span>
       </span>
     </button>
   );

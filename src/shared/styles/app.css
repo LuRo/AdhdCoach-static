@@ -1,5 +1,21 @@
 @import "./legacy.css";
 
+.modal-close-button {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(127, 19, 145, 0.22);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.modal-close-button i {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
 .btn-purple {
   color: var(--color-white);
   background-color: var(--color-accent);
@@ -524,3 +540,53 @@ html {
 .inline-translation-editor::placeholder {
   color: rgba(108, 117, 125, 0.72);
 }
+
+.editable-translation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.editable-translation-text {
+  border-bottom: 1px dashed rgba(127, 19, 145, 0.35);
+  cursor: text;
+}
+
+.editable-translation-edit-button {
+  border: 1px solid rgba(127, 19, 145, 0.24);
+  background: rgba(127, 19, 145, 0.08);
+  color: var(--color-accent);
+  border-radius: 999px;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.editable-translation-edit-button:hover,
+.editable-translation-edit-button:focus-visible {
+  background: rgba(127, 19, 145, 0.16);
+}
+
+.editable-translation-edit-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  line-height: 1;
+  flex: 0 0 14px;
+}
+
+.editable-translation-editor-shell {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 100%;
+}
+
+.editable-translation-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+

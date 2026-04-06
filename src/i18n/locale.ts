@@ -1,4 +1,4 @@
-export const LOCALES = ["en", "de", "fr"] as const;
+﻿export const LOCALES = ["en", "de", "fr"] as const;
 export type Locale = (typeof LOCALES)[number];
 
 const TRANSLATION_ENABLED_KEY = "adhd-coach-static-translations-enabled";
@@ -35,7 +35,7 @@ export const persistLocale = (locale: Locale) => {
 export const getTranslationEnabled = (): boolean => {
   if (typeof window === "undefined") return true;
   const stored = window.localStorage.getItem(TRANSLATION_ENABLED_KEY);
-  return stored === null ? true : stored === "true";
+  return stored === null ? false : stored === "true";
 };
 
 export const persistTranslationEnabled = (enabled: boolean) => {

@@ -1,5 +1,5 @@
-import { TodayPanel } from "../components/TodayPanel";
-import type { useMorningPlanner } from "../hooks/useMorningPlanner";
+import { TodayPanel } from "../../today/component/TodayPanel";
+import type { useMorningPlanner } from "../../morning/hooks/useMorningPlanner";
 
 type PlannerState = ReturnType<typeof useMorningPlanner>;
 

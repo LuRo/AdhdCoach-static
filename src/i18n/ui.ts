@@ -118,6 +118,7 @@ const uiCopy = {
       speedLabel: "Test day speed",
       speedAria: "Test day speed",
       simulationNote: "Simulation only. All running timers advance at the selected speed.",
+      liveSpeedNote: "Today is running at live speed.",
       tasksTitle: "Today tasks",
       tasksDescription: "Only the top unblocked task can start. Block unlocks the next task.",
       allCompleted: "All planned tasks are completed.",
@@ -165,6 +166,27 @@ const uiCopy = {
       checkinAnsweredLabel: "Check-in answered",
       channelLabel: "Channel: {{channel}}",
       answerLabel: "Answer: {{answer}}",
+      initialNote: "The first reset worked once messages were closed.",
+      localeLabels: {
+        submissions: "submissions",
+        causes: {
+          external: "external context switches",
+          internal: "internal distractions"
+        },
+        kind: {
+          internal: "internal",
+          external: "external"
+        },
+        channel: {
+          in_app: "in-app",
+          push: "push"
+        },
+        answer: {
+          yes_still_on_task: "yes, still on task",
+          paused: "paused",
+          switched: "switched"
+        }
+      },
       status: {
         onTrack: "On track",
         extraRunway: "Needed extra runway",
@@ -311,6 +333,7 @@ const uiCopy = {
       speedLabel: "Test-Tagesgeschwindigkeit",
       speedAria: "Test-Tagesgeschwindigkeit",
       simulationNote: "Nur Simulation. Alle laufenden Timer laufen mit der gewählten Geschwindigkeit weiter.",
+      liveSpeedNote: "Heute läuft in Echtzeitgeschwindigkeit.",
       tasksTitle: "Aufgaben für heute",
       tasksDescription: "Nur die oberste nicht blockierte Aufgabe kann starten. Blockieren gibt die nächste Aufgabe frei.",
       allCompleted: "Alle geplanten Aufgaben sind erledigt.",
@@ -358,6 +381,27 @@ const uiCopy = {
       checkinAnsweredLabel: "Check-in beantwortet",
       channelLabel: "Kanal: {{channel}}",
       answerLabel: "Antwort: {{answer}}",
+      initialNote: "Der erste Neustart funktionierte, sobald die Nachrichten geschlossen waren.",
+      localeLabels: {
+        submissions: "Einreichungen",
+        causes: {
+          external: "externe Kontextwechsel",
+          internal: "interne Ablenkungen"
+        },
+        kind: {
+          internal: "intern",
+          external: "extern"
+        },
+        channel: {
+          in_app: "In-App",
+          push: "Push"
+        },
+        answer: {
+          yes_still_on_task: "ja, noch bei der Aufgabe",
+          paused: "pausiert",
+          switched: "gewechselt"
+        }
+      },
       status: {
         onTrack: "Im Plan",
         extraRunway: "Mehr Puffer nötig",
@@ -504,6 +548,7 @@ const uiCopy = {
       speedLabel: "Vitesse du jour de test",
       speedAria: "Vitesse du jour de test",
       simulationNote: "Simulation uniquement. Tous les minuteurs en cours avancent à la vitesse sélectionnée.",
+      liveSpeedNote: "Aujourd'hui fonctionne à la vitesse réelle.",
       tasksTitle: "Tâches du jour",
       tasksDescription: "Seule la tâche supérieure non bloquée peut démarrer. Le blocage débloque la tâche suivante.",
       allCompleted: "Toutes les tâches prévues sont terminées.",
@@ -551,6 +596,27 @@ const uiCopy = {
       checkinAnsweredLabel: "Point de contrôle répondu",
       channelLabel: "Canal : {{channel}}",
       answerLabel: "Réponse : {{answer}}",
+      initialNote: "La première remise à zéro a fonctionné une fois les messages fermés.",
+      localeLabels: {
+        submissions: "soumissions",
+        causes: {
+          external: "changements de contexte externes",
+          internal: "distractions internes"
+        },
+        kind: {
+          internal: "interne",
+          external: "externe"
+        },
+        channel: {
+          in_app: "dans l'application",
+          push: "push"
+        },
+        answer: {
+          yes_still_on_task: "oui, toujours sur la tâche",
+          paused: "en pause",
+          switched: "changé"
+        }
+      },
       status: {
         onTrack: "Dans les temps",
         extraRunway: "Besoin de plus de marge",
@@ -585,3 +651,6 @@ const uiCopy = {
 export type UiCopy = (typeof uiCopy)[Locale];
 
 export const getUiCopy = (locale: Locale): UiCopy => uiCopy[locale];
+
+
+

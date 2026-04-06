@@ -1,7 +1,7 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
-import type { PomodoroMinutes, TodayTask } from "../types";
+import type { PomodoroMinutes, TodayTask } from "../../morning/types";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 
 interface Props {

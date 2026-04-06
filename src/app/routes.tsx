@@ -8,17 +8,17 @@ import {
 } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { DashboardLayout } from "../layouts/DashboardLayout";
-import { AddTaskModal } from "../features/morning/components/AddTaskModal";
-import { PomodoroOverlay } from "../features/morning/components/PomodoroOverlay";
-import { Step2HelpModal } from "../features/morning/components/Step2HelpModal";
-import { TaskDetailsModal } from "../features/morning/components/TaskDetailsModal";
+import { AddTaskModal } from "../features/morning/component/AddTaskModal";
+import { PomodoroOverlay } from "../features/today/component/PomodoroOverlay";
+import { Step2HelpModal } from "../features/morning/component/Step2HelpModal";
+import { TaskDetailsModal } from "../features/morning/component/TaskDetailsModal";
 import { useMorningPlanner } from "../features/morning/hooks/useMorningPlanner";
-import { DebriefingPage } from "../features/morning/pages/DebriefingPage";
+import { DebriefingPage } from "../features/debriefing/pages/DebriefingPage";
 import { MorningPage } from "../features/morning/pages/MorningPage";
-import { TodayPage } from "../features/morning/pages/TodayPage";
+import { TodayPage } from "../features/today/pages/TodayPage";
 import type { TabId } from "../features/morning/types";
-import { ProfilePage } from "../pages/ProfilePage";
-import { SettingsPage } from "../pages/SettingsPage";
+import { ProfilePage } from "../features/profile/pages/ProfilePage";
+import { SettingsPage } from "../features/settings/pages/SettingsPage";
 
 const TAB_PATHS: Record<TabId, string> = {
   morning: "/morning",

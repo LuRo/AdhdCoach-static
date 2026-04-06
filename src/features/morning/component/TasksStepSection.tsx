@@ -1,8 +1,9 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Sortable, { type SortableEvent } from "sortablejs";
 import { useTranslation } from "react-i18next";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
+import { TrashBinButton } from "../../../shared/components/atoms/TrashBinButton";
 import type { RemoveSelectedMode, Task } from "../types";
 import { TaskCard } from "./TaskCard";
 
@@ -89,9 +90,7 @@ export const TasksStepSection = ({ canRemoveSelected, currentStep, isLocked, onA
         </div>
 
         <div className="step-header-actions d-flex align-items-center gap-2">
-          <CoachButton id="remove-selected-btn" type="button" className="rounded-pill px-3 py-2" variant="danger" disabled={!canRemoveSelected || isLocked} aria-label={t("Remove selected tasks")} title={t("Remove selected tasks")} testId="morning-tasks-remove-selected-button" onClick={() => setIsRemoveChoiceOpen(true)}>
-            <i className="bi bi-trash" />
-          </CoachButton>
+          <TrashBinButton id="remove-selected-btn" className="rounded-pill px-3 py-2" disabled={!canRemoveSelected || isLocked} aria-label={t("Remove selected tasks")} title={t("Remove selected tasks")} testId="morning-tasks-remove-selected-button" onClick={() => setIsRemoveChoiceOpen(true)} />
 
           <CoachButton type="button" className="rounded-pill px-3 py-2" variant="outline" onClick={onShowHelp}>
             {t("Help")}
@@ -122,7 +121,9 @@ export const TasksStepSection = ({ canRemoveSelected, currentStep, isLocked, onA
               <div className="modal-content border-0 shadow-lg">
                 <div className="modal-header">
                   <h2 className="modal-title fs-5">{t("Remove selected tasks")}</h2>
-                  <button type="button" className="btn-close" aria-label={t("Close")} data-testid="morning-remove-selected-close-button" onClick={() => setIsRemoveChoiceOpen(false)} />
+                  <CoachButton type="button" variant="ghost" className="modal-close-button" aria-label={t("Close")} testId="morning-remove-selected-close-button" onClick={() => setIsRemoveChoiceOpen(false)}>
+                    <i className="bi bi-x-lg" aria-hidden="true" />
+                  </CoachButton>
                 </div>
 
                 <div className="modal-body">

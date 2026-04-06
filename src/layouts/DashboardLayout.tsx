@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { cn } from "../shared/utils/cn";
 import type { TabId } from "../features/morning/types";
-import { MainTabSwitcher } from "../features/morning/components/MainTabSwitcher";
-import { TopNavigation } from "../features/morning/components/TopNavigation";
+import { MainTabSwitcher } from "../features/morning/component/MainTabSwitcher";
+import { TopNavigation } from "../features/morning/component/TopNavigation";
 
 interface Props {
   activeTab: TabId;

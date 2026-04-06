@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
-import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../types";
-import type { TestModeSettings } from "../store";
+import { useI18n } from "../../../i18n";
+import type { DaySpeedMultiplier, PomodoroMinutes, TodayTask } from "../../morning/types";
+import type { TestModeSettings } from "../../morning/store";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import { TodayTaskCard } from "./TodayTaskCard";
 
@@ -37,6 +38,8 @@ export const TodayPanel = ({
   testDaySpeed,
   testModeSettings
 }: Props) => {
+  const { copy } = useI18n();
+  const ui = copy.ui.todayPanel;
   const openTasks = tasks.filter((task) => !task.done);
   const achievedTasks = tasks.filter((task) => task.done);
   const showTestSpeedControl = testModeSettings.enabled && testModeSettings.todaySpeedEnabled;
@@ -47,8 +50,8 @@ export const TodayPanel = ({
       type="button"
       className="add-task-fab"
       variant="primary"
-      aria-label="Add new task"
-      title="Add new task"
+      aria-label={copy.ui.tasksStepSection.addTaskAria}
+      title={copy.ui.tasksStepSection.addTaskAria}
       testId="today-add-task-button"
       onClick={onAddTask}
     >
@@ -67,16 +70,16 @@ export const TodayPanel = ({
       >
         <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
           <div>
-            <p className="text-uppercase small fw-semibold text-secondary mb-2">Today execution</p>
-            <h1 className="h2 mb-2">Work from your confirmed morning plan</h1>
-            <p className="text-secondary mb-0">Click the timer circle to open the Pomodoro overlay.</p>
+            <p className="text-uppercase small fw-semibold text-secondary mb-2">{ui.eyebrow}</p>
+            <h1 className="h2 mb-2">{ui.title}</h1>
+            <p className="text-secondary mb-0">{ui.intro}</p>
           </div>
 
           <div className="d-grid gap-2 min-w-0">
             {showTestSpeedControl ? (
               <>
-                <span className="small fw-semibold text-secondary">Test day speed</span>
-                <div className="d-flex flex-wrap gap-2" role="group" aria-label="Test day speed" data-testid="today-speed-group">
+                <span className="small fw-semibold text-secondary">{ui.speedLabel}</span>
+                <div className="d-flex flex-wrap gap-2" role="group" aria-label={ui.speedAria} data-testid="today-speed-group">
                   {SPEED_OPTIONS.map((speed) => (
                     <CoachButton
                       key={speed}
@@ -89,10 +92,10 @@ export const TodayPanel = ({
                     </CoachButton>
                   ))}
                 </div>
-                <div className="small text-secondary">Simulation only. All running timers advance at the selected speed.</div>
+                <div className="small text-secondary">{ui.simulationNote}</div>
               </>
             ) : (
-              <div className="small text-secondary">Today is running at live speed.</div>
+              <div className="small text-secondary">{ui.liveSpeedNote}</div>
             )}
           </div>
         </div>
@@ -101,13 +104,13 @@ export const TodayPanel = ({
           <div className="step-header mb-2">
             <div className="flex-grow-1">
               <h2 id="today-tasks-title" className="h4 mb-2">
-                Today tasks
+                {ui.tasksTitle}
               </h2>
-              <p className="text-secondary mb-0">Only the top unblocked task can start. Block unlocks the next task.</p>
+              <p className="text-secondary mb-0">{ui.tasksDescription}</p>
             </div>
           </div>
 
-          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Today task list" data-testid="today-open-task-list">
+          <div className="task-list-stage d-flex flex-column gap-3" aria-label={ui.tasksTitle} data-testid="today-open-task-list">
             {openTasks.length > 0 ? (
               openTasks.map((task, index) => (
                 <TodayTaskCard
@@ -126,7 +129,7 @@ export const TodayPanel = ({
                 />
               ))
             ) : (
-              <div className="alert alert-success mb-0">All planned tasks are completed.</div>
+              <div className="alert alert-success mb-0">{ui.allCompleted}</div>
             )}
           </div>
         </section>
@@ -135,13 +138,13 @@ export const TodayPanel = ({
           <div className="step-header mb-2">
             <div className="flex-grow-1">
               <h2 id="today-achieved-title" className="h4 mb-2">
-                Achieved goals of today
+                {ui.achievedTitle}
               </h2>
-              <p className="text-secondary mb-0">Completed items are moved here automatically.</p>
+              <p className="text-secondary mb-0">{ui.achievedDescription}</p>
             </div>
           </div>
 
-          <div className="task-list-stage d-flex flex-column gap-3" aria-label="Achieved goals of today" data-testid="today-achieved-task-list">
+          <div className="task-list-stage d-flex flex-column gap-3" aria-label={ui.achievedTitle} data-testid="today-achieved-task-list">
             {achievedTasks.length > 0 ? (
               achievedTasks.map((task) => (
                 <TodayTaskCard
@@ -159,7 +162,7 @@ export const TodayPanel = ({
                 />
               ))
             ) : (
-              <div className="text-secondary small">No completed goals yet.</div>
+              <div className="text-secondary small">{ui.noCompleted}</div>
             )}
           </div>
         </section>
@@ -169,3 +172,6 @@ export const TodayPanel = ({
     </>
   );
 };
+
+
+

@@ -2,6 +2,8 @@
 import { I18nextProvider, useTranslation } from "react-i18next";
 import i18n from "./i18n";
 import { LOCALES, normalizeLocale, type Locale } from "./locale";
+import { useTranslationEditMode, TranslationEditModeProvider } from "./TranslationEditModeContext";
+import { updateI18nextResource } from "./updateI18nextResource";
 import { getUiCopy } from "./ui";
 
 type LegacyCopy = {
@@ -151,17 +153,22 @@ const legacyCopyByLocale: Record<Locale, Omit<LegacyCopy, "ui">> = {
 
 const I18nStateProvider = ({ children }: PropsWithChildren) => {
   const { i18n: instance } = useTranslation();
+  const { enabled: translationEnabled, setEnabled: setTranslationEnabled } = useTranslationEditMode();
   const locale = normalizeLocale(instance.resolvedLanguage ?? instance.language ?? "en");
 
   const setLocale = (nextLocale: Locale) => {
     void instance.changeLanguage(nextLocale);
   };
 
+  const setTranslationValue = (targetLocale: Locale, path: string, value: string) => {
+    updateI18nextResource(instance, targetLocale, "translation", path, value);
+  };
+
   const copy = useMemo(() => ({ ...legacyCopyByLocale[locale], ui: getUiCopy(locale) }), [locale]);
 
   const value = useMemo(
-    () => ({ locale, setLocale, copy, translationEnabled: true, setTranslationEnabled: () => {}, setTranslationValue: () => {}, translationOverrides: {} }),
-    [locale, copy]
+    () => ({ locale, setLocale, copy, translationEnabled, setTranslationEnabled, setTranslationValue, translationOverrides: {} }),
+    [copy, locale, setTranslationEnabled, translationEnabled]
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
@@ -170,7 +177,9 @@ const I18nStateProvider = ({ children }: PropsWithChildren) => {
 export const I18nProvider = ({ children }: PropsWithChildren) => {
   return (
     <I18nextProvider i18n={i18n}>
-      <I18nStateProvider>{children}</I18nStateProvider>
+      <TranslationEditModeProvider>
+        <I18nStateProvider>{children}</I18nStateProvider>
+      </TranslationEditModeProvider>
     </I18nextProvider>
   );
 };
@@ -186,3 +195,12 @@ export const useI18n = (): I18nValue => {
 
 export { LOCALES };
 export type { Locale } from "./locale";
+export { EditableTranslation } from "./EditableTranslation";
+export { TranslationListEditorModal } from "./TranslationListEditorModal";
+export { TranslationEditToggle } from "./TranslationEditToggle";
+export { useTranslationEditMode } from "./TranslationEditModeContext";
+
+
+
+
+

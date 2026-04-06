@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 import type { BacklogTask, CreateTaskInput } from "../types";
@@ -71,7 +71,9 @@ export const AddTaskModal = ({ backlogTasks, isOpen, onAddFromBacklog, onClose, 
           <div className="modal-content border-0 shadow-lg add-task-modal-content">
             <div className="modal-header">
               <h2 className="modal-title fs-5">{stage === "backlog" ? t("Backlog") : t("Create a new task")}</h2>
-              <button type="button" className="btn-close" aria-label={t("Close")} data-testid="morning-add-task-close-button" onClick={onClose} />
+              <CoachButton type="button" variant="ghost" className="modal-close-button" aria-label={t("Close")} testId="morning-add-task-close-button" onClick={onClose}>
+                <i className="bi bi-x-lg" aria-hidden="true" />
+              </CoachButton>
             </div>
 
             <div className="modal-body">

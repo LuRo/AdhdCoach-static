@@ -1,4 +1,4 @@
-import { MorningPanel } from "../components/MorningPanel";
+import { MorningPanel } from "../component/MorningPanel";
 import type { useMorningPlanner } from "../hooks/useMorningPlanner";
 
 type PlannerState = ReturnType<typeof useMorningPlanner>;

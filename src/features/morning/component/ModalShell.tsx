@@ -1,4 +1,4 @@
-﻿import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { CoachButton } from "../../../shared/components/atoms/CoachButton";
 
 import type { PropsWithChildren } from "react";
@@ -25,7 +25,9 @@ export const ModalShell = ({ children, isOpen, onClose, primaryActionLabel, test
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header">
               <h2 className="modal-title fs-5">{title}</h2>
-              <button type="button" className="btn-close" aria-label={t("Close")} onClick={onClose} />
+              <CoachButton type="button" variant="ghost" className="modal-close-button" aria-label={t("Close")} onClick={onClose}>
+                <i className="bi bi-x-lg" aria-hidden="true" />
+              </CoachButton>
             </div>
 
             <div className="modal-body">{children}</div>
